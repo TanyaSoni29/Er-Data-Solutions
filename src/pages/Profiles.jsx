@@ -1,19 +1,19 @@
 /** @format */
 
-import Dashboard1Content from '../components/Dashboard/Dashboard1Content';
 import Header from '../components/Common/Header';
 import Sidebar from '../components/Common/Sidebar';
+import ProfilesContent from '../components/Profiles/ProfilesContent';
 
-function Dashboard1() {
+function Profiles() {
 	return (
 		<div className='flex h-screen'>
 			<Sidebar />
 			<div className='flex-1 flex flex-col'>
 				<Header />
-				<Dashboard1Content />
+				<ProfilesContent />
 			</div>
 		</div>
 	);
 }
 
-export default Dashboard1;
+export default Profiles;

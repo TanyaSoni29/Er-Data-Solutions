@@ -18,6 +18,7 @@ import Request from './pages/Request';
 import ForgotPassword from './components/Authentication/ForgetPassword';
 import Dashboard1 from './pages/Dashboard1';
 import Dashboard2 from './pages/Dashboard2';
+import Profiles from './pages/Profiles';
 
 const App = () => {
 	// const dispatch = useDispatch();
@@ -63,6 +64,10 @@ const App = () => {
 				<Route
 					path='/users'
 					element={<Users />}
+				/>
+				<Route
+					path='/profiles'
+					element={<Profiles />}
 				/>
 				<Route
 					path='/requests'
