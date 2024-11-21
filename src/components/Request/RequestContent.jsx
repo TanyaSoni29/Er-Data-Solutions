@@ -1,0 +1,180 @@
+/** @format */
+
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { FaRegCircle } from 'react-icons/fa';
+
+const RequestForm = () => {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm();
+
+	const onSubmit = (data) => {
+		console.log(data);
+		alert('Form Submitted Successfully!');
+	};
+
+	return (
+		<div className='p-6 bg-white min-h-screen'>
+			{/* Page Header */}
+			<div className='text-2xl font-semibold text-gray-700 flex justify-start items-center space-x-2 mb-10'>
+				<FaRegCircle fontSize={18} />
+				<span>Request</span>
+			</div>
+
+			{/* Form Container */}
+			<div className='bg-white p-6 rounded-lg'>
+				<h2 className='text-xl font-semibold text-gray-700 mb-6'>
+					Request Form
+				</h2>
+				<form
+					onSubmit={handleSubmit(onSubmit)}
+					className='grid grid-cols-3 gap-6'
+				>
+					{/* Description */}
+					<div>
+						<label className='block text-gray-600 mb-2'>Description</label>
+						<input
+							type='text'
+							placeholder='Enter description'
+							{...register('description', {
+								required: 'Description is required',
+							})}
+							className={`w-full px-4 py-2 border ${
+								errors.description ? 'border-red-500' : 'border-gray-300'
+							} rounded-lg focus:outline-none focus:ring-2 ${
+								errors.description
+									? 'focus:ring-red-500'
+									: 'focus:ring-blue-500'
+							}`}
+						/>
+						{errors.description && (
+							<p className='text-red-500 text-sm mt-1'>
+								{errors.description.message}
+							</p>
+						)}
+					</div>
+
+					{/* Type */}
+					<div>
+						<label className='block text-gray-600 mb-2'>Type</label>
+						<select
+							{...register('type', { required: 'Type is required' })}
+							className={`w-full px-4 py-2 border ${
+								errors.type ? 'border-red-500' : 'border-gray-300'
+							} rounded-lg focus:outline-none focus:ring-2 ${
+								errors.type ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+							}`}
+						>
+							<option value=''>Select type</option>
+							<option value='type1'>Type 1</option>
+							<option value='type2'>Type 2</option>
+							<option value='type3'>Type 3</option>
+						</select>
+						{errors.type && (
+							<p className='text-red-500 text-sm mt-1'>{errors.type.message}</p>
+						)}
+					</div>
+
+					{/* Duration */}
+					<div>
+						<label className='block text-gray-600 mb-2'>Duration</label>
+						<input
+							type='text'
+							placeholder='Enter duration'
+							{...register('duration', { required: 'Duration is required' })}
+							className={`w-full px-4 py-2 border ${
+								errors.duration ? 'border-red-500' : 'border-gray-300'
+							} rounded-lg focus:outline-none focus:ring-2 ${
+								errors.duration ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+							}`}
+						/>
+						{errors.duration && (
+							<p className='text-red-500 text-sm mt-1'>
+								{errors.duration.message}
+							</p>
+						)}
+					</div>
+
+					{/* Date */}
+					<div>
+						<label className='block text-gray-600 mb-2'>Date</label>
+						<input
+							type='date'
+							{...register('date', { required: 'Date is required' })}
+							className={`w-full px-4 py-2 border ${
+								errors.date ? 'border-red-500' : 'border-gray-300'
+							} rounded-lg focus:outline-none focus:ring-2 ${
+								errors.date ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+							}`}
+						/>
+						{errors.date && (
+							<p className='text-red-500 text-sm mt-1'>{errors.date.message}</p>
+						)}
+					</div>
+
+					{/* Mode */}
+					<div>
+						<label className='block text-gray-600 mb-2'>Mode</label>
+						<select
+							{...register('mode', { required: 'Mode is required' })}
+							className={`w-full px-4 py-2 border ${
+								errors.mode ? 'border-red-500' : 'border-gray-300'
+							} rounded-lg focus:outline-none focus:ring-2 ${
+								errors.mode ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+							}`}
+						>
+							<option value=''>Select mode</option>
+							<option value='online'>Online</option>
+							<option value='offline'>Offline</option>
+						</select>
+						{errors.mode && (
+							<p className='text-red-500 text-sm mt-1'>{errors.mode.message}</p>
+						)}
+					</div>
+
+					{/* Select Name */}
+					<div>
+						<label className='block text-gray-600 mb-2'>Select Name</label>
+						<select
+							{...register('name', { required: 'Name is required' })}
+							className={`w-full px-4 py-2 border ${
+								errors.name ? 'border-red-500' : 'border-gray-300'
+							} rounded-lg focus:outline-none focus:ring-2 ${
+								errors.name ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+							}`}
+						>
+							<option value=''>Select name</option>
+							<option value='name1'>Name 1</option>
+							<option value='name2'>Name 2</option>
+							<option value='name3'>Name 3</option>
+						</select>
+						{errors.name && (
+							<p className='text-red-500 text-sm mt-1'>{errors.name.message}</p>
+						)}
+					</div>
+
+					{/* Buttons */}
+					<div className='col-span-2 flex space-x-4 mt-6'>
+						<button
+							type='submit'
+							className='w-52 bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white px-6 py-2 rounded-lg hover:from-[#00449B] hover:to-[#0071D3]'
+						>
+							Save & Submit
+						</button>
+						<button
+							type='button'
+							className='w-32 border border-blue-600 text-blue-600 px-6 py-2 rounded-lg hover:bg-blue-100'
+						>
+							Save
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	);
+};
+
+export default RequestForm;
