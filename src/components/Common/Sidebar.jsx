@@ -1,6 +1,6 @@
 /** @format */
 
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LogoImg from '../../assets/LogoImg.png';
 import { AiOutlineAppstore } from 'react-icons/ai';
 import { PiUsersThree } from 'react-icons/pi';
@@ -8,7 +8,14 @@ import { RxBox } from 'react-icons/rx';
 import { IoMdLogOut } from 'react-icons/io';
 import { useState } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../service/operations/authApi';
 const Sidebar = () => {
+	const { user } = useSelector((state) => state.auth);
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	// console.log(user);
 	const [isOpen, setIsOpen] = useState(false);
 	const location = useLocation();
 	const isActive = (path) => location.pathname === path;
@@ -47,116 +54,130 @@ const Sidebar = () => {
 				<nav>
 					<ul className='space-y-1'>
 						{/* Super Admin Dashboard */}
-						<li>
-							<Link
-								to='/dashboard'
-								className={`flex items-center space-x-2 p-3 rounded ${
-									isActive('/dashboard')
-										? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
-										: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
-								}`}
-							>
-								<AiOutlineAppstore fontSize={22} />
-								<span>Dashboard</span>
-							</Link>
-						</li>
+						{user?.role === '1' && (
+							<li>
+								<Link
+									to='/dashboard'
+									className={`flex items-center space-x-2 p-3 rounded ${
+										isActive('/dashboard')
+											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
+											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
+									}`}
+								>
+									<AiOutlineAppstore fontSize={22} />
+									<span>Dashboard</span>
+								</Link>
+							</li>
+						)}
 
 						{/* Users Dashboard */}
-						<li>
-							<Link
-								to='/dashboard-1'
-								className={`flex items-center space-x-2 p-3 rounded ${
-									isActive('/dashboard-1')
-										? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
-										: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
-								}`}
-							>
-								<AiOutlineAppstore fontSize={22} />
-								<span>Dashboard - 1</span>
-							</Link>
-						</li>
-						<li>
-							<Link
-								to='/dashboard-2'
-								className={`flex items-center space-x-2 p-3 rounded ${
-									isActive('/dashboard-2')
-										? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
-										: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
-								}`}
-							>
-								<AiOutlineAppstore fontSize={22} />
-								<span>Dashboard - 2</span>
-							</Link>
-						</li>
+						{user?.role === '2' && (
+							<li>
+								<Link
+									to='/dashboard-1'
+									className={`flex items-center space-x-2 p-3 rounded ${
+										isActive('/dashboard-1')
+											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
+											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
+									}`}
+								>
+									<AiOutlineAppstore fontSize={22} />
+									<span>Dashboard - 1</span>
+								</Link>
+							</li>
+						)}
+						{user?.role === '2' && (
+							<li>
+								<Link
+									to='/dashboard-2'
+									className={`flex items-center space-x-2 p-3 rounded ${
+										isActive('/dashboard-2')
+											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
+											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
+									}`}
+								>
+									<AiOutlineAppstore fontSize={22} />
+									<span>Dashboard - 2</span>
+								</Link>
+							</li>
+						)}
 
 						{/* User Profiles */}
 
-						<li>
-							<Link
-								to='/profiles'
-								className={`flex items-center space-x-2 p-3 rounded ${
-									isActive('/profiles')
-										? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
-										: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
-								}`}
-							>
-								<AiOutlineAppstore fontSize={22} />
-								<span>Profiles</span>
-							</Link>
-						</li>
+						{user.role === '2' && (
+							<li>
+								<Link
+									to='/profiles'
+									className={`flex items-center space-x-2 p-3 rounded ${
+										isActive('/profiles')
+											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
+											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
+									}`}
+								>
+									<AiOutlineAppstore fontSize={22} />
+									<span>Profiles</span>
+								</Link>
+							</li>
+						)}
 
 						{/* Super Admin Users List */}
 
-						<li>
-							<Link
-								to='/users'
-								className={`flex items-center space-x-2 p-3 rounded ${
-									isActive('/users') ||
-									isActive('/users/addUser') ||
-									isActive('/users/addUser2') ||
-									isActive('/users/editUser2') ||
-									isActive('/users/editUser')
-										? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
-										: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
-								}`}
-							>
-								<PiUsersThree fontSize={22} />
-								<span>Users</span>
-							</Link>
-						</li>
+						{user?.role === '1' && (
+							<li>
+								<Link
+									to='/users'
+									className={`flex items-center space-x-2 p-3 rounded ${
+										isActive('/users') ||
+										isActive('/users/addUser') ||
+										isActive('/users/addUser2') ||
+										isActive('/users/editUser2') ||
+										isActive('/users/editUser')
+											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
+											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
+									}`}
+								>
+									<PiUsersThree fontSize={22} />
+									<span>Users</span>
+								</Link>
+							</li>
+						)}
 
-						{/* Super Admin Request */}
-						<li>
-							<Link
-								to='/requests'
-								className={`flex items-center space-x-2 p-3 rounded ${
-									isActive('/requests')
-										? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
-										: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
-								}`}
-							>
-								<RxBox fontSize={22} />
+						{/* User Request */}
+						{user.role === '2' && (
+							<li>
+								<Link
+									to='/requests'
+									className={`flex items-center space-x-2 p-3 rounded ${
+										isActive('/requests')
+											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
+											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
+									}`}
+								>
+									<RxBox fontSize={22} />
 
-								<span>Request</span>
-							</Link>
-						</li>
+									<span>Request</span>
+								</Link>
+							</li>
+						)}
 
-						{/* Users Request Page */}
+						{/* Super Admin Request Page */}
 
-						<li>
-							<Link
-								to='/requestsList'
-								className={`flex items-center space-x-2 p-3 rounded ${
-									isActive('/requestsList')
-										? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
-										: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
-								}`}
-							>
-								<RxBox fontSize={22} />
+						{user?.role === '1' && (
+							<li>
+								<Link
+									to='/requestsList'
+									className={`flex items-center space-x-2 p-3 rounded ${
+										isActive('/requestsList')
+											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
+											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
+									}`}
+								>
+									<RxBox fontSize={22} />
 
-								<span>Request</span>
-							</Link>
-						</li>
+									<span>Request</span>
+								</Link>
+							</li>
+						)}
 
 						<li>
 							<Link
@@ -172,7 +193,7 @@ const Sidebar = () => {
 									className=' -rotate-90'
 								/>
 
-								<span>Logout</span>
+								<span onClick={() => dispatch(logout(navigate))}>Logout</span>
 							</Link>
 						</li>
 					</ul>

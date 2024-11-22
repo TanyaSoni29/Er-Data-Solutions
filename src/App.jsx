@@ -1,10 +1,11 @@
 /** @format */
 
-// import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
 	// BrowserRouter as Router,
 	Route,
 	Routes,
+	useNavigate,
 	// useNavigate,
 } from 'react-router-dom';
 // import { useDispatch, useSelector } from 'react-redux';
@@ -25,19 +26,22 @@ import './App.css';
 import AddUserSecond from './pages/AddUserSecond';
 import EditUserFirst from './pages/EditUserFirst';
 import EditUserSecond from './pages/EditUserSecond';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMe } from './service/operations/authApi';
+import ProtectedRoute from './utils/ProtectedRoute';
 
 const App = () => {
-	// const dispatch = useDispatch();
-	// const { token } = useSelector((state) => state.auth);
+	const dispatch = useDispatch();
+	const { token } = useSelector((state) => state.auth);
 
-	// const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	// Fetch user info on app load if token is available
-	// useEffect(() => {
-	// 	if (token) {
-	// 		dispatch(getMe(navigate));
-	// 	}
-	// }, [dispatch, token]);
+	useEffect(() => {
+		if (token) {
+			dispatch(getMe(navigate));
+		}
+	}, [dispatch, token]);
 
 	return (
 		<div className='flex flex-col h-screen w-screen bg-white'>
@@ -51,53 +55,49 @@ const App = () => {
 					element={<ForgotPassword />}
 				/>
 
-				{/* <Route
-					path='/dashboard'
-					element={<ProtectedRoute element={<Dashboard />} />}
-				/> */}
 				<Route
 					path='/dashboard'
-					element={<Dashboard />}
+					element={<ProtectedRoute element={<Dashboard />} />}
 				/>
 				<Route
 					path='/dashboard-1'
-					element={<Dashboard1 />}
+					element={<ProtectedRoute element={<Dashboard1 />} />}
 				/>
 				<Route
 					path='/dashboard-2'
-					element={<Dashboard2 />}
+					element={<ProtectedRoute element={<Dashboard2 />} />}
 				/>
 				<Route
 					path='/users'
-					element={<Users />}
+					element={<ProtectedRoute element={<Users />} />}
 				/>
 				<Route
 					path='/users/addUser'
-					element={<AddUser />}
+					element={<ProtectedRoute element={<AddUser />} />}
 				/>
 				<Route
 					path='/users/addUser2'
-					element={<AddUserSecond />}
+					element={<ProtectedRoute element={<AddUserSecond />} />}
 				/>
 				<Route
 					path='/users/editUser'
-					element={<EditUserFirst />}
+					element={<ProtectedRoute element={<EditUserFirst />} />}
 				/>
 				<Route
 					path='/users/editUser2'
-					element={<EditUserSecond />}
+					element={<ProtectedRoute element={<EditUserSecond />} />}
 				/>
 				<Route
 					path='/profiles'
-					element={<Profiles />}
+					element={<ProtectedRoute element={<Profiles />} />}
 				/>
 				<Route
 					path='/requests'
-					element={<Request />}
+					element={<ProtectedRoute element={<Request />} />}
 				/>
 				<Route
 					path='/requestsList'
-					element={<RequestUser />}
+					element={<ProtectedRoute element={<RequestUser />} />}
 				/>
 			</Routes>
 		</div>
