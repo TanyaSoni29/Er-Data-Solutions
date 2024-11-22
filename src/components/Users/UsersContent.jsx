@@ -1,6 +1,3 @@
-/** @format */
-
-import React from 'react';
 import { FiEdit } from 'react-icons/fi';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaRegCircle } from 'react-icons/fa';
