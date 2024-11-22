@@ -4,12 +4,12 @@ import { FiEdit } from 'react-icons/fi';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaRegCircle } from 'react-icons/fa';
 import { AiOutlineUserAdd } from 'react-icons/ai';
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 const UsersContent = () => {
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 	const handleAddNewClick = () => {
-      navigate("/addUser")
-	}
+		navigate('/users/addUser');
+	};
 
 	const users = [
 		{
@@ -78,7 +78,10 @@ const UsersContent = () => {
 					<FaRegCircle fontSize={18} />
 					<span>Users List</span>
 				</div>
-				<button onClick={handleAddNewClick} className='flex w-full md:w-48 justify-center items-center space-x-2 bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white px-4 py-2 rounded shadow hover:from-[#00449B] hover:to-[#0071D3]'>
+				<button
+					onClick={handleAddNewClick}
+					className='flex w-full md:w-48 justify-center items-center space-x-2 bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white px-4 py-2 rounded shadow hover:from-[#00449B] hover:to-[#0071D3]'
+				>
 					<span>Add User</span>
 					<AiOutlineUserAdd />
 				</button>
@@ -110,7 +113,10 @@ const UsersContent = () => {
 								<td className='py-3 px-2 md:px-4'>{user.mobile}</td>
 								<td className='py-3 px-2 md:px-4'>
 									<div className='flex space-x-2'>
-										<button className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'>
+										<button
+											className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'
+											onClick={() => navigate('/users/editUser')}
+										>
 											<FiEdit />
 										</button>
 										<button className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'>

@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-const AddNewUser = () => {
+const EditUserFirstContent = () => {
 	const navigate = useNavigate();
 	const {
 		register,
@@ -34,7 +34,7 @@ const AddNewUser = () => {
 			{/* Form Container */}
 			<div className='bg-[#F7F7F7] rounded-lg shadow-lg p-4 md:p-6'>
 				<h2 className='text-lg md:text-xl font-semibold text-[#0071D3] mb-6'>
-					Add User
+					Edit User
 				</h2>
 				<form
 					onSubmit={handleSubmit(onSubmit)}
@@ -178,7 +178,7 @@ const AddNewUser = () => {
 						<button
 							type='submit'
 							className='w-full md:w-48 px-6 py-2 bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white rounded-lg hover:from-[#003876] hover:to-[#005fa1]'
-							onClick={() => navigate('/users/addUser2')}
+							onClick={() => navigate('/users/editUser2')}
 						>
 							Save & Continue
 						</button>
@@ -189,4 +189,4 @@ const AddNewUser = () => {
 	);
 };
 
-export default AddNewUser;
+export default EditUserFirstContent;

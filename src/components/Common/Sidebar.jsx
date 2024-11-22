@@ -111,7 +111,11 @@ const Sidebar = () => {
 							<Link
 								to='/users'
 								className={`flex items-center space-x-2 p-3 rounded ${
-									isActive('/users')
+									isActive('/users') ||
+									isActive('/users/addUser') ||
+									isActive('/users/addUser2') ||
+									isActive('/users/editUser2') ||
+									isActive('/users/editUser')
 										? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
 										: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
 								}`}

@@ -2,20 +2,20 @@
 
 import Header from '../components/Common/Header';
 import Sidebar from '../components/Common/Sidebar';
-import AddNewUser from '../components/Users/AddNewUser';
+import AddUserSecondStep from '../components/Users/AddUserSecondStep';
 
-function AddUser() {
+function AddUserSecond() {
 	return (
 		<div className='flex flex-col md:flex-row h-screen'>
 			<Sidebar />
 			<div className='flex-1 flex flex-col overflow-hidden'>
 				<Header />
 				<div className='flex-1 overflow-y-auto p-4'>
-					<AddNewUser />
+					<AddUserSecondStep />
 				</div>
 			</div>
 		</div>
 	);
 }
 
-export default AddUser;
+export default AddUserSecond;

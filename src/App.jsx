@@ -14,7 +14,7 @@ import './App.css';
 import LoginForm from './components/Authentication/LoginForm';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
-import AddNewUser from "./pages/"
+import AddUser from './pages/AddUser';
 import Request from './pages/Request';
 import ForgotPassword from './components/Authentication/ForgetPassword';
 import Dashboard1 from './pages/Dashboard1';
@@ -22,6 +22,9 @@ import Dashboard2 from './pages/Dashboard2';
 import Profiles from './pages/Profiles';
 import RequestUser from './pages/RequestUser';
 import './App.css';
+import AddUserSecond from './pages/AddUserSecond';
+import EditUserFirst from './pages/EditUserFirst';
+import EditUserSecond from './pages/EditUserSecond';
 
 const App = () => {
 	// const dispatch = useDispatch();
@@ -69,8 +72,20 @@ const App = () => {
 					element={<Users />}
 				/>
 				<Route
-					path='/addUser'
-					element={<AddNewUser />}
+					path='/users/addUser'
+					element={<AddUser />}
+				/>
+				<Route
+					path='/users/addUser2'
+					element={<AddUserSecond />}
+				/>
+				<Route
+					path='/users/editUser'
+					element={<EditUserFirst />}
+				/>
+				<Route
+					path='/users/editUser2'
+					element={<EditUserSecond />}
 				/>
 				<Route
 					path='/profiles'
