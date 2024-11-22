@@ -6,7 +6,10 @@ import { FaRegCircle } from 'react-icons/fa';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { useState } from 'react';
 const UsersContent = () => {
-	const [addUserModal, setAddUserModal] = useState(false);
+    const navigate = useNavigate();
+	const handleAddNewClick = () => {
+      navigate("/addUser")
+	}
 
 	const users = [
 		{
@@ -145,10 +148,6 @@ const UsersContent = () => {
 					</div>
 				</div>
 			</div>
-
-			{/* {
-				addUserModal && 
-			} */}
 		</div>
 	);
 };

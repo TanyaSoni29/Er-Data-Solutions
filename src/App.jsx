@@ -14,6 +14,7 @@ import './App.css';
 import LoginForm from './components/Authentication/LoginForm';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
+import AddNewUser from "./pages/"
 import Request from './pages/Request';
 import ForgotPassword from './components/Authentication/ForgetPassword';
 import Dashboard1 from './pages/Dashboard1';
@@ -66,6 +67,10 @@ const App = () => {
 				<Route
 					path='/users'
 					element={<Users />}
+				/>
+				<Route
+					path='/addUser'
+					element={<AddNewUser />}
 				/>
 				<Route
 					path='/profiles'
