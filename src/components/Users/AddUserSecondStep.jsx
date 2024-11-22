@@ -1,20 +1,31 @@
 /** @format */
 
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { createUser } from '../../service/operations/usersApi';
+import { refreshUser } from '../../slices/userSlice';
 
-const AddUserSecondStep = () => {
+const AddUserSecondStep = ({ addUserDate1 }) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { token } = useSelector((state) => state.auth);
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
 
-	const onSubmit = (data) => {
-		console.log(data);
-		navigate('/users');
-		alert('Account Created Successfully!');
+	const onSubmit = async (data) => {
+		try {
+			const combineData = { ...addUserDate1, ...data };
+			const response = await createUser(token, combineData);
+			console.log(response);
+			dispatch(refreshUser());
+			navigate('/users');
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -68,7 +79,7 @@ const AddUserSecondStep = () => {
 									<input
 										type='text'
 										placeholder='Enter Dashboard 1 URL'
-										{...register('dashboard1', {
+										{...register('dashboardUrl1', {
 											required: 'Dashboard 1 URL is required',
 											pattern: {
 												value: /^(http|https):\/\/[^ "]+$/,
@@ -76,17 +87,19 @@ const AddUserSecondStep = () => {
 											},
 										})}
 										className={`w-full flex-1 px-4 py-2 border ${
-											errors.dashboard1 ? 'border-red-500' : 'border-[#01CAEC]'
+											errors.dashboardUrl1
+												? 'border-red-500'
+												: 'border-[#01CAEC]'
 										} rounded-lg focus:outline-none focus:ring-2 ${
-											errors.dashboard1
+											errors.dashboardUrl1
 												? 'focus:ring-red-500'
 												: 'focus:ring-blue-500'
 										}`}
 									/>
 								</div>
-								{errors.dashboard1 && (
+								{errors.dashboardUrl1 && (
 									<p className='text-red-500 text-sm mt-1'>
-										{errors.dashboard1.message}
+										{errors.dashboardUrl1.message}
 									</p>
 								)}
 							</div>
@@ -100,24 +113,26 @@ const AddUserSecondStep = () => {
 									<input
 										type='text'
 										placeholder='Enter Dashboard 2 URL'
-										{...register('dashboard2', {
+										{...register('dashboardUrl2', {
 											pattern: {
 												value: /^(http|https):\/\/[^ "]+$/,
 												message: 'Enter a valid URL',
 											},
 										})}
 										className={`w-full flex-1 px-4 py-2 border ${
-											errors.dashboard2 ? 'border-red-500' : 'border-[#01CAEC]'
+											errors.dashboardUrlUrl2
+												? 'border-red-500'
+												: 'border-[#01CAEC]'
 										} rounded-lg focus:outline-none focus:ring-2 ${
-											errors.dashboard2
+											errors.dashboardUrlUrl2
 												? 'focus:ring-red-500'
 												: 'focus:ring-blue-500'
 										}`}
 									/>
 								</div>
-								{errors.dashboard2 && (
+								{errors.dashboardUrlUrl2 && (
 									<p className='text-red-500 text-sm mt-1'>
-										{errors.dashboard2.message}
+										{errors.dashboardUrlUrl2.message}
 									</p>
 								)}
 							</div>
@@ -131,24 +146,26 @@ const AddUserSecondStep = () => {
 									<input
 										type='text'
 										placeholder='Enter Dashboard 3 URL'
-										{...register('dashboard3', {
+										{...register('dashboardUrl3', {
 											pattern: {
 												value: /^(http|https):\/\/[^ "]+$/,
 												message: 'Enter a valid URL',
 											},
 										})}
 										className={`w-full flex-1 px-4 py-2 border ${
-											errors.dashboard3 ? 'border-red-500' : 'border-[#01CAEC]'
+											errors.dashboardUrl3
+												? 'border-red-500'
+												: 'border-[#01CAEC]'
 										} rounded-lg focus:outline-none focus:ring-2 ${
-											errors.dashboard3
+											errors.dashboardUrl3
 												? 'focus:ring-red-500'
 												: 'focus:ring-blue-500'
 										}`}
 									/>
 								</div>
-								{errors.dashboard3 && (
+								{errors.dashboardUrl3 && (
 									<p className='text-red-500 text-sm mt-1'>
-										{errors.dashboard3.message}
+										{errors.dashboardUrl3.message}
 									</p>
 								)}
 							</div>

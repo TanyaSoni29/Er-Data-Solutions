@@ -73,7 +73,7 @@ export function login(email, password, navigate) {
 			navigate('/dashboard');
 		} catch (error) {
 			console.log('LOGIN API ERROR........', error);
-			const errorMessage = error.response.data.message;
+			const errorMessage = error.response.data.error;
 			toast.error(errorMessage);
 		}
 		dispatch(setLoading(false));

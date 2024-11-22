@@ -10,8 +10,8 @@ const HeaderUser = () => {
 	const pathname = location.pathname;
 
 	const headingMap = {
+		'/dashboard': 'Dashboard-1',
 		'/dashboard-1': 'Dashboard-1',
-		'/dashboard-2': 'Dashboard-2',
 		'/requestsList': 'Request',
 		'/profile': 'Profile',
 	};

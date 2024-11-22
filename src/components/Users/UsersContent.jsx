@@ -5,70 +5,41 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaRegCircle } from 'react-icons/fa';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
-const UsersContent = () => {
-	const navigate = useNavigate();
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { refreshUser, removeUser } from '../../slices/userSlice';
+import { deleteUserById } from '../../service/operations/usersApi';
+import { setUser } from '../../slices/authSlice';
+const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
+	const dispatch = useDispatch();
+	const { users } = useSelector((state) => state.user);
+	const { token } = useSelector((state) => state.auth);
+	useEffect(() => {
+		dispatch(refreshUser());
+	}, [dispatch]);
+
 	const handleAddNewClick = () => {
-		navigate('/users/addUser');
+		setAddUserButton(true);
 	};
 
-	const users = [
-		{
-			id: 1,
-			companyName: "Tam's Stationers",
-			contactPerson: 'Corina McCoy',
-			email: 'lorri73@gmail.com',
-			mobile: '(267) 739-6240',
-		},
-		{
-			id: 2,
-			companyName: 'Seamans Furniture',
-			contactPerson: 'Kenneth Allen',
-			email: 'iva838@outlook.com',
-			mobile: '(813) 752-5611',
-		},
-		{
-			id: 3,
-			companyName: "Johnson's General Stores",
-			contactPerson: 'Iva Ryan',
-			email: 'r.m.smith@gmail.com',
-			mobile: '(503) 338-2573',
-		},
-		{
-			id: 4,
-			companyName: 'Super Duper',
-			contactPerson: 'Autumn Phillips',
-			email: 'patricia651@outlook.com',
-			mobile: '(830) 556-6651',
-		},
-		{
-			id: 5,
-			companyName: "Luskin's",
-			contactPerson: 'Jerry Helfer',
-			email: 'c_j_mccoy@gmail.com',
-			mobile: '(920) 948-1722',
-		},
-		{
-			id: 6,
-			companyName: 'Finast',
-			contactPerson: 'Paula Mora',
-			email: 'alex941@outlook.com',
-			mobile: '(303) 420-4261',
-		},
-		{
-			id: 7,
-			companyName: 'Cut Rite Lawn Care',
-			contactPerson: 'Daniel Hamilton',
-			email: 's.t.sharkey@outlook.com',
-			mobile: '(214) 390-8650',
-		},
-		{
-			id: 8,
-			companyName: 'Pacific Stereo',
-			contactPerson: 'Frances Swann',
-			email: 'james_hall@gmail.com',
-			mobile: '(618) 474-9169',
-		},
-	];
+	const handleEditButton = (user) => {
+		setUser(user);
+		setAddUserButton(false);
+		setEditUserButton(true);
+	};
+
+	const handleDelete = async (id) => {
+		try {
+			const response = await deleteUserById(token, id);
+			console.log(response);
+			if (response) {
+				dispatch(removeUser(id));
+				dispatch(refreshUser());
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<div className='p-4 md:p-6 bg-white min-h-screen'>
@@ -103,23 +74,34 @@ const UsersContent = () => {
 					<tbody>
 						{users.map((user, index) => (
 							<tr
-								key={user.id}
+								key={user?.id}
 								className='border-b hover:bg-gray-50 text-xs md:text-sm'
 							>
 								<td className='py-3 px-2 md:px-4'>{index + 1}</td>
-								<td className='py-3 px-2 md:px-4'>{user.companyName}</td>
-								<td className='py-3 px-2 md:px-4'>{user.contactPerson}</td>
-								<td className='py-3 px-2 md:px-4'>{user.email}</td>
-								<td className='py-3 px-2 md:px-4'>{user.mobile}</td>
+								<td className='py-3 px-2 md:px-4'>
+									{user?.companyName ? user?.companyName : '-'}
+								</td>
+								<td className='py-3 px-2 md:px-4'>
+									{user?.contactPerson ? user?.contactPerson : '-'}
+								</td>
+								<td className='py-3 px-2 md:px-4'>
+									{user?.email ? user?.email : '-'}
+								</td>
+								<td className='py-3 px-2 md:px-4'>
+									{user?.mobile ? user?.mobile : '-'}
+								</td>
 								<td className='py-3 px-2 md:px-4'>
 									<div className='flex space-x-2'>
 										<button
 											className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'
-											onClick={() => navigate('/users/editUser')}
+											onClick={() => handleEditButton(user)}
 										>
 											<FiEdit />
 										</button>
-										<button className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'>
+										<button
+											className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'
+											onClick={() => handleDelete(user?.id)}
+										>
 											<RiDeleteBinLine />
 										</button>
 									</div>

@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-const AddNewUser = () => {
+const AddNewUser = ({ setAddUserData1 }) => {
 	const navigate = useNavigate();
 	const {
 		register,
@@ -12,8 +12,8 @@ const AddNewUser = () => {
 	} = useForm();
 
 	const onSubmit = (data) => {
-		console.log(data);
-		alert('User Added Successfully!');
+		setAddUserData1(data);
+		navigate('/users/addUser');
 	};
 
 	return (
@@ -123,18 +123,18 @@ const AddNewUser = () => {
 							<input
 								type='text'
 								placeholder='Enter Mobile No.'
-								{...register('mobile', {
+								{...register('mobileNo', {
 									required: 'Mobile No. is required',
 								})}
 								className={`w-full px-4 py-2 border ${
-									errors.mobile ? 'border-red-500' : 'border-[#01CAEC]'
+									errors.mobileNo ? 'border-red-500' : 'border-[#01CAEC]'
 								} rounded-lg focus:outline-none focus:ring-2 ${
-									errors.mobile ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+									errors.mobileNo ? 'focus:ring-red-500' : 'focus:ring-blue-500'
 								}`}
 							/>
-							{errors.mobile && (
+							{errors.mobileNo && (
 								<p className='text-red-500 text-sm mt-1'>
-									{errors.mobile.message}
+									{errors.mobileNo.message}
 								</p>
 							)}
 						</div>
@@ -178,7 +178,6 @@ const AddNewUser = () => {
 						<button
 							type='submit'
 							className='w-full md:w-48 px-6 py-2 bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white rounded-lg hover:from-[#003876] hover:to-[#005fa1]'
-							onClick={() => navigate('/users/addUser2')}
 						>
 							Save & Continue
 						</button>

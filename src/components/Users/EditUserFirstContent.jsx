@@ -1,10 +1,17 @@
 /** @format */
 
 import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-const EditUserFirstContent = () => {
+const EditUserFirstContent = ({
+	setEditUserData1,
+	setEditFirstStepComplete,
+	user,
+}) => {
 	const navigate = useNavigate();
+
+	console.log('----', user);
 	const {
 		register,
 		handleSubmit,
@@ -12,8 +19,8 @@ const EditUserFirstContent = () => {
 	} = useForm();
 
 	const onSubmit = (data) => {
-		console.log(data);
-		alert('User Added Successfully!');
+		setEditUserData1(data);
+		setEditFirstStepComplete(true);
 	};
 
 	return (
@@ -46,9 +53,8 @@ const EditUserFirstContent = () => {
 						<input
 							type='text'
 							placeholder='Enter Company Name'
-							{...register('companyName', {
-								required: 'Company Name is required',
-							})}
+							defaultValue={user?.companyName}
+							{...register('companyName')}
 							className={`w-full px-4 py-2 border ${
 								errors.companyName ? 'border-red-500' : 'border-[#01CAEC]'
 							} rounded-lg focus:outline-none focus:ring-2 ${
@@ -71,9 +77,8 @@ const EditUserFirstContent = () => {
 							<input
 								type='text'
 								placeholder='Enter Name'
-								{...register('contactPerson', {
-									required: 'Contact Person is required',
-								})}
+								defaultValue={user?.contactPerson}
+								{...register('contactPerson')}
 								className={`w-full px-4 py-2 border ${
 									errors.contactPerson ? 'border-red-500' : 'border-[#01CAEC]'
 								} rounded-lg focus:outline-none focus:ring-2 ${
@@ -95,13 +100,8 @@ const EditUserFirstContent = () => {
 							<input
 								type='email'
 								placeholder='Enter Email ID'
-								{...register('email', {
-									required: 'Email is required',
-									pattern: {
-										value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-										message: 'Invalid email address',
-									},
-								})}
+								defaultValue={user?.email}
+								{...register('email')}
 								className={`w-full px-4 py-2 border ${
 									errors.email ? 'border-red-500' : 'border-[#01CAEC]'
 								} rounded-lg focus:outline-none focus:ring-2 ${
@@ -123,18 +123,17 @@ const EditUserFirstContent = () => {
 							<input
 								type='text'
 								placeholder='Enter Mobile No.'
-								{...register('mobile', {
-									required: 'Mobile No. is required',
-								})}
+								defaultValue={user?.mobileNo}
+								{...register('mobileNo')}
 								className={`w-full px-4 py-2 border ${
-									errors.mobile ? 'border-red-500' : 'border-[#01CAEC]'
+									errors.mobileNo ? 'border-red-500' : 'border-[#01CAEC]'
 								} rounded-lg focus:outline-none focus:ring-2 ${
-									errors.mobile ? 'focus:ring-red-500' : 'focus:ring-blue-500'
+									errors.mobileNo ? 'focus:ring-red-500' : 'focus:ring-blue-500'
 								}`}
 							/>
-							{errors.mobile && (
+							{errors.mobileNo && (
 								<p className='text-red-500 text-sm mt-1'>
-									{errors.mobile.message}
+									{errors.mobileNo.message}
 								</p>
 							)}
 						</div>
@@ -145,13 +144,7 @@ const EditUserFirstContent = () => {
 							<input
 								type='password'
 								placeholder='Enter Password'
-								{...register('password', {
-									required: 'Password is required',
-									minLength: {
-										value: 6,
-										message: 'Password must be at least 6 characters',
-									},
-								})}
+								{...register('password')}
 								className={`w-full px-4 py-2 border ${
 									errors.password ? 'border-red-500' : 'border-[#01CAEC]'
 								} rounded-lg focus:outline-none focus:ring-2 ${
@@ -178,7 +171,6 @@ const EditUserFirstContent = () => {
 						<button
 							type='submit'
 							className='w-full md:w-48 px-6 py-2 bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white rounded-lg hover:from-[#003876] hover:to-[#005fa1]'
-							onClick={() => navigate('/users/editUser2')}
 						>
 							Save & Continue
 						</button>

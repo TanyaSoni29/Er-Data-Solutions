@@ -74,9 +74,9 @@ const Sidebar = () => {
 						{user?.role === '2' && (
 							<li>
 								<Link
-									to='/dashboard-1'
+									to='/dashboard'
 									className={`flex items-center space-x-2 p-3 rounded ${
-										isActive('/dashboard-1')
+										isActive('/dashboard')
 											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
 											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
 									}`}
@@ -89,9 +89,9 @@ const Sidebar = () => {
 						{user?.role === '2' && (
 							<li>
 								<Link
-									to='/dashboard-2'
+									to='/dashboard-1'
 									className={`flex items-center space-x-2 p-3 rounded ${
-										isActive('/dashboard-2')
+										isActive('/dashboard-1')
 											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
 											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
 									}`}
@@ -104,7 +104,7 @@ const Sidebar = () => {
 
 						{/* User Profiles */}
 
-						{user.role === '2' && (
+						{user?.role === '2' && (
 							<li>
 								<Link
 									to='/profiles'
@@ -127,11 +127,7 @@ const Sidebar = () => {
 								<Link
 									to='/users'
 									className={`flex items-center space-x-2 p-3 rounded ${
-										isActive('/users') ||
-										isActive('/users/addUser') ||
-										isActive('/users/addUser2') ||
-										isActive('/users/editUser2') ||
-										isActive('/users/editUser')
+										isActive('/users') || isActive('/users/addUser')
 											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
 											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
 									}`}
@@ -143,7 +139,7 @@ const Sidebar = () => {
 						)}
 
 						{/* User Request */}
-						{user.role === '2' && (
+						{user?.role === '2' && (
 							<li>
 								<Link
 									to='/requests'

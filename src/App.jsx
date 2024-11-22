@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	// BrowserRouter as Router,
 	Route,
@@ -15,7 +15,6 @@ import './App.css';
 import LoginForm from './components/Authentication/LoginForm';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
-import AddUser from './pages/AddUser';
 import Request from './pages/Request';
 import ForgotPassword from './components/Authentication/ForgetPassword';
 import Dashboard1 from './pages/Dashboard1';
@@ -24,8 +23,6 @@ import Profiles from './pages/Profiles';
 import RequestUser from './pages/RequestUser';
 import './App.css';
 import AddUserSecond from './pages/AddUserSecond';
-import EditUserFirst from './pages/EditUserFirst';
-import EditUserSecond from './pages/EditUserSecond';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMe } from './service/operations/authApi';
 import ProtectedRoute from './utils/ProtectedRoute';
@@ -33,7 +30,9 @@ import ProtectedRoute from './utils/ProtectedRoute';
 const App = () => {
 	const dispatch = useDispatch();
 	const { token } = useSelector((state) => state.auth);
-
+	const { user } = useSelector((state) => state.auth);
+	const [addUserDate1, setAddUserData1] = useState({});
+	const [editUserDate1, setEditUserData1] = useState({});
 	const navigate = useNavigate();
 
 	// Fetch user info on app load if token is available
@@ -55,37 +54,46 @@ const App = () => {
 					element={<ForgotPassword />}
 				/>
 
-				<Route
-					path='/dashboard'
-					element={<ProtectedRoute element={<Dashboard />} />}
-				/>
-				<Route
-					path='/dashboard-1'
-					element={<ProtectedRoute element={<Dashboard1 />} />}
-				/>
-				<Route
-					path='/dashboard-2'
-					element={<ProtectedRoute element={<Dashboard2 />} />}
-				/>
+				{user?.role === '1' && (
+					<Route
+						path='/dashboard'
+						element={<ProtectedRoute element={<Dashboard />} />}
+					/>
+				)}
+				{user?.role === '2' && (
+					<Route
+						path='/dashboard'
+						element={<ProtectedRoute element={<Dashboard1 />} />}
+					/>
+				)}
+				{user?.role === '2' && (
+					<Route
+						path='/dashboard-1'
+						element={<ProtectedRoute element={<Dashboard2 />} />}
+					/>
+				)}
 				<Route
 					path='/users'
-					element={<ProtectedRoute element={<Users />} />}
+					element={
+						<ProtectedRoute
+							element={
+								<Users
+									setAddUserData1={setAddUserData1}
+									setEditUserData1={setEditUserData1}
+									editUserDate1={editUserDate1}
+								/>
+							}
+						/>
+					}
 				/>
+
 				<Route
 					path='/users/addUser'
-					element={<ProtectedRoute element={<AddUser />} />}
-				/>
-				<Route
-					path='/users/addUser2'
-					element={<ProtectedRoute element={<AddUserSecond />} />}
-				/>
-				<Route
-					path='/users/editUser'
-					element={<ProtectedRoute element={<EditUserFirst />} />}
-				/>
-				<Route
-					path='/users/editUser2'
-					element={<ProtectedRoute element={<EditUserSecond />} />}
+					element={
+						<ProtectedRoute
+							element={<AddUserSecond addUserDate1={addUserDate1} />}
+						/>
+					}
 				/>
 				<Route
 					path='/profiles'
