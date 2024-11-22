@@ -35,7 +35,7 @@ const EditUserSecondContent = () => {
 			{/* Form Container */}
 			<div className='bg-[#F7F7F7] rounded-lg shadow-lg p-4 md:p-6'>
 				<h2 className='text-lg md:text-xl font-semibold text-[#0071D3] mb-6'>
-					Add Details
+					Edit Details
 				</h2>
 				<form
 					className='w-full flex flex-col justify-start items-start gap-6'
@@ -63,7 +63,7 @@ const EditUserSecondContent = () => {
 								<div className='flex w-full items-center space-x-4'>
 									<div className='bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center'>
 										Dashboard 1
-                    <span className='ml-2 w-2 h-2 rounded-full bg-green-500'></span>
+										<span className='ml-2 w-2 h-2 rounded-full bg-green-500'></span>
 									</div>
 									<input
 										type='text'
