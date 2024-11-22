@@ -20,7 +20,7 @@ const HeaderUser = () => {
 	const heading = headingMap[pathname] || 'Page Not Found';
 
 	return (
-		<div className='flex justify-between items-center bg-white drop-shadow-lg py-6 px-10'>
+		<div className='flex justify-between items-center bg-[#F8F9FD] drop-shadow-lg py-6 px-10'>
 			<div className='flex justify-start items-center gap-2'>
 				<img src={TopHeaderImg} />
 				<h1 className='text-xl font-semibold'>{heading}</h1>
