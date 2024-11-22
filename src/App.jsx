@@ -19,6 +19,7 @@ import ForgotPassword from './components/Authentication/ForgetPassword';
 import Dashboard1 from './pages/Dashboard1';
 import Dashboard2 from './pages/Dashboard2';
 import Profiles from './pages/Profiles';
+import RequestUser from './pages/RequestUser';
 
 const App = () => {
 	// const dispatch = useDispatch();
@@ -72,6 +73,10 @@ const App = () => {
 				<Route
 					path='/requests'
 					element={<Request />}
+				/>
+				<Route
+					path='/requestsList'
+					element={<RequestUser />}
 				/>
 			</Routes>
 		</div>
