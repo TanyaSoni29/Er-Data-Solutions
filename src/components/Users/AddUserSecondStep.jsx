@@ -100,7 +100,6 @@ const AddUserSecondStep = () => {
 										type='text'
 										placeholder='Enter Dashboard 2 URL'
 										{...register('dashboard2', {
-											required: 'Dashboard 2 URL is required',
 											pattern: {
 												value: /^(http|https):\/\/[^ "]+$/,
 												message: 'Enter a valid URL',
@@ -132,7 +131,6 @@ const AddUserSecondStep = () => {
 										type='text'
 										placeholder='Enter Dashboard 3 URL'
 										{...register('dashboard3', {
-											required: 'Dashboard 3 URL is required',
 											pattern: {
 												value: /^(http|https):\/\/[^ "]+$/,
 												message: 'Enter a valid URL',
