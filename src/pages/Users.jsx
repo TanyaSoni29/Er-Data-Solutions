@@ -39,6 +39,8 @@ function Users({ setAddUserData1, setEditUserData1, editUserDate1 }) {
 					{editFirstStepComplete && !addUserButton && editUserButton && (
 						<EditUserSecondContent
 							editUserDate1={editUserDate1}
+							setEditFirstStepComplete={setEditFirstStepComplete}
+							setEditUserButton={setEditUserButton}
 							user={user}
 						/>
 					)}

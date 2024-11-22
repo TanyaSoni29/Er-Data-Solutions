@@ -5,7 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { updateUser } from '../../service/operations/usersApi';
 import { useSelector } from 'react-redux';
 
-const EditUserSecondContent = ({ editUserDate1, user }) => {
+const EditUserSecondContent = ({
+	editUserDate1,
+	user,
+	setEditFirstStepComplete,
+	setEditUserButton,
+}) => {
 	const navigate = useNavigate();
 	const { token } = useSelector((state) => state.auth);
 	const {
@@ -17,8 +22,10 @@ const EditUserSecondContent = ({ editUserDate1, user }) => {
 	const onSubmit = async (data) => {
 		try {
 			const combineData = { ...editUserDate1, ...data };
-			const response = await updateUser(token, combineData);
+			const response = await updateUser(token, user?.id, combineData);
 			console.log(response);
+			setEditFirstStepComplete(false);
+			setEditUserButton(false);
 			navigate('/users');
 		} catch (error) {
 			console.log(error);
@@ -78,7 +85,6 @@ const EditUserSecondContent = ({ editUserDate1, user }) => {
 										placeholder='Enter Dashboard 1 URL'
 										defaultValue={user?.dashboardUrl1}
 										{...register('dashboardUrl1', {
-											required: 'Dashboard 1 URL is required',
 											pattern: {
 												value: /^(http|https):\/\/[^ "]+$/,
 												message: 'Enter a valid URL',

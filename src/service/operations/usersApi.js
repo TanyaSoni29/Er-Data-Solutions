@@ -73,7 +73,7 @@ export const getUserById = async (token) => {
 
 export const updateUser = async (token, userId, data) => {
 	try {
-		const response = await apiConnector('POST', UPDATE_USER(userId), data, {
+		const response = await apiConnector('PUT', UPDATE_USER(userId), data, {
 			'Authorization': `Bearer ${token}`,
 			'Content-Type': 'application/json',
 		});
