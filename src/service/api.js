@@ -1,6 +1,6 @@
 /** @format */
 
-const BASE_URL = import.meta.env.BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const endpoints = {
 	SIGNUP_API: `${BASE_URL}/register`,
@@ -23,5 +23,5 @@ export const usersEndpoints = {
 	GET_USER_BY_ID: (id) => `${BASE_URL}/users/${id}`,
 	UPDATE_USER: (id) => `${BASE_URL}/users/${id}`,
 	DELETE_USER: (id) => `${BASE_URL}/users/${id}`,
-	RESET_PASSWORD: (id) => `${BASE_URL}/users/resetPassword/${id}`,
+	RESET_PASSWORD: `${BASE_URL}/users/resetPassword`,
 };

@@ -111,11 +111,11 @@ export const deleteUserById = async (token, userId) => {
 	return result;
 };
 
-export const resetPassword = async (token, userId, data) => {
+export const resetPassword = async (token, data) => {
 	try {
 		const response = await apiConnector(
 			'POST',
-			RESET_PASSWORD(userId),
+			RESET_PASSWORD,
 			{
 				email: data.email,
 				password: data.password,
