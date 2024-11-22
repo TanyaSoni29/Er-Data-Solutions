@@ -1,10 +1,8 @@
 /** @format */
 
-import React from 'react';
 import { FiEdit } from 'react-icons/fi';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaRegCircle } from 'react-icons/fa';
-import { AiOutlineUserAdd } from 'react-icons/ai';
 const RequestUserContent = () => {
 	const users = [
 		{
@@ -66,10 +64,10 @@ const RequestUserContent = () => {
 	];
 
 	return (
-		<div className='p-6 bg-white min-h-screen'>
+		<div className='p-4 md:p-6 bg-white min-h-screen'>
 			{/* Header */}
-			<div className='flex justify-between items-center mb-6 px-4'>
-				<div className='text-2xl font-semibold text-gray-700 flex justify-start items-center space-x-2'>
+			<div className='flex flex-wrap justify-between items-center mb-6 px-4'>
+				<div className='text-xl md:text-2xl font-semibold text-gray-700 flex justify-start items-center space-x-2'>
 					<FaRegCircle fontSize={18} />
 					<span>Request List</span>
 				</div>
@@ -80,30 +78,30 @@ const RequestUserContent = () => {
 			</div>
 
 			{/* Table */}
-			<div className='bg-[#F7F7F7] rounded-lg shadow'>
+			<div className='bg-[#F7F7F7] rounded-lg shadow overflow-x-auto'>
 				<table className='w-full border-collapse'>
 					<thead>
-						<tr className='text-left text-gray-600 uppercase text-sm'>
-							<th className='py-3 px-4'>Sr. No</th>
-							<th className='py-3 px-4'>Company Name</th>
-							<th className='py-3 px-4'>Contact Person</th>
-							<th className='py-3 px-4'>Email ID</th>
-							<th className='py-3 px-4'>Mobile No.</th>
-							<th className='py-3 px-4'>Action</th>
+						<tr className='text-left text-gray-600 uppercase text-xs md:text-sm'>
+							<th className='py-3 px-2 md:px-4'>Sr. No</th>
+							<th className='py-3 px-2 md:px-4'>Company Name</th>
+							<th className='py-3 px-2 md:px-4'>Contact Person</th>
+							<th className='py-3 px-2 md:px-4'>Email ID</th>
+							<th className='py-3 px-2 md:px-4'>Mobile No.</th>
+							<th className='py-3 px-2 md:px-4'>Action</th>
 						</tr>
 					</thead>
 					<tbody>
 						{users.map((user, index) => (
 							<tr
 								key={user.id}
-								className='border-b hover:bg-gray-50'
+								className='border-b hover:bg-gray-50 text-xs md:text-sm'
 							>
-								<td className='py-3 px-4'>{index + 1}</td>
-								<td className='py-3 px-4'>{user.companyName}</td>
-								<td className='py-3 px-4'>{user.contactPerson}</td>
-								<td className='py-3 px-4'>{user.email}</td>
-								<td className='py-3 px-4'>{user.mobile}</td>
-								<td className='py-3 px-4'>
+								<td className='py-3 px-2 md:px-4'>{index + 1}</td>
+								<td className='py-3 px-2 md:px-4'>{user.companyName}</td>
+								<td className='py-3 px-2 md:px-4'>{user.contactPerson}</td>
+								<td className='py-3 px-2 md:px-4'>{user.email}</td>
+								<td className='py-3 px-2 md:px-4'>{user.mobile}</td>
+								<td className='py-3 px-2 md:px-4'>
 									<div className='flex space-x-2'>
 										<button className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'>
 											<FiEdit />
@@ -118,7 +116,7 @@ const RequestUserContent = () => {
 					</tbody>
 				</table>
 				{/* Pagination */}
-				<div className='flex justify-between items-center p-4 text-gray-600 text-sm'>
+				<div className='flex flex-wrap justify-between items-center p-4 text-gray-600 text-sm'>
 					<span>Showing data 1 to 8 of 100 entries</span>
 					<div className='flex space-x-2'>
 						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>

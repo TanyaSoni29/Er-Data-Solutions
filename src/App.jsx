@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useEffect, useState } from 'react';
+// import React, { useEffect, useState } from 'react';
 import {
 	// BrowserRouter as Router,
 	Route,
@@ -20,6 +20,7 @@ import Dashboard1 from './pages/Dashboard1';
 import Dashboard2 from './pages/Dashboard2';
 import Profiles from './pages/Profiles';
 import RequestUser from './pages/RequestUser';
+import './App.css';
 
 const App = () => {
 	// const dispatch = useDispatch();

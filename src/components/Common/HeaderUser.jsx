@@ -20,7 +20,7 @@ const HeaderUser = () => {
 	const heading = headingMap[pathname] || 'Page Not Found';
 
 	return (
-		<div className='flex justify-between items-center bg-[#F8F9FD] drop-shadow-lg py-6 px-10'>
+		<div className='w-full flex flex-wrap justify-between items-center bg-[#F8F9FD] drop-shadow-lg py-6 px-6 md:px-10'>
 			<div className='flex justify-start items-center gap-2'>
 				<img src={TopHeaderImg} />
 				<h1 className='text-xl font-semibold'>{heading}</h1>
@@ -34,9 +34,11 @@ const HeaderUser = () => {
 				<img
 					src={JohnImg} // Replace with your profile image path
 					alt='Profile'
-					className='w-10 h-10 rounded-full'
+					className='w-8 h-8 md:w-10 md:h-10 rounded-full'
 				/>
-				<span className='text-sm font-medium text-gray-600'>Jonathan Doe</span>
+				<span className='text-sm md:text-base font-medium text-gray-600'>
+					Jonathan Doe
+				</span>
 				<IoIosArrowDown
 					fontSize={18}
 					color='#0071D3'

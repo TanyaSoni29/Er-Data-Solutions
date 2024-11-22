@@ -6,11 +6,13 @@ import Sidebar from '../components/Common/Sidebar';
 
 function Users() {
 	return (
-		<div className='flex h-screen'>
+		<div className='flex flex-col md:flex-row h-screen'>
 			<Sidebar />
-			<div className='flex-1 flex flex-col'>
-				<Header />
-				<UsersContent />
+			<div className='flex-1 flex flex-col overflow-hidden'>
+				<Header />\
+				<div className='flex-1 overflow-y-auto p-4'>
+					<UsersContent />
+				</div>
 			</div>
 		</div>
 	);

@@ -57,9 +57,9 @@ const ProfilesContent = () => {
 								)}
 							</div>
 
-							<div className='w-full flex justify-start items-center gap-4 mb-4'>
+							<div className='w-full flex flex-col md:flex-row justify-start items-center gap-4 mb-4'>
 								{/* Mobile */}
-								<div className='mb-4 w-[50%]'>
+								<div className='mb-4 w-full md:w-[50%]'>
 									<label className='block text-sm font-medium text-gray-600 mb-1'>
 										Mobile No.
 									</label>
@@ -78,7 +78,7 @@ const ProfilesContent = () => {
 									)}
 								</div>
 								{/* Email */}
-								<div className='mb-4 w-[50%]'>
+								<div className='mb-4 w-full md:w-[50%]'>
 									<label className='block text-sm font-medium text-gray-600 mb-1'>
 										Email ID
 									</label>

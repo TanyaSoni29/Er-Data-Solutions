@@ -1,6 +1,5 @@
 /** @format */
 
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { FaRegCircle } from 'react-icons/fa';
 
@@ -17,21 +16,21 @@ const RequestForm = () => {
 	};
 
 	return (
-		<div className='p-6 bg-white min-h-screen'>
+		<div className='p-4 md:p-6 bg-white min-h-screen'>
 			{/* Page Header */}
-			<div className='text-2xl font-semibold text-gray-700 flex justify-start items-center space-x-2 mb-10'>
+			<div className='text-xl md:text-2xl font-semibold text-gray-700 flex justify-start items-center space-x-2 mb-10'>
 				<FaRegCircle fontSize={18} />
 				<span>Request</span>
 			</div>
 
 			{/* Form Container */}
-			<div className='bg-white p-6 rounded-lg'>
+			<div className='bg-white p-4 md:p-6 rounded-lg'>
 				<h2 className='text-xl font-semibold text-gray-700 mb-6'>
 					Request Form
 				</h2>
 				<form
 					onSubmit={handleSubmit(onSubmit)}
-					className='grid grid-cols-3 gap-6'
+					className='grid grid-cols-1 md:grid-cols-3 gap-6'
 				>
 					{/* Description */}
 					<div>
@@ -157,7 +156,7 @@ const RequestForm = () => {
 					</div>
 
 					{/* Buttons */}
-					<div className='col-span-2 flex space-x-4 mt-6'>
+					<div className='col-span-1 md:col-span-3 flex flex-wrap space-x-0 sm:space-x-4 gap-4 sm:gap-0 mt-6'>
 						<button
 							type='submit'
 							className='w-52 bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white px-6 py-2 rounded-lg hover:from-[#00449B] hover:to-[#0071D3]'
@@ -166,7 +165,7 @@ const RequestForm = () => {
 						</button>
 						<button
 							type='button'
-							className='w-32 border border-blue-600 text-blue-600 px-6 py-2 rounded-lg hover:bg-blue-100'
+							className='w-52 sm:w-32 border border-blue-600 text-blue-600 px-6 py-2 rounded-lg hover:bg-blue-100'
 						>
 							Save
 						</button>
