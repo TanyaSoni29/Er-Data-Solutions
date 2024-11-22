@@ -5,52 +5,58 @@ import ChartImg from '../../assets/Chart.png';
 
 const DashboardContent = () => {
 	return (
-		<div className='p-6 bg-white flex-1'>
+		<div className="p-6 bg-gray-100 flex-1 min-h-screen">
 			{/* Metrics Section */}
-			<div className='flex flex-wrap justify-start items-start gap-4 mb-6 p-6'>
-				<div className='bg-[#EDF0F3] p-4 rounded shadow w-full sm:w-60 h-36 flex justify-center items-center'>
-					<div className='flex items-center justify-center space-x-4'>
-						<span className='rounded w-8 h-8 p-2 bg-blue-600'>
-							<FaUserGroup color='white' />
+			<div className="flex flex-wrap justify-start items-start gap-6 mb-6">
+				{/* Total Users Card */}
+				<div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow w-full sm:w-60 h-36 flex justify-center items-center">
+					<div className="flex items-center space-x-4">
+						<span className="rounded-full w-10 h-10 p-2 bg-blue-600 flex justify-center items-center">
+							<FaUserGroup color="white" />
 						</span>
+						<div className="flex flex-col">
+							<h2 className="text-gray-700 font-medium">Total Users</h2>
+							<p className="text-3xl font-bold text-gray-900">10</p>
+						</div>
+					</div>
+				</div>
+				
+				{/* Client Card */}
+				<div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow w-full sm:w-60 h-36 flex justify-center items-center">
+					<div className="flex items-center space-x-4">
+						<span className="rounded-full w-10 h-10 p-2 bg-green-500 flex justify-center items-center">
+							<FaUserGroup color="white" />
+						</span>
+						<div className="flex flex-col">
+							<h2 className="text-gray-700 font-medium">Client</h2>
+							<p className="text-3xl font-bold text-gray-900">05</p>
+						</div>
+					</div>
+				</div>
 
-						<div className='flex justify-center items-center space-x-4'>
-							<h2 className='text-gray-600 font-medium'>Total Users</h2>
-							<p className='text-2xl font-bold'>10</p>
-						</div>
-					</div>
-				</div>
-				<div className='bg-[#EDF0F3] p-4 rounded shadow w-full sm:w-60 h-36 flex justify-center items-center'>
-					<div className='flex items-center space-x-4'>
-						<span className='rounded w-8 h-8 p-2 bg-blue-600'>
-							<FaUserGroup color='white' />
+				{/* Dashboard Card */}
+				<div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow w-full sm:w-60 h-36 flex justify-center items-center">
+					<div className="flex items-center space-x-4">
+						<span className="rounded-full w-10 h-10 p-2 bg-yellow-500 flex justify-center items-center">
+							<FaUserGroup color="white" />
 						</span>
-						<div className='flex justify-center items-center space-x-4'>
-							<h2 className='text-gray-600 font-medium'>Client</h2>
-							<p className='text-2xl font-bold'>05</p>
+						<div className="flex flex-col">
+							<h2 className="text-gray-700 font-medium">Dashboard</h2>
+							<p className="text-3xl font-bold text-gray-900">04</p>
 						</div>
 					</div>
 				</div>
-				<div className='bg-[#EDF0F3] p-4 rounded shadow w-full sm:w-60 h-36 flex justify-center items-center'>
-					<div className='flex items-center space-x-4'>
-						<span className='rounded w-8 h-8 p-2 bg-blue-600'>
-							<FaUserGroup color='white' />
-						</span>
-						<div className='flex justify-center items-center space-x-4'>
-							<h2 className='text-gray-600 font-medium'>Dashboard</h2>
-							<p className='text-2xl font-bold'>04</p>
-						</div>
-					</div>
-				</div>
-				<div className='bg-[#EDF0F3] p-4 rounded shadow w-full h-auto sm:w-[39rem] sm:h-[20.2rem] flex flex-col justify-center items-center'>
-					<h2 className='text-gray-600 flex w-full justify-start items-start font-medium p-2 border-l-4 border-blue-700'>
+
+				{/* Recent Status Section */}
+				<div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow w-full sm:w-[39rem] sm:h-[20.2rem] flex flex-col justify-start items-center">
+					<h2 className="text-gray-700 font-medium text-lg w-full text-left mb-4 border-l-4 pl-2 border-blue-700">
 						Recent Status
 					</h2>
-					<div className='mt-4 w-full'>
-						{/* Replace with your chart component */}
+					<div className="w-full flex justify-center items-center">
 						<img
 							src={ChartImg}
-							alt='Chart'
+							alt="Chart"
+							className="w-full h-auto rounded-md shadow-sm"
 						/>
 					</div>
 				</div>
