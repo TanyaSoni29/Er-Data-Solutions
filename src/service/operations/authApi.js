@@ -110,7 +110,7 @@ export function getMe(navigate) {
 			}
 
 			// Save user info and mark the user as authenticated
-			dispatch(setUser(response.data));
+			dispatch(setUser(response.data.user));
 			dispatch(setIsAuth(true));
 
 			// Redirect user to locationStep or other relevant page

@@ -146,6 +146,8 @@ import toast from 'react-hot-toast';
 import WorkerImg from '../../assets/LoginImg.png';
 import LogoImg from '../../assets/LogoImg.png';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { useDispatch } from 'react-redux';
+import { login } from '../../service/operations/authApi';
 
 const LoginForm = () => {
 	const [formData, setFormData] = useState({
@@ -154,6 +156,7 @@ const LoginForm = () => {
 	});
 	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -165,8 +168,7 @@ const LoginForm = () => {
 			toast.error('Please provide email and password.');
 			return;
 		}
-		toast.success('Logged in successfully!');
-		navigate('/dashboard'); // Replace with the dashboard route
+		dispatch(login(formData.email, formData.password, navigate));
 	};
 
 	return (
