@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  // BrowserRouter as Router,
-  Route,
-  Routes,
-  useNavigate,
-  // useNavigate,
-} from "react-router-dom";
-// import { useDispatch, useSelector } from 'react-redux';
-// import { getMe } from './service/operations/authApi';
-// import ProtectedRoute from './utils/ProtectedRoute';
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getMe } from "./service/operations/authApi";
+import ProtectedRoute from "./utils/ProtectedRoute";
 import "./App.css";
 import LoginForm from "./components/Authentication/LoginForm";
 import Dashboard from "./pages/Dashboard";
@@ -19,18 +13,11 @@ import Dashboard1 from "./pages/Dashboard1";
 import Dashboard2 from "./pages/Dashboard2";
 import Profiles from "./pages/Profiles";
 import RequestUser from "./pages/RequestUser";
-import "./App.css";
 import AddUserSecond from "./pages/AddUserSecond";
-import { useDispatch, useSelector } from "react-redux";
-import { getMe } from "./service/operations/authApi";
-import ProtectedRoute from "./utils/ProtectedRoute";
 
 const App = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
-  const { user } = useSelector((state) => state.auth);
-  const [addUserDate1, setAddUserData1] = useState({});
-  const [editUserDate1, setEditUserData1] = useState({});
   const navigate = useNavigate();
 
   // Fetch user info on app load if token is available
@@ -43,64 +30,82 @@ const App = () => {
   return (
     <div className="flex flex-col h-screen w-screen bg-white">
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<LoginForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {user?.role === "1" && (
-          <Route
-            path="/dashboard"
-            element={<ProtectedRoute element={<Dashboard />} />}
-          />
-        )}
-        {user?.role === "2" && (
-          <Route
-            path="/dashboard"
-            element={<ProtectedRoute element={<Dashboard1 />} />}
-          />
-        )}
-        {user?.role === "2" && (
-          <Route
-            path="/dashboard-1"
-            element={<ProtectedRoute element={<Dashboard2 />} />}
-          />
-        )}
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute
+              element={<Dashboard />}
+              allowedRoles={["1"]} // Only role 1 can access
+            />
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute
+              element={<Dashboard1 />}
+              allowedRoles={["2"]} // Only role 2 can access
+            />
+          }
+        />
+        <Route
+          path="/dashboard-1"
+          element={
+            <ProtectedRoute
+              element={<Dashboard2 />}
+              allowedRoles={["2"]} // Only role 2 can access
+            />
+          }
+        />
         <Route
           path="/users"
           element={
             <ProtectedRoute
-              element={
-                <Users
-                  setAddUserData1={setAddUserData1}
-                  setEditUserData1={setEditUserData1}
-                  editUserDate1={editUserDate1}
-                />
-              }
+              element={<Users />}
+              allowedRoles={["1"]} // Only role 1 can access
             />
           }
         />
-
         <Route
           path="/users/addUser"
           element={
             <ProtectedRoute
-              element={<AddUserSecond addUserDate1={addUserDate1} />}
+              element={<AddUserSecond />}
+              allowedRoles={["1"]} // Only role 1 can access
             />
           }
         />
-        {(user?.role === "1" || user?.role === "2") && (
-          <Route
-            path="/profiles"
-            element={<ProtectedRoute element={<Profiles />} />}
-          />
-        )}
-
+        <Route
+          path="/profiles"
+          element={
+            <ProtectedRoute
+              element={<Profiles />}
+              allowedRoles={["1", "2"]} // Both roles 1 and 2 can access
+            />
+          }
+        />
         <Route
           path="/requests"
-          element={<ProtectedRoute element={<Request />} />}
+          element={
+            <ProtectedRoute
+              element={<Request />}
+              allowedRoles={["1", "2"]} // Both roles 1 and 2 can access
+            />
+          }
         />
         <Route
           path="/requestsList"
-          element={<ProtectedRoute element={<RequestUser />} />}
+          element={
+            <ProtectedRoute
+              element={<RequestUser />}
+              allowedRoles={["1", "2"]} // Both roles 1 and 2 can access
+            />
+          }
         />
       </Routes>
     </div>
