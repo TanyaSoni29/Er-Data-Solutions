@@ -50,35 +50,43 @@ export function signUp(data, navigate) {
 
 export function login(email, password, navigate) {
 	return async (dispatch) => {
-		dispatch(setLoading(true));
-		try {
-			const response = await apiConnector('POST', LOGIN_API, {
-				email,
-				password,
-			});
-
-			console.log('LOGIN API RESPONSE.........', response);
-
-			if (response.status !== 200) {
-				throw new Error(response.data);
-			}
-			toast.success('Login Successfully');
-
-			dispatch(setToken(response.data.token));
-			dispatch(setIsAuth(true));
-
-			localStorage.setItem('token', JSON.stringify(response.data.token));
-			// Store expiration time
-
-			navigate('/dashboard');
-		} catch (error) {
-			console.log('LOGIN API ERROR........', error);
-			const errorMessage = error.response.data.error;
-			toast.error(errorMessage);
+	  dispatch(setLoading(true));
+	  try {
+		const response = await apiConnector('POST', LOGIN_API, { email, password });
+  
+		console.log('LOGIN API RESPONSE.........', response);
+  
+		if (response.status !== 200) {
+		  throw new Error(response.data);
 		}
-		dispatch(setLoading(false));
+		toast.success('Login Successfully');
+  
+		// Store token and user in Redux
+		const { token, user } = response.data;
+		dispatch(setToken(token));
+		dispatch(setUser(user)); // Assuming `setUser` stores user details
+		dispatch(setIsAuth(true));
+  
+		// Save token to local storage
+		localStorage.setItem('token', JSON.stringify(token));
+  
+		// Navigate based on user role
+		if (user.role === "1") {
+		  navigate('/dashboard-role1'); // Admin Dashboard
+		} else if (user.role === "2") {
+		  navigate('/dashboard-role2'); // Regular User Dashboard
+		} else {
+		  navigate('/'); // Default route if no role matches
+		}
+	  } catch (error) {
+		console.log('LOGIN API ERROR........', error);
+		const errorMessage = error.response?.data?.error || "Something went wrong";
+		toast.error(errorMessage);
+	  }
+	  dispatch(setLoading(false));
 	};
-}
+  }
+  
 
 export function getMe(navigate) {
 	return async (dispatch, getState) => {

@@ -36,7 +36,7 @@ const App = () => {
 
         {/* Protected Routes */}
         <Route
-          path="/dashboard"
+          path="/dashboard-role1"
           element={
             <ProtectedRoute
               element={<Dashboard />}
@@ -45,7 +45,7 @@ const App = () => {
           }
         />
         <Route
-          path="/dashboard"
+          path="/dashboard-role2"
           element={
             <ProtectedRoute
               element={<Dashboard1 />}

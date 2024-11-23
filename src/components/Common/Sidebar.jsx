@@ -57,9 +57,9 @@ const Sidebar = () => {
 						{user?.role === '1' && (
 							<li>
 								<Link
-									to='/dashboard'
+									to='/dashboard-role1'
 									className={`flex items-center space-x-2 p-3 rounded ${
-										isActive('/dashboard')
+										isActive('/dashboard-role1')
 											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
 											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
 									}`}
@@ -74,9 +74,9 @@ const Sidebar = () => {
 						{user?.role === '2' && (
 							<li>
 								<Link
-									to='/dashboard'
+									to='/dashboard-role2'
 									className={`flex items-center space-x-2 p-3 rounded ${
-										isActive('/dashboard')
+										isActive('/dashboard-role2')
 											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
 											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
 									}`}

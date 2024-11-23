@@ -12,7 +12,7 @@ const HeaderUser = () => {
 	const { user } = useSelector((state) => state.auth);
 
 	const headingMap = {
-		'/dashboard': 'Dashboard-1',
+		'/dashboard-role2': 'Dashboard-1',
 		'/dashboard-1': 'Dashboard-2',
 		'/requests': 'Request',
 		'/profiles': 'Profile',
