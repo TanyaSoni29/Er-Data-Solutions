@@ -1,19 +1,33 @@
 /** @format */
 
-import { FiEdit } from 'react-icons/fi';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaRegCircle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { refreshRequest } from '../../slices/requestSlice';
+import { refreshRequest, removeRequest } from '../../slices/requestSlice';
 import { useEffect } from 'react';
-const RequestrequestContent = () => {
+import { deleteRequestById } from '../../service/operations/requestApi';
+const RequestUserContent = () => {
 	const dispatch = useDispatch();
 	const { requests } = useSelector((state) => state.request);
+	const { token } = useSelector((state) => state.auth);
 
 	console.log(requests);
 	useEffect(() => {
 		dispatch(refreshRequest());
 	}, [dispatch]);
+
+	const handleDelete = async (id) => {
+		try {
+			const response = await deleteRequestById(token, id);
+			console.log(response);
+			if (response) {
+				dispatch(removeRequest(id));
+				dispatch(refreshRequest());
+			}
+		} catch (error) {
+			console.error('Failed to delete request:', error);
+		}
+	};
 
 	return (
 		<div className='p-4 md:p-6 bg-white min-h-screen'>
@@ -54,17 +68,30 @@ const RequestrequestContent = () => {
 								<td className='py-3 px-2 md:px-4'>
 									{request?.select_name ? request?.select_name : '-'}
 								</td>
-								<td className='py-3 px-2 md:px-4'>{request.contactPerson}</td>
-								<td className='py-3 px-2 md:px-4'>{request.email}</td>
-								<td className='py-3 px-2 md:px-4'>{request.mobile}</td>
-								<td className='py-3 px-2 md:px-4'>{request.mobile}</td>
-								<td className='py-3 px-2 md:px-4'>{request.mobile}</td>
+								<td className='py-3 px-2 md:px-4'>
+									{request?.description ? request?.description : '-'}
+								</td>
+								<td className='py-3 px-2 md:px-4'>
+									{request?.type ? request?.type : '-'}
+								</td>
+								<td className='py-3 px-2 md:px-4'>
+									{request?.mode ? request?.mode : '-'}
+								</td>
+								<td className='py-3 px-2 md:px-4'>
+									{request?.duration ? request?.duration : '-'}
+								</td>
+								<td className='py-3 px-2 md:px-4'>
+									{request?.date ? request?.date?.split('T')[0] : '-'}
+								</td>
 								<td className='py-3 px-2 md:px-4'>
 									<div className='flex space-x-2'>
-										<button className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'>
+										{/* <button className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'>
 											<FiEdit />
-										</button>
-										<button className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'>
+										</button> */}
+										<button
+											className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'
+											onClick={() => handleDelete(request?.id)}
+										>
 											<RiDeleteBinLine />
 										</button>
 									</div>
@@ -103,4 +130,4 @@ const RequestrequestContent = () => {
 	);
 };
 
-export default RequestrequestContent;
+export default RequestUserContent;
