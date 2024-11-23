@@ -2,17 +2,28 @@
 
 import { useForm } from 'react-hook-form';
 import { FaRegCircle } from 'react-icons/fa';
+import { createRequest } from '../../service/operations/requestApi';
+import { useSelector } from 'react-redux';
 
 const RequestForm = () => {
+	const { token } = useSelector((state) => state.auth);
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm();
 
-	const onSubmit = (data) => {
-		console.log(data);
-		alert('Form Submitted Successfully!');
+	const onSubmit = async (data) => {
+		try {
+			const response = await createRequest(token, data);
+			// console.log(response);
+			if (response) {
+				reset();
+			}
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -138,7 +149,7 @@ const RequestForm = () => {
 					<div>
 						<label className='block text-gray-600 mb-2'>Select Name</label>
 						<select
-							{...register('name', { required: 'Name is required' })}
+							{...register('select_name', { required: 'Name is required' })}
 							className={`w-full px-4 py-2 border ${
 								errors.name ? 'border-red-500' : 'border-gray-300'
 							} rounded-lg focus:outline-none focus:ring-2 ${
@@ -150,8 +161,10 @@ const RequestForm = () => {
 							<option value='name2'>Name 2</option>
 							<option value='name3'>Name 3</option>
 						</select>
-						{errors.name && (
-							<p className='text-red-500 text-sm mt-1'>{errors.name.message}</p>
+						{errors.select_name && (
+							<p className='text-red-500 text-sm mt-1'>
+								{errors.select_name.message}
+							</p>
 						)}
 					</div>
 
@@ -161,13 +174,7 @@ const RequestForm = () => {
 							type='submit'
 							className='w-52 bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white px-6 py-2 rounded-lg hover:from-[#00449B] hover:to-[#0071D3]'
 						>
-							Save & Submit
-						</button>
-						<button
-							type='button'
-							className='w-52 sm:w-32 border border-blue-600 text-blue-600 px-6 py-2 rounded-lg hover:bg-blue-100'
-						>
-							Save
+							Submit
 						</button>
 					</div>
 				</form>
