@@ -1,5 +1,6 @@
 /** @format */
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -10,11 +11,27 @@ const AddUserSecondStep = ({ addUserDate1 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { token } = useSelector((state) => state.auth);
+
+	// State to manage logo upload
+	const [logoPreview, setLogoPreview] = useState(null);
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
+
+	// Handle Logo Upload
+	const handleLogoUpload = (event) => {
+		const file = event.target.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = () => {
+				setLogoPreview(reader.result); // Set the logo preview to the uploaded file
+			};
+			reader.readAsDataURL(file);
+		}
+	};
 
 	const onSubmit = async (data) => {
 		try {
@@ -54,15 +71,28 @@ const AddUserSecondStep = ({ addUserDate1 }) => {
 				>
 					{/* Browse Logo */}
 					<div className='w-48 flex justify-start items-center'>
-						<div className='border-2 border-[#01CAEC] rounded-lg w-full h-32 md:h-48 flex justify-center items-center p-4'>
-							<div className='border-dashed border-2 border-gray-500 w-full h-full rounded-lg flex justify-center items-center'>
-								<button
-									type='button'
-									className='text-black hover:text-blue-800 font-medium '
-								>
-									Browse Logo
-								</button>
-							</div>
+						<div className='border-2 border-[#01CAEC] rounded-lg w-full h-32 md:h-48 flex justify-center items-center p-4 relative overflow-hidden'>
+							{/* Logo Preview */}
+							{logoPreview ? (
+								<img
+									src={logoPreview}
+									alt='Logo Preview'
+									className='w-full h-full object-contain rounded-lg'
+								/>
+							) : (
+								<div className='border-dashed border-2 border-gray-500 w-full h-full rounded-lg flex justify-center items-center'>
+									<span className='text-black hover:text-blue-800 font-medium'>
+										Browse Logo
+									</span>
+								</div>
+							)}
+							{/* Hidden File Input */}
+							<input
+								type='file'
+								accept='image/*'
+								className='absolute inset-0 opacity-0 cursor-pointer'
+								onChange={handleLogoUpload}
+							/>
 						</div>
 					</div>
 
@@ -120,19 +150,19 @@ const AddUserSecondStep = ({ addUserDate1 }) => {
 											},
 										})}
 										className={`w-full flex-1 px-4 py-2 border ${
-											errors.dashboardUrlUrl2
+											errors.dashboardUrl2
 												? 'border-red-500'
 												: 'border-[#01CAEC]'
 										} rounded-lg focus:outline-none focus:ring-2 ${
-											errors.dashboardUrlUrl2
+											errors.dashboardUrl2
 												? 'focus:ring-red-500'
 												: 'focus:ring-blue-500'
 										}`}
 									/>
 								</div>
-								{errors.dashboardUrlUrl2 && (
+								{errors.dashboardUrl2 && (
 									<p className='text-red-500 text-sm mt-1'>
-										{errors.dashboardUrlUrl2.message}
+										{errors.dashboardUrl2.message}
 									</p>
 								)}
 							</div>
