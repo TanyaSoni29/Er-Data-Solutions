@@ -4,19 +4,28 @@ import { useNavigate } from 'react-router-dom';
 import WorkerImg2 from '../../assets/forgetPasswordImg.png'; // Replace with your image path
 import LogoImg from '../../assets/LogoImg.png';
 import { useState } from 'react';
+import { forgetPassword } from '../../service/operations/authApi';
 
 const ForgotPassword = () => {
 	const [email, setEmail] = useState('');
 	const navigate = useNavigate();
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (!email) {
-			alert('Please enter your email address.');
 			return;
 		}
-		alert('Password recovery instructions sent!');
-		navigate('/login'); // Redirect to login page
+		try {
+			const response = await forgetPassword(email);
+			console.log(response);
+			if (response.message === 'New password sent to your email') {
+				navigate('/');
+			}
+		} catch (error) {
+			console.log(error);
+		}
+
+		// Redirect to login page
 	};
 
 	return (

@@ -6,9 +6,7 @@ export const endpoints = {
 	SIGNUP_API: `${BASE_URL}/auth/register`,
 	LOGIN_API: `${BASE_URL}/auth/login`,
 	GET_ME_API: `${BASE_URL}/auth/me`,
-	// UPDATE_PASSWORD_API: BASE_URL + "/user/updatePassword",
-	// RESET_PASSWORD_API: BASE_URL + '/password/reset',
-	// FORGET_PASSWORD_API: BASE_URL + '/password/forget',
+	FORGET_PASSWORD_API: `${BASE_URL}/auth/forgetPassword`,
 };
 
 export const requestEndpoints = {

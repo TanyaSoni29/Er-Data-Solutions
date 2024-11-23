@@ -9,7 +9,7 @@ const initialState = {
 	users: [],
 };
 
-const userProfileSlice = createSlice({
+const userSlice = createSlice({
 	name: 'user',
 	initialState: initialState,
 	reducers: {
@@ -66,5 +66,5 @@ export const {
 	addUser,
 	updateUser,
 	removeUser,
-} = userProfileSlice.actions;
-export default userProfileSlice.reducer;
+} = userSlice.actions;
+export default userSlice.reducer;
