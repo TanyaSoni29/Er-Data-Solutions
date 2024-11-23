@@ -1,5 +1,6 @@
 /** @format */
 
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetPassword, updateUser } from '../../service/operations/usersApi';
@@ -9,12 +10,17 @@ import toast from 'react-hot-toast';
 const ProfilesContent = () => {
 	const { user, token } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
+
+	const [profileImage, setProfileImage] = useState(null); // State for managing profile image
+
+	// Profile Form
 	const {
 		register: registerProfile,
 		handleSubmit: handleProfileSubmit,
 		formState: { errors: profileErrors },
 	} = useForm();
 
+	// Password Form
 	const {
 		register: registerPassword,
 		handleSubmit: handlePasswordSubmit,
@@ -22,6 +28,7 @@ const ProfilesContent = () => {
 		reset: resetPasswordForm,
 	} = useForm();
 
+	// Handle Profile Update Submit
 	const onSubmitProfile = async (data) => {
 		try {
 			const response = await updateUser(token, user?.id, data);
@@ -32,6 +39,7 @@ const ProfilesContent = () => {
 		}
 	};
 
+	// Handle Password Change Submit
 	const onSubmitPassword = async (data) => {
 		try {
 			if (data.newPassword !== data.confirmPassword) {
@@ -55,24 +63,50 @@ const ProfilesContent = () => {
 		}
 	};
 
+	// Handle Image Upload
+	const handleImageUpload = (event) => {
+		const file = event.target.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = () => {
+				setProfileImage(reader.result); // Update state with the uploaded image
+			};
+			reader.readAsDataURL(file);
+		}
+	};
+
 	return (
 		<div className='p-8 bg-[#F8F9FD] min-h-screen'>
 			<div className='w-full mx-auto bg-[#F8F9FD] rounded-lg p-8'>
-				{/* <h1 className='text-2xl font-bold mb-6'>Profile</h1> */}
 				<div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
 					{/* Profile Form */}
 					<div>
-						<h2 className='text-xl font-semibold text-blue-600 mb-4'>
-							Profile
-						</h2>
+						<h2 className='text-xl font-semibold text-blue-600 mb-4'>Profile</h2>
 						<form onSubmit={handleProfileSubmit(onSubmitProfile)}>
 							{/* Profile Image */}
 							<div className='mb-4 flex items-center'>
 								<span className='text-gray-600 mr-4'>Profile Image :</span>
-								<div className='w-20 h-20 border border-blue-300 rounded-full flex items-center justify-center relative'>
-									<span className='text-blue-500 text-xl'>&#9998;</span>
+								<div className='w-20 h-20 border border-blue-300 rounded-full flex items-center justify-center relative overflow-hidden'>
+									{/* Show the uploaded profile image or default pen icon */}
+									{profileImage ? (
+										<img
+											src={profileImage}
+											alt='Profile'
+											className='w-full h-full object-cover rounded-full'
+										/>
+									) : (
+										<span className='text-blue-500 text-xl'>&#9998;</span>
+									)}
+									{/* Hidden File Input */}
+									<input
+										type='file'
+										accept='image/*'
+										className='absolute inset-0 opacity-0 cursor-pointer'
+										onChange={handleImageUpload}
+									/>
 								</div>
 							</div>
+
 							{/* Name */}
 							<div className='mb-4'>
 								<label className='block text-sm font-medium text-gray-600 mb-1'>
@@ -115,6 +149,7 @@ const ProfilesContent = () => {
 										</p>
 									)}
 								</div>
+
 								{/* Email */}
 								<div className='mb-4 w-full md:w-[50%]'>
 									<label className='block text-sm font-medium text-gray-600 mb-1'>
@@ -155,9 +190,7 @@ const ProfilesContent = () => {
 
 					{/* Password Change Form */}
 					<div>
-						<h2 className='text-xl font-semibold text-blue-800 mb-4'>
-							Password
-						</h2>
+						<h2 className='text-xl font-semibold text-blue-800 mb-4'>Password</h2>
 						<form onSubmit={handlePasswordSubmit(onSubmitPassword)}>
 							{/* Old Password */}
 							<div className='mb-4'>
@@ -178,6 +211,7 @@ const ProfilesContent = () => {
 									</p>
 								)}
 							</div>
+
 							{/* New Password */}
 							<div className='mb-4'>
 								<label className='block text-sm font-medium text-gray-600 mb-1'>
@@ -197,6 +231,7 @@ const ProfilesContent = () => {
 									</p>
 								)}
 							</div>
+
 							{/* Confirm Password */}
 							<div className='mb-4'>
 								<label className='block text-sm font-medium text-gray-600 mb-1'>
@@ -216,6 +251,7 @@ const ProfilesContent = () => {
 									</p>
 								)}
 							</div>
+
 							{/* Change Password Button */}
 							<div className='w-full flex justify-end items-center'>
 								<button
