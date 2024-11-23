@@ -4,9 +4,16 @@ import { FiEdit } from 'react-icons/fi';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaRegCircle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-const RequestUserContent = () => {
+import { refreshRequest } from '../../slices/requestSlice';
+import { useEffect } from 'react';
+const RequestrequestContent = () => {
 	const dispatch = useDispatch();
-	const { request } = useSelector((state) => state.request);
+	const { requests } = useSelector((state) => state.request);
+
+	console.log(requests);
+	useEffect(() => {
+		dispatch(refreshRequest());
+	}, [dispatch]);
 
 	return (
 		<div className='p-4 md:p-6 bg-white min-h-screen'>
@@ -17,8 +24,8 @@ const RequestUserContent = () => {
 					<span>Request List</span>
 				</div>
 				{/* <button className='flex w-48 justify-center items-center space-x-2 bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white px-6 py-2 rounded shadow hover:from-[#00449B] hover:to-[#0071D3]'>
-					<span>Add User</span>
-					<AiOutlineUserAdd />
+					<span>Add request</span>
+					<AiOutlinerequestAdd />
 				</button> */}
 			</div>
 
@@ -28,24 +35,30 @@ const RequestUserContent = () => {
 					<thead>
 						<tr className='text-left text-gray-600 uppercase text-xs md:text-sm'>
 							<th className='py-3 px-2 md:px-4'>Sr. No</th>
-							<th className='py-3 px-2 md:px-4'>Company Name</th>
-							<th className='py-3 px-2 md:px-4'>Contact Person</th>
-							<th className='py-3 px-2 md:px-4'>Email ID</th>
-							<th className='py-3 px-2 md:px-4'>Mobile No.</th>
+							<th className='py-3 px-2 md:px-4'>Name</th>
+							<th className='py-3 px-2 md:px-4'>Description</th>
+							<th className='py-3 px-2 md:px-4'>Type</th>
+							<th className='py-3 px-2 md:px-4'>Mode</th>
+							<th className='py-3 px-2 md:px-4'>Duration</th>
+							<th className='py-3 px-2 md:px-4'>Date</th>
 							<th className='py-3 px-2 md:px-4'>Action</th>
 						</tr>
 					</thead>
 					<tbody>
-						{users.map((user, index) => (
+						{requests.map((request, index) => (
 							<tr
-								key={user.id}
+								key={request.id}
 								className='border-b hover:bg-gray-50 text-xs md:text-sm'
 							>
 								<td className='py-3 px-2 md:px-4'>{index + 1}</td>
-								<td className='py-3 px-2 md:px-4'>{user.companyName}</td>
-								<td className='py-3 px-2 md:px-4'>{user.contactPerson}</td>
-								<td className='py-3 px-2 md:px-4'>{user.email}</td>
-								<td className='py-3 px-2 md:px-4'>{user.mobile}</td>
+								<td className='py-3 px-2 md:px-4'>
+									{request?.select_name ? request?.select_name : '-'}
+								</td>
+								<td className='py-3 px-2 md:px-4'>{request.contactPerson}</td>
+								<td className='py-3 px-2 md:px-4'>{request.email}</td>
+								<td className='py-3 px-2 md:px-4'>{request.mobile}</td>
+								<td className='py-3 px-2 md:px-4'>{request.mobile}</td>
+								<td className='py-3 px-2 md:px-4'>{request.mobile}</td>
 								<td className='py-3 px-2 md:px-4'>
 									<div className='flex space-x-2'>
 										<button className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'>
@@ -90,4 +103,4 @@ const RequestUserContent = () => {
 	);
 };
 
-export default RequestUserContent;
+export default RequestrequestContent;
