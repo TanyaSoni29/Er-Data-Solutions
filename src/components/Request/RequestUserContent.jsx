@@ -3,65 +3,10 @@
 import { FiEdit } from 'react-icons/fi';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaRegCircle } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
 const RequestUserContent = () => {
-	const users = [
-		{
-			id: 1,
-			companyName: "Tam's Stationers",
-			contactPerson: 'Corina McCoy',
-			email: 'lorri73@gmail.com',
-			mobile: '(267) 739-6240',
-		},
-		{
-			id: 2,
-			companyName: 'Seamans Furniture',
-			contactPerson: 'Kenneth Allen',
-			email: 'iva838@outlook.com',
-			mobile: '(813) 752-5611',
-		},
-		{
-			id: 3,
-			companyName: "Johnson's General Stores",
-			contactPerson: 'Iva Ryan',
-			email: 'r.m.smith@gmail.com',
-			mobile: '(503) 338-2573',
-		},
-		{
-			id: 4,
-			companyName: 'Super Duper',
-			contactPerson: 'Autumn Phillips',
-			email: 'patricia651@outlook.com',
-			mobile: '(830) 556-6651',
-		},
-		{
-			id: 5,
-			companyName: "Luskin's",
-			contactPerson: 'Jerry Helfer',
-			email: 'c_j_mccoy@gmail.com',
-			mobile: '(920) 948-1722',
-		},
-		{
-			id: 6,
-			companyName: 'Finast',
-			contactPerson: 'Paula Mora',
-			email: 'alex941@outlook.com',
-			mobile: '(303) 420-4261',
-		},
-		{
-			id: 7,
-			companyName: 'Cut Rite Lawn Care',
-			contactPerson: 'Daniel Hamilton',
-			email: 's.t.sharkey@outlook.com',
-			mobile: '(214) 390-8650',
-		},
-		{
-			id: 8,
-			companyName: 'Pacific Stereo',
-			contactPerson: 'Frances Swann',
-			email: 'james_hall@gmail.com',
-			mobile: '(618) 474-9169',
-		},
-	];
+	const dispatch = useDispatch();
+	const { request } = useSelector((state) => state.request);
 
 	return (
 		<div className='p-4 md:p-6 bg-white min-h-screen'>
