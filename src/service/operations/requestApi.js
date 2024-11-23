@@ -95,7 +95,7 @@ export const deleteRequestById = async (token, requestId) => {
 	let result;
 	try {
 		const response = await apiConnector(
-			'GET',
+			'DELETE',
 			DELETE_REQUEST(requestId),
 			null,
 			{

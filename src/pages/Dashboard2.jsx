@@ -1,6 +1,6 @@
 /** @format */
 
-// import DashboardContent from '../components/Dashboard/DashboardContent';
+import Dashboard2Content from '../components/Dashboard/Dashboard2Content';
 import Sidebar from '../components/Common/Sidebar';
 import HeaderUser from '../components/Common/HeaderUser';
 
@@ -10,7 +10,7 @@ function Dashboard2() {
 			<Sidebar />
 			<div className='flex-1 flex flex-col overflow-hidden'>
 				<HeaderUser />
-				{/* <DashboardContent /> */}
+				<Dashboard2Content />
 			</div>
 		</div>
 	);

@@ -4,12 +4,12 @@ import { FiEdit } from 'react-icons/fi';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaRegCircle } from 'react-icons/fa';
 import { AiOutlineUserAdd } from 'react-icons/ai';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { refreshUser, removeUser } from '../../slices/userSlice';
 import { deleteUserById } from '../../service/operations/usersApi';
-import { setUser } from '../../slices/authSlice';
+// import { setUser } from '../../slices/authSlice';
 const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 	const dispatch = useDispatch();
 	const { users } = useSelector((state) => state.user);
