@@ -1,20 +1,35 @@
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getMe } from "../service/operations/authApi";
+import { useSelector, useDispatch } from "react-redux";
+import { getMe, refreshToken } from "../service/operations/authApi";	
 
 const ProtectedRoute = ({ element, allowedRoles = [] }) => {
-  const { isAuth, loading, token, user } = useSelector((state) => state.auth);
+  const { isAuth, token, user, loading: authLoading } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(true); // Internal loading state
+  const dispatch = useDispatch();
 
-  // Re-authenticate user if token exists but `isAuth` is false
   useEffect(() => {
-    if (token && !isAuth) {
-      dispatch(getMe());
-    }
-  }, [token, isAuth]);
+    const verifyAuth = async () => {
+      setLoading(true);
 
-  if (loading) {
-    return <div>Loading...</div>; // Show loading while fetching user details
+      try {
+        // If the user is not authenticated but has a token, refresh or fetch user data
+        if (!isAuth && token) {
+          await dispatch(refreshToken()); // Refresh the token if needed
+          await dispatch(getMe()); // Fetch user details
+        }
+      } catch (error) {
+        console.error("Authentication failed:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    verifyAuth();
+  }, [isAuth, token, dispatch]);
+
+  if (authLoading || loading) {
+    return <div>Loading...</div>; // Show loading screen during verification
   }
 
   if (!isAuth) {
@@ -22,7 +37,7 @@ const ProtectedRoute = ({ element, allowedRoles = [] }) => {
   }
 
   if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
-    return <Navigate to="/" replace />; // Redirect if user role is not allowed
+    return <Navigate to="/unauthorized" replace />; // Redirect if role is not allowed
   }
 
   return element; // Render the protected component

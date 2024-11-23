@@ -86,6 +86,20 @@ export function login(email, password, navigate) {
 	  dispatch(setLoading(false));
 	};
   }
+
+
+// Ensure refreshToken is declared and exported
+export const refreshToken = async () => {
+	const response = await fetch('/api/auth/refresh', {
+	  method: 'POST',
+	  credentials: 'include', // Include cookies if required
+	});
+	if (!response.ok) {
+	  throw new Error('Failed to refresh token');
+	}
+	return await response.json();
+  };
+  
   
 
 export function getMe(navigate) {
