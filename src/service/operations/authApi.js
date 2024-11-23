@@ -10,7 +10,7 @@ import {
 	setUser,
 } from '../../slices/authSlice';
 
-const { LOGIN_API, SIGNUP_API, GET_ME_API } = endpoints;
+const { LOGIN_API, SIGNUP_API, GET_ME_API, FORGET_PASSWORD_API } = endpoints;
 
 export function signUp(data, navigate) {
 	return async (dispatch) => {
@@ -144,3 +144,21 @@ export function logout(navigate) {
 		navigate('/');
 	};
 }
+
+export const forgetPassword = async (email) => {
+	try {
+		// Fetch current user details using token
+		const response = await apiConnector('POST', FORGET_PASSWORD_API, { email });
+
+		console.log('Forget Password API RESPONSE.........', response);
+
+		if (response.status !== 200) {
+			throw new Error(response.data);
+		}
+
+		return response.data;
+	} catch (error) {
+		console.log('Forget Password API ERROR........', error);
+		toast.error(error.response.data.error || 'Forget Password Error');
+	}
+};

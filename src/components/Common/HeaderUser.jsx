@@ -5,14 +5,16 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { FaBell } from 'react-icons/fa';
 import TopHeaderImg from '../../assets/TopHeaderImg.png';
 import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 const HeaderUser = () => {
 	const location = useLocation();
 	const pathname = location.pathname;
+	const { user } = useSelector((state) => state.auth);
 
 	const headingMap = {
 		'/dashboard': 'Dashboard-1',
 		'/dashboard-1': 'Dashboard-1',
-		'/requestsList': 'Request',
+		'/requests': 'Request',
 		'/profile': 'Profile',
 	};
 
@@ -32,12 +34,12 @@ const HeaderUser = () => {
 					color='#000000'
 				/>
 				<img
-					src={JohnImg} // Replace with your profile image path
+					src={user?.image || JohnImg} // Replace with your profile image path
 					alt='Profile'
 					className='w-8 h-8 md:w-10 md:h-10 rounded-full'
 				/>
 				<span className='text-sm md:text-base font-medium text-gray-600'>
-					Jonathan Doe
+					{user?.contactPerson}
 				</span>
 				<IoIosArrowDown
 					fontSize={18}
