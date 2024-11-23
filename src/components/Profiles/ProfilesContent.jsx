@@ -1,26 +1,58 @@
 /** @format */
 
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetPassword, updateUser } from '../../service/operations/usersApi';
+import { refreshUser } from '../../slices/userSlice';
+import toast from 'react-hot-toast';
 
 const ProfilesContent = () => {
+	const { user, token } = useSelector((state) => state.auth);
+	const dispatch = useDispatch();
 	const {
-		register,
-		handleSubmit,
-		formState: { errors },
+		register: registerProfile,
+		handleSubmit: handleProfileSubmit,
+		formState: { errors: profileErrors },
 	} = useForm();
 
-	const onSubmitProfile = (data) => {
-		console.log('Profile Updated:', data);
-		alert('Profile updated successfully!');
+	const {
+		register: registerPassword,
+		handleSubmit: handlePasswordSubmit,
+		formState: { errors: passwordErrors },
+		reset: resetPasswordForm,
+	} = useForm();
+
+	const onSubmitProfile = async (data) => {
+		try {
+			const response = await updateUser(token, user?.id, data);
+			console.log(response);
+			dispatch(refreshUser());
+		} catch (error) {
+			console.log('Profile Updated Error:', error);
+		}
 	};
 
-	const onSubmitPassword = (data) => {
-		console.log('Password Changed:', data);
-		if (data.newPassword !== data.confirmPassword) {
-			alert("New password and confirm password don't match!");
-			return;
+	const onSubmitPassword = async (data) => {
+		try {
+			if (data.newPassword !== data.confirmPassword) {
+				toast.error('Password must be same with confirm password');
+				return;
+			}
+			const newData = {
+				email: user?.email,
+				newPassword: data.newPassword,
+				confirmPassword: data.confirmPassword,
+				oldPassword: data.oldPassword,
+			};
+			const response = await resetPassword(newData);
+			console.log(response);
+			if (response?.message === 'Password reset successfully') {
+				dispatch(refreshUser());
+				resetPasswordForm();
+			}
+		} catch (error) {
+			console.log('Password Reset Error:', error);
 		}
-		alert('Password changed successfully!');
 	};
 
 	return (
@@ -33,7 +65,7 @@ const ProfilesContent = () => {
 						<h2 className='text-xl font-semibold text-blue-600 mb-4'>
 							Profile
 						</h2>
-						<form onSubmit={handleSubmit(onSubmitProfile)}>
+						<form onSubmit={handleProfileSubmit(onSubmitProfile)}>
 							{/* Profile Image */}
 							<div className='mb-4 flex items-center'>
 								<span className='text-gray-600 mr-4'>Profile Image :</span>
@@ -48,12 +80,17 @@ const ProfilesContent = () => {
 								</label>
 								<input
 									type='text'
-									{...register('name', { required: 'Name is required' })}
+									defaultValue={user?.contactPerson}
+									{...registerProfile('contactPerson', {
+										required: 'Name is required',
+									})}
 									placeholder='Eddie Lake'
 									className='w-full px-4 py-2 border border-blue-300 rounded-lg focus:ring focus:ring-blue-500 focus:outline-none'
 								/>
-								{errors.name && (
-									<p className='text-red-500 text-sm'>{errors.name.message}</p>
+								{profileErrors.contactPerson && (
+									<p className='text-red-500 text-sm'>
+										{profileErrors.contactPerson.message}
+									</p>
 								)}
 							</div>
 
@@ -65,15 +102,16 @@ const ProfilesContent = () => {
 									</label>
 									<input
 										type='tel'
-										{...register('mobile', {
+										defaultValue={user?.mobileNo}
+										{...registerProfile('mobileNo', {
 											required: 'Mobile number is required',
 										})}
 										placeholder='(267) 739-6240'
 										className='w-full px-4 py-2 border border-blue-300 rounded-lg focus:ring focus:ring-blue-500 focus:outline-none'
 									/>
-									{errors.mobile && (
+									{profileErrors.mobileNo && (
 										<p className='text-red-500 text-sm'>
-											{errors.mobile.message}
+											{profileErrors.mobileNo.message}
 										</p>
 									)}
 								</div>
@@ -84,7 +122,8 @@ const ProfilesContent = () => {
 									</label>
 									<input
 										type='email'
-										{...register('email', {
+										defaultValue={user?.email}
+										{...registerProfile('email', {
 											required: 'Email is required',
 											pattern: {
 												value: /^\S+@\S+$/i,
@@ -94,9 +133,9 @@ const ProfilesContent = () => {
 										placeholder='lorri73@gmail.com'
 										className='w-full px-4 py-2 border border-blue-300 rounded-lg focus:ring focus:ring-blue-500 focus:outline-none'
 									/>
-									{errors.email && (
+									{profileErrors.email && (
 										<p className='text-red-500 text-sm'>
-											{errors.email.message}
+											{profileErrors.email.message}
 										</p>
 									)}
 								</div>
@@ -119,7 +158,7 @@ const ProfilesContent = () => {
 						<h2 className='text-xl font-semibold text-blue-800 mb-4'>
 							Password
 						</h2>
-						<form onSubmit={handleSubmit(onSubmitPassword)}>
+						<form onSubmit={handlePasswordSubmit(onSubmitPassword)}>
 							{/* Old Password */}
 							<div className='mb-4'>
 								<label className='block text-sm font-medium text-gray-600 mb-1'>
@@ -127,15 +166,15 @@ const ProfilesContent = () => {
 								</label>
 								<input
 									type='password'
-									{...register('oldPassword', {
+									{...registerPassword('oldPassword', {
 										required: 'Old password is required',
 									})}
 									placeholder='XXXXXX'
 									className='w-full px-4 py-2 border border-blue-300 rounded-lg focus:ring focus:ring-blue-500 focus:outline-none'
 								/>
-								{errors.oldPassword && (
+								{passwordErrors.oldPassword && (
 									<p className='text-red-500 text-sm'>
-										{errors.oldPassword.message}
+										{passwordErrors.oldPassword.message}
 									</p>
 								)}
 							</div>
@@ -146,15 +185,15 @@ const ProfilesContent = () => {
 								</label>
 								<input
 									type='password'
-									{...register('newPassword', {
+									{...registerPassword('newPassword', {
 										required: 'New password is required',
 									})}
 									placeholder='XXXXXX'
 									className='w-full px-4 py-2 border border-blue-300 rounded-lg focus:ring focus:ring-blue-500 focus:outline-none'
 								/>
-								{errors.newPassword && (
+								{passwordErrors.newPassword && (
 									<p className='text-red-500 text-sm'>
-										{errors.newPassword.message}
+										{passwordErrors.newPassword.message}
 									</p>
 								)}
 							</div>
@@ -165,15 +204,15 @@ const ProfilesContent = () => {
 								</label>
 								<input
 									type='password'
-									{...register('confirmPassword', {
+									{...registerPassword('confirmPassword', {
 										required: 'Confirm password is required',
 									})}
 									placeholder='XXXXXX'
 									className='w-full px-4 py-2 border border-blue-300 rounded-lg focus:ring focus:ring-blue-500 focus:outline-none'
 								/>
-								{errors.confirmPassword && (
+								{passwordErrors.confirmPassword && (
 									<p className='text-red-500 text-sm'>
-										{errors.confirmPassword.message}
+										{passwordErrors.confirmPassword.message}
 									</p>
 								)}
 							</div>

@@ -111,20 +111,13 @@ export const deleteUserById = async (token, userId) => {
 	return result;
 };
 
-export const resetPassword = async (token, data) => {
+export const resetPassword = async (data) => {
 	try {
-		const response = await apiConnector(
-			'POST',
-			RESET_PASSWORD,
-			{
-				email: data.email,
-				password: data.password,
-			},
-			{
-				'Authorization': `Bearer ${token}`,
-				'Content-Type': 'application/json',
-			}
-		);
+		const response = await apiConnector('POST', RESET_PASSWORD, {
+			email: data.email,
+			oldPassword: data.oldPassword,
+			newPassword: data.newPassword,
+		});
 
 		console.log('Reset Password Api Response..', response);
 		if (response.status !== 200)
