@@ -5,19 +5,22 @@ import WorkerImg from '../../assets/LoginImg.png';
 import LogoImg from '../../assets/LogoImg.png';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useDispatch } from 'react-redux';
-import { login } from '../../service/operations/authApi';
+import { login, } from '../../service/operations/authApi';
 
 const LoginForm = () => {
 	const [formData, setFormData] = useState({
+		firstName: '',
+		lastName: '',
 		email: '',
 		password: '',
+		confirmPassword: '',
 	});
 	const [showPassword, setShowPassword] = useState(false);
 	const [isSignUp, setIsSignUp] = useState(false); // State to toggle Sign Up form
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	// Handle input changes for Login and Sign Up forms
+	// Handle input changes for Login and Sign-Up forms
 	const handleChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
@@ -36,7 +39,8 @@ const LoginForm = () => {
 	const handleSubmitSignUp = (e) => {
 		e.preventDefault();
 		if (
-			!formData.name ||
+			!formData.firstName ||
+			!formData.lastName ||
 			!formData.email ||
 			!formData.password ||
 			!formData.confirmPassword
@@ -87,16 +91,31 @@ const LoginForm = () => {
 									Please fill the details below
 								</p>
 								<form onSubmit={handleSubmitSignUp}>
-									{/* Name */}
+									{/* First Name */}
 									<div className='mb-4'>
 										<label className='block text-sm font-medium text-gray-600 mb-1'>
-											Name
+											First Name
 										</label>
 										<input
 											type='text'
-											name='name'
-											placeholder='Enter your name'
-											value={formData.name}
+											name='firstName'
+											placeholder='Enter your first name'
+											value={formData.firstName}
+											onChange={handleChange}
+											className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+											required
+										/>
+									</div>
+									{/* Last Name */}
+									<div className='mb-4'>
+										<label className='block text-sm font-medium text-gray-600 mb-1'>
+											Last Name
+										</label>
+										<input
+											type='text'
+											name='lastName'
+											placeholder='Enter your last name'
+											value={formData.lastName}
 											onChange={handleChange}
 											className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
 											required
