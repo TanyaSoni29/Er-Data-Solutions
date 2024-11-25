@@ -17,32 +17,39 @@ export function signUp(data, navigate) {
 		dispatch(setLoading(true));
 		try {
 			const response = await apiConnector('POST', SIGNUP_API, {
-				firstName: data.firstName || '',
-				lastName: data.lastName || '',
+				contactPerson: `${data.firstName} ${data.lastName}`,
 				email: data.email,
-				dob: data.dob || '', // Added Date of Birth field
 				password: data.password,
-				password_confirmation: data.confirmPassword,
-				phone_number: data.phone_number,
-				address: data.address || '',
-				preferred_location: data.preferred_location || '',
-				referred_by: data.referred_by || '',
-				gender: data.gender || '',
-				post_code: data.post_code,
-				role: data.role,
+				role: data.role || '2',
 			});
 			console.log('SIGNUP API RESPONSE.........', response);
 
-			if (!response.data.success) {
+			if (response.status !== 201) {
 				throw new Error(response.data.message);
 			}
+
+			const user = response.data.user;
+			dispatch(setToken(response.data.token));
+			dispatch(setUser(user)); // Assuming `setUser` stores user details
+			dispatch(setIsAuth(true));
+
+			localStorage.setItem('token', JSON.stringify(response.data.token));
+
+			console.log(user);
+
 			toast.success('Signup Successfully');
-			navigate('/login');
+			if (user.role === '1') {
+				navigate('/dashboard-role1'); // Admin Dashboard
+			} else if (user.role === '2') {
+				navigate('/dashboard-role2'); // Regular User Dashboard
+			} else {
+				navigate('/'); // Default route if no role matches
+			}
 		} catch (error) {
 			console.log('SIGNUP API ERROR.........', error);
 			const errorMessage = error.response.data.error;
 			toast.error(errorMessage);
-			navigate('/signup');
+			navigate('/');
 		}
 		dispatch(setLoading(false));
 	};
@@ -50,57 +57,58 @@ export function signUp(data, navigate) {
 
 export function login(email, password, navigate) {
 	return async (dispatch) => {
-	  dispatch(setLoading(true));
-	  try {
-		const response = await apiConnector('POST', LOGIN_API, { email, password });
-  
-		console.log('LOGIN API RESPONSE.........', response);
-  
-		if (response.status !== 200) {
-		  throw new Error(response.data);
-		}
-		toast.success('Login Successfully');
-  
-		// Store token and user in Redux
-		const { token, user } = response.data;
-		dispatch(setToken(token));
-		dispatch(setUser(user)); // Assuming `setUser` stores user details
-		dispatch(setIsAuth(true));
-  
-		// Save token to local storage
-		localStorage.setItem('token', JSON.stringify(token));
-  
-		// Navigate based on user role
-		if (user.role === "1") {
-		  navigate('/dashboard-role1'); // Admin Dashboard
-		} else if (user.role === "2") {
-		  navigate('/dashboard-role2'); // Regular User Dashboard
-		} else {
-		  navigate('/'); // Default route if no role matches
-		}
-	  } catch (error) {
-		console.log('LOGIN API ERROR........', error);
-		const errorMessage = error.response?.data?.error || "Something went wrong";
-		toast.error(errorMessage);
-	  }
-	  dispatch(setLoading(false));
-	};
-  }
+		dispatch(setLoading(true));
+		try {
+			const response = await apiConnector('POST', LOGIN_API, {
+				email,
+				password,
+			});
 
+			console.log('LOGIN API RESPONSE.........', response);
+
+			if (response.status !== 200) {
+				throw new Error(response.data);
+			}
+			toast.success('Login Successfully');
+
+			// Store token and user in Redux
+			const { token, user } = response.data;
+			dispatch(setToken(token));
+			dispatch(setUser(user)); // Assuming `setUser` stores user details
+			dispatch(setIsAuth(true));
+
+			// Save token to local storage
+			localStorage.setItem('token', JSON.stringify(token));
+
+			// Navigate based on user role
+			if (user.role === '1') {
+				navigate('/dashboard-role1'); // Admin Dashboard
+			} else if (user.role === '2') {
+				navigate('/dashboard-role2'); // Regular User Dashboard
+			} else {
+				navigate('/'); // Default route if no role matches
+			}
+		} catch (error) {
+			console.log('LOGIN API ERROR........', error);
+			const errorMessage =
+				error.response?.data?.error || 'Something went wrong';
+			toast.error(errorMessage);
+		}
+		dispatch(setLoading(false));
+	};
+}
 
 // Ensure refreshToken is declared and exported
 export const refreshToken = async () => {
 	const response = await fetch('/api/auth/refresh', {
-	  method: 'POST',
-	  credentials: 'include', // Include cookies if required
+		method: 'POST',
+		credentials: 'include', // Include cookies if required
 	});
 	if (!response.ok) {
-	  throw new Error('Failed to refresh token');
+		throw new Error('Failed to refresh token');
 	}
 	return await response.json();
-  };
-  
-  
+};
 
 export function getMe(navigate) {
 	return async (dispatch, getState) => {
