@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetPassword, updateUser } from '../../service/operations/usersApi';
@@ -11,7 +11,9 @@ const ProfilesContent = () => {
 	const { user, token } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 
-	const [profileImage, setProfileImage] = useState(null); // State for managing profile image
+	console.log(user);
+
+	const [profileImage, setProfileImage] = useState(user?.image || null); // State for managing profile image
 
 	// Profile Form
 	const {
@@ -30,8 +32,17 @@ const ProfilesContent = () => {
 
 	// Handle Profile Update Submit
 	const onSubmitProfile = async (data) => {
+		const newData = new FormData();
+		if (profileImage && profileImage !== user?.image) {
+			// If the image is changed, add it to the form data
+			newData.append('image', profileImage);
+		}
+		newData.append('contactPerson', data.contactPerson);
+		newData.append('email', data.email);
+		newData.append('mobileNo', data.mobileNo);
+		console.log(newData);
 		try {
-			const response = await updateUser(token, user?.id, data);
+			const response = await updateUser(token, user?.id, newData);
 			console.log(response);
 			dispatch(refreshUser());
 		} catch (error) {
@@ -75,13 +86,22 @@ const ProfilesContent = () => {
 		}
 	};
 
+	useEffect(() => {
+		// Set the default profile image from API if available
+		if (user?.image) {
+			setProfileImage(user.image);
+		}
+	}, [user]);
+
 	return (
 		<div className='p-8 bg-[#F8F9FD] min-h-screen'>
 			<div className='w-full mx-auto bg-[#F8F9FD] rounded-lg p-8'>
 				<div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
 					{/* Profile Form */}
 					<div>
-						<h2 className='text-xl font-semibold text-blue-600 mb-4'>Profile</h2>
+						<h2 className='text-xl font-semibold text-blue-600 mb-4'>
+							Profile
+						</h2>
 						<form onSubmit={handleProfileSubmit(onSubmitProfile)}>
 							{/* Profile Image */}
 							<div className='mb-4 flex items-center'>
@@ -190,7 +210,9 @@ const ProfilesContent = () => {
 
 					{/* Password Change Form */}
 					<div>
-						<h2 className='text-xl font-semibold text-blue-800 mb-4'>Password</h2>
+						<h2 className='text-xl font-semibold text-blue-800 mb-4'>
+							Password
+						</h2>
 						<form onSubmit={handlePasswordSubmit(onSubmitPassword)}>
 							{/* Old Password */}
 							<div className='mb-4'>
