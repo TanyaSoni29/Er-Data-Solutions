@@ -94,7 +94,7 @@ export const updateUser = async (token, userId, data) => {
 export const deleteUserById = async (token, userId) => {
 	let result;
 	try {
-		const response = await apiConnector('GET', DELETE_USER(userId), null, {
+		const response = await apiConnector('DELETE', DELETE_USER(userId), null, {
 			Authorization: `Bearer ${token}`,
 		});
 		console.log('Delete User Api Response..', response);

@@ -88,7 +88,9 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 								key={user?.id}
 								className='border-b hover:bg-gray-50 text-xs md:text-sm'
 							>
-								<td className='py-3 px-2 md:px-4'>{index + index + 1}</td>
+								<td className='py-3 px-2 md:px-4'>
+									{indexOfFirstUser + index + 1}
+								</td>
 								<td className='py-3 px-2 md:px-4'>
 									{user?.companyName ? user?.companyName : '-'}
 								</td>

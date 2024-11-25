@@ -4,14 +4,16 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaRegCircle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { refreshRequest, removeRequest } from '../../slices/requestSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { deleteRequestById } from '../../service/operations/requestApi';
 const RequestUserContent = () => {
 	const dispatch = useDispatch();
 	const { requests } = useSelector((state) => state.request);
 	const { token } = useSelector((state) => state.auth);
 
-	console.log(requests);
+	const [currentPage, setCurrentPage] = useState(1);
+	const requestPerPage = 10;
+
 	useEffect(() => {
 		dispatch(refreshRequest());
 	}, [dispatch]);
@@ -28,6 +30,16 @@ const RequestUserContent = () => {
 			console.error('Failed to delete request:', error);
 		}
 	};
+
+	const totalPages = Math.ceil(requests / requestPerPage);
+	const indexOfLastRequest = currentPage * requestPerPage;
+	const indexOfFirstRequest = indexOfLastRequest - requestPerPage;
+	const currentRequests = requests.slice(
+		indexOfFirstRequest,
+		indexOfLastRequest
+	);
+
+	const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
 	return (
 		<div className='p-4 md:p-6 bg-white min-h-screen'>
@@ -59,12 +71,14 @@ const RequestUserContent = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{requests.map((request, index) => (
+						{currentRequests.map((request, index) => (
 							<tr
 								key={request.id}
 								className='border-b hover:bg-gray-50 text-xs md:text-sm'
 							>
-								<td className='py-3 px-2 md:px-4'>{index + 1}</td>
+								<td className='py-3 px-2 md:px-4'>
+									{indexOfFirstRequest + index + 1}
+								</td>
 								<td className='py-3 px-2 md:px-4'>
 									{request?.select_name ? request?.select_name : '-'}
 								</td>
@@ -102,27 +116,24 @@ const RequestUserContent = () => {
 				</table>
 				{/* Pagination */}
 				<div className='flex flex-wrap justify-between items-center p-4 text-gray-600 text-sm'>
-					<span>Showing data 1 to 8 of 100 entries</span>
+					<span>
+						Showing {indexOfFirstRequest + 1} to{' '}
+						{Math.min(indexOfLastRequest, requests.length)} of {requests.length}
+					</span>
 					<div className='flex space-x-2'>
-						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>
-							&lt;
-						</button>
-						<button className='px-3 py-1 bg-[#00449B] text-white rounded'>
-							1
-						</button>
-						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>
-							2
-						</button>
-						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>
-							3
-						</button>
-						<span className='px-3 py-1'>...</span>
-						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>
-							10
-						</button>
-						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>
-							&gt;
-						</button>
+						{Array.from({ length: totalPages }, (_, index) => (
+							<button
+								key={index + 1}
+								className={`px-3 py-1 ${
+									currentPage === index + 1
+										? 'bg-[#00449B] text-white'
+										: 'bg-gray-200 hover:bg-gray-300'
+								} rounded`}
+								onClick={() => handlePageChange(index + 1)}
+							>
+								{index + 1}
+							</button>
+						))}
 					</div>
 				</div>
 			</div>
