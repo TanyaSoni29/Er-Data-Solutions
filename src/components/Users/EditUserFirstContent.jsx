@@ -1,17 +1,13 @@
 /** @format */
 
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 const EditUserFirstContent = ({
 	setEditUserData1,
 	setEditFirstStepComplete,
+	setEditUserButton,
 	user,
 }) => {
-	const navigate = useNavigate();
-
-	console.log('----', user);
 	const {
 		register,
 		handleSubmit,
@@ -164,7 +160,7 @@ const EditUserFirstContent = ({
 						<button
 							type='button'
 							className='w-full md:w-48 px-6 py-2 bg-[#BEDEFA] text-blue-600 rounded-lg hover:bg-white hover:border-blue-600 hover:border-[1px]'
-							onClick={() => navigate('/users')}
+							onClick={() => setEditUserButton(false)}
 						>
 							Back
 						</button>

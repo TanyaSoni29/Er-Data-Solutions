@@ -104,7 +104,7 @@ const Sidebar = () => {
 
 						{/* User Profiles */}
 
-						{(user?.role === '2' || user?.role === '1') && (
+						{user?.role === '2' && (
 							<li>
 								<Link
 									to='/profiles'

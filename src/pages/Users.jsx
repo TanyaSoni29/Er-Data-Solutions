@@ -27,12 +27,13 @@ function Users({ setAddUserData1, setEditUserData1, editUserDate1 }) {
 						/>
 					)}
 					{addUserButton && !editUserButton && (
-						<AddNewUser setAddUserData1={setAddUserData1} />
+						<AddNewUser setAddUserData1={setAddUserData1} setAddUserButton={setAddUserButton} />
 					)}
 					{!addUserButton && editUserButton && !editFirstStepComplete && (
 						<EditUserFirstContent
 							setEditUserData1={setEditUserData1}
 							setEditFirstStepComplete={setEditFirstStepComplete}
+							setEditUserButton={setEditUserButton}
 							user={user}
 						/>
 					)}

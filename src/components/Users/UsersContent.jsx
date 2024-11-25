@@ -5,7 +5,7 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { FaRegCircle } from 'react-icons/fa';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 // import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { refreshUser, removeUser } from '../../slices/userSlice';
 import { deleteUserById } from '../../service/operations/usersApi';
@@ -14,6 +14,10 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 	const dispatch = useDispatch();
 	const { users } = useSelector((state) => state.user);
 	const { token } = useSelector((state) => state.auth);
+
+	const [currentPage, setCurrentPage] = useState(1);
+	const userPerPage = 10;
+
 	useEffect(() => {
 		dispatch(refreshUser());
 	}, [dispatch]);
@@ -40,6 +44,13 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 			console.log(error);
 		}
 	};
+
+	const totalPages = Math.ceil(users.length / userPerPage);
+	const indexOfLastUser = currentPage * userPerPage;
+	const indexOfFirstUser = indexOfLastUser - userPerPage;
+	const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+	const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
 	return (
 		<div className='p-4 md:p-6 bg-white min-h-screen'>
@@ -72,12 +83,12 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 						</tr>
 					</thead>
 					<tbody>
-						{users.map((user, index) => (
+						{currentUsers.map((user, index) => (
 							<tr
 								key={user?.id}
 								className='border-b hover:bg-gray-50 text-xs md:text-sm'
 							>
-								<td className='py-3 px-2 md:px-4'>{index + 1}</td>
+								<td className='py-3 px-2 md:px-4'>{index + index + 1}</td>
 								<td className='py-3 px-2 md:px-4'>
 									{user?.companyName ? user?.companyName : '-'}
 								</td>
@@ -112,27 +123,24 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 				</table>
 				{/* Pagination */}
 				<div className='flex flex-wrap justify-between items-center p-4 text-gray-600 text-sm'>
-					<span>Showing data 1 to 8 of 100 entries</span>
+					<span>
+						Showing {indexOfFirstUser + 1} to{' '}
+						{Math.min(indexOfLastUser, users.length)} of {users.length} entries
+					</span>
 					<div className='flex space-x-2'>
-						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>
-							&lt;
-						</button>
-						<button className='px-3 py-1 bg-[#00449B] text-white rounded'>
-							1
-						</button>
-						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>
-							2
-						</button>
-						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>
-							3
-						</button>
-						<span className='px-3 py-1'>...</span>
-						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>
-							10
-						</button>
-						<button className='px-3 py-1 bg-gray-200 rounded hover:bg-gray-300'>
-							&gt;
-						</button>
+						{Array.from({ length: totalPages }, (_, index) => (
+							<button
+								key={index + 1}
+								className={`px-3 py-1 ${
+									currentPage === index + 1
+										? 'bg-[#00449B] text-white'
+										: 'bg-gray-200 hover:bg-gray-300'
+								} rounded`}
+								onClick={() => handlePageChange(index + 1)}
+							>
+								{index + 1}
+							</button>
+						))}
 					</div>
 				</div>
 			</div>

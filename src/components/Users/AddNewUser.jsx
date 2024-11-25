@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-const AddNewUser = ({ setAddUserData1 }) => {
+const AddNewUser = ({ setAddUserData1, setAddUserButton }) => {
 	const navigate = useNavigate();
 	const {
 		register,
@@ -171,7 +171,7 @@ const AddNewUser = ({ setAddUserData1 }) => {
 						<button
 							type='button'
 							className='w-full md:w-48 px-6 py-2 bg-[#BEDEFA] text-blue-600 rounded-lg hover:bg-white hover:border-blue-600 hover:border-[1px]'
-							onClick={() => navigate('/users')}
+							onClick={() => setAddUserButton(false)}
 						>
 							Back
 						</button>
