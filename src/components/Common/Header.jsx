@@ -1,6 +1,6 @@
 /** @format */
 
-import ProfileImg from '../../assets/ProfileImg.png';
+// import ProfileImg from '../../assets/ProfileImg.png';
 import { IoIosArrowDown } from 'react-icons/io';
 import { CgBox } from 'react-icons/cg';
 import { useDispatch, useSelector } from 'react-redux';

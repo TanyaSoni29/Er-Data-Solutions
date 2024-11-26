@@ -1,6 +1,6 @@
 /** @format */
 
-import JohnImg from '../../assets/JohnImg.png';
+// import JohnImg from '../../assets/JohnImg.png';
 import { IoIosArrowDown } from 'react-icons/io';
 // import { FaBell } from 'react-icons/fa';
 import TopHeaderImg from '../../assets/TopHeaderImg.png';
