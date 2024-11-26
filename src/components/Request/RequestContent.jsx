@@ -79,9 +79,11 @@ const RequestForm = () => {
 							}`}
 						>
 							<option value=''>Select type</option>
-							<option value='type1'>Type 1</option>
-							<option value='type2'>Type 2</option>
-							<option value='type3'>Type 3</option>
+							<option value='type1'>Dashboard Request</option>
+							<option value='type2'>User Feedback</option>
+							<option value='type3'>Connection Request</option>
+							<option value='type2'>Features Request</option>
+							<option value='type3'>Bug report | Performance issue</option>
 						</select>
 						{errors.type && (
 							<p className='text-red-500 text-sm mt-1'>{errors.type.message}</p>
@@ -90,10 +92,10 @@ const RequestForm = () => {
 
 					{/* Duration */}
 					<div>
-						<label className='block text-gray-600 mb-2'>Duration</label>
+						<label className='block text-gray-600 mb-2'>Name of Requestor</label>
 						<input
 							type='text'
-							placeholder='Enter duration'
+							placeholder='Enter Requestor Name'
 							{...register('duration', { required: 'Duration is required' })}
 							className={`w-full px-4 py-2 border ${
 								errors.duration ? 'border-red-500' : 'border-gray-300'
@@ -110,7 +112,7 @@ const RequestForm = () => {
 
 					{/* Date */}
 					<div>
-						<label className='block text-gray-600 mb-2'>Date</label>
+						<label className='block text-gray-600 mb-2'> Request Date</label>
 						<input
 							type='date'
 							{...register('date', { required: 'Date is required' })}
@@ -127,7 +129,7 @@ const RequestForm = () => {
 
 					{/* Mode */}
 					<div>
-						<label className='block text-gray-600 mb-2'>Mode</label>
+						<label className='block text-gray-600 mb-2'>Priority</label>
 						<select
 							{...register('mode', { required: 'Mode is required' })}
 							className={`w-full px-4 py-2 border ${
@@ -136,9 +138,10 @@ const RequestForm = () => {
 								errors.mode ? 'focus:ring-red-500' : 'focus:ring-blue-500'
 							}`}
 						>
-							<option value=''>Select mode</option>
-							<option value='online'>Online</option>
-							<option value='offline'>Offline</option>
+							<option value=''>Select Priority</option>
+							<option value='High'>High</option>
+							<option value='Medium'>Medium</option>
+							<option value='Low'>Low</option>
 						</select>
 						{errors.mode && (
 							<p className='text-red-500 text-sm mt-1'>{errors.mode.message}</p>
@@ -147,7 +150,7 @@ const RequestForm = () => {
 
 					{/* Select Name */}
 					<div>
-						<label className='block text-gray-600 mb-2'>Select Name</label>
+						<label className='block text-gray-600 mb-2'>Communication Method</label>
 						<select
 							{...register('select_name', { required: 'Name is required' })}
 							className={`w-full px-4 py-2 border ${
@@ -156,10 +159,10 @@ const RequestForm = () => {
 								errors.name ? 'focus:ring-red-500' : 'focus:ring-blue-500'
 							}`}
 						>
-							<option value=''>Select name</option>
-							<option value='name1'>Name 1</option>
-							<option value='name2'>Name 2</option>
-							<option value='name3'>Name 3</option>
+							<option value=''>Method Name</option>
+							<option value='name1'>Email</option>
+							<option value='name2'>Phone</option>
+							<option value='name3'>InPerson</option>
 						</select>
 						{errors.select_name && (
 							<p className='text-red-500 text-sm mt-1'>

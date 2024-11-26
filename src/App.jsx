@@ -10,6 +10,7 @@ import LoginForm from './components/Authentication/LoginForm';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Request from './pages/Request';
+import ReqListEdit from './components/Request/ReqListEdit'
 import ForgotPassword from './components/Authentication/ForgetPassword';
 import Dashboard1 from './pages/Dashboard1';
 import Dashboard2 from './pages/Dashboard2';
@@ -112,6 +113,15 @@ const App = () => {
 						<ProtectedRoute
 							element={<Request />}
 							allowedRoles={['1', '2']} // Both roles 1 and 2 can access
+						/>
+					}
+				/>
+				<Route
+					path='/reqeditlist'
+					element={
+						<ProtectedRoute
+							element={<ReqListEdit />}
+							allowedRoles={['1']} // Both roles 1 and 2 can access
 						/>
 					}
 				/>
