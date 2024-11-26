@@ -167,6 +167,32 @@ const AddNewUser = ({ setAddUserData1, setAddUserButton }) => {
 						</div>
 					</div>
 
+					<h2 className='text-lg md:text-xl font-semibold text-[#0071D3] mb-6'>
+					  Organization
+				     </h2>
+
+					{/* New Fields */}
+					<div className='w-full'>
+						<label className='block text-gray-600 mb-2'>Organization Mission</label>
+						<input
+							type='text'
+							placeholder='Enter Mission'
+							{...register('organizationMission')}
+							className='w-full px-4 py-2 border border-[#01CAEC] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+						/>
+					</div>
+
+					<div className='w-full'>
+						<label className='block text-gray-600 mb-2'>
+							Additional Organization Support
+						</label>
+						<textarea
+							placeholder='Enter additional support details...'
+							{...register('organizationSupport')}
+							className='w-full px-4 py-2 border border-[#01CAEC] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none'
+						/>
+					</div>
+
 					{/* Buttons */}
 					<div className='w-full flex flex-col md:flex-row justify-end items-center gap-4 mt-6'>
 						<button
