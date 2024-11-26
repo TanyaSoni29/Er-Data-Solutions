@@ -17,6 +17,7 @@ const Header = () => {
 	const headingMap = {
 		'/dashboard-role1': 'Dashboard',
 		'/users': 'Users',
+		'/users/addUser': 'Users',
 		'/requestsList': 'Requests',
 	};
 	const heading = headingMap[pathname] || 'Page Not Found';

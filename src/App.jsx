@@ -22,6 +22,9 @@ const App = () => {
 	const { token } = useSelector((state) => state.auth);
 	const navigate = useNavigate();
 
+	const [addUserDate1, setAddUserData1] = useState({});
+	const [editUserDate1, setEditUserData1] = useState({});
+
 	// Fetch user info on app load if token is available
 	useEffect(() => {
 		if (token) {
@@ -74,7 +77,13 @@ const App = () => {
 					path='/users'
 					element={
 						<ProtectedRoute
-							element={<Users />}
+							element={
+								<Users
+									setAddUserData1={setAddUserData1}
+									setEditUserData1={setEditUserData1}
+									editUserDate1={editUserDate1}
+								/>
+							}
 							allowedRoles={['1']} // Only role 1 can access
 						/>
 					}
@@ -83,7 +92,7 @@ const App = () => {
 					path='/users/addUser'
 					element={
 						<ProtectedRoute
-							element={<AddUserSecond />}
+							element={<AddUserSecond addUserDate1={addUserDate1} />}
 							allowedRoles={['1']} // Only role 1 can access
 						/>
 					}

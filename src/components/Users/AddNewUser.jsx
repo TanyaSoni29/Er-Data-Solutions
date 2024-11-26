@@ -12,6 +12,7 @@ const AddNewUser = ({ setAddUserData1, setAddUserButton }) => {
 	} = useForm();
 
 	const onSubmit = (data) => {
+		console.log(data);
 		setAddUserData1(data);
 		navigate('/users/addUser');
 	};
