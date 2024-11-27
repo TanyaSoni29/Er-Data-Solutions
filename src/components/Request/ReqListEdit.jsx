@@ -1,6 +1,4 @@
-/** @format */
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   TextField,
@@ -13,10 +11,21 @@ import {
 import { AiOutlineDownload } from "react-icons/ai";
 import Header from "../Common/Header";
 import Sidebar from "../Common/Sidebar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getRequestById, updateRequest } from "../../service/operations/requestApi";
 
 const ReqListEdit = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { token } = useSelector((state) => state.auth);
+  const { requests } = useSelector((state) => state.request);
+
+  // Extract the ID from the query string
+  const queryParams = new URLSearchParams(location.search);
+  const requestId = queryParams.get("id");
+
+  // State for form data
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -24,9 +33,48 @@ const ReqListEdit = () => {
     type: "",
     method: "",
     status: "",
-    attachment: null,
+    attachment: null, // For new file uploads
+    existingAttachment: null, // For download link
   });
 
+  // Fetch the request data when component mounts
+  useEffect(() => {
+    const fetchRequestDetails = async () => {
+      try {
+        const existingRequest = requests.find((req) => req.id === Number(requestId));
+        if (existingRequest) {
+          setFormData({
+            name: existingRequest.requestorName || "",
+            description: existingRequest.description || "",
+            priority: existingRequest.priority || "",
+            type: existingRequest.type || "",
+            method: existingRequest.communicationMethod || "",
+            status: existingRequest.completionStatus || "",
+            attachment: null, // Handle new uploads separately
+            existingAttachment: existingRequest.attachment || null, // File download link
+          });
+        } else {
+          const fetchedRequest = await getRequestById(token, requestId);
+          setFormData({
+            name: fetchedRequest.requestorName || "",
+            description: fetchedRequest.description || "",
+            priority: fetchedRequest.priority || "",
+            type: fetchedRequest.type || "",
+            method: fetchedRequest.communicationMethod || "",
+            status: fetchedRequest.completionStatus || "",
+            attachment: null,
+            existingAttachment: fetchedRequest.attachment || null,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch request details:", error);
+      }
+    };
+
+    if (requestId) fetchRequestDetails();
+  }, [requestId, requests, token]);
+
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -35,6 +83,7 @@ const ReqListEdit = () => {
     }));
   };
 
+  // Handle file upload
   const handleFileUpload = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -42,10 +91,47 @@ const ReqListEdit = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // Handle file download
+  const handleDownload = () => {
+    if (formData.existingAttachment) {
+      const link = document.createElement("a");
+      link.href = `http://localhost:3000/${formData.existingAttachment}`; // Adjust URL if necessary
+      link.download = formData.existingAttachment.split("/").pop(); // Extract filename
+      link.click();
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-    navigate("/requestsList"); // Redirect to Request List page after submit
+    try {
+      const updatedData = {
+        requestorName: formData.name,
+        description: formData.description,
+        priority: formData.priority,
+        type: formData.type,
+        communicationMethod: formData.method,
+        completionStatus: formData.status,
+      };
+
+      if (formData.attachment) {
+        // If a new file is uploaded, use FormData
+        const formDataToSend = new FormData();
+        Object.keys(updatedData).forEach((key) => {
+          formDataToSend.append(key, updatedData[key]);
+        });
+        formDataToSend.append("attachment", formData.attachment);
+
+        await updateRequest(token, requestId, formDataToSend);
+      } else {
+        // If no new file is uploaded, update only the other fields
+        await updateRequest(token, requestId, updatedData);
+      }
+
+      navigate("/requestsList"); // Redirect to the requests list after submission
+    } catch (error) {
+      console.error("Failed to update request:", error);
+    }
   };
 
   return (
@@ -81,7 +167,7 @@ const ReqListEdit = () => {
             </Typography>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={4}>
-                {/* Name of Requestor and Priority */}
+                {/* Name of Requestor */}
                 <Grid item xs={12} md={8}>
                   <TextField
                     fullWidth
@@ -103,7 +189,6 @@ const ReqListEdit = () => {
                     value={formData.priority}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="Select Priority"
                     sx={{ backgroundColor: "#FFFFFF" }}
                   >
                     {["Low", "Medium", "High"].map((priority) => (
@@ -119,7 +204,7 @@ const ReqListEdit = () => {
                   <TextField
                     fullWidth
                     multiline
-                    rows={3}
+                    rows={1}
                     label="Description"
                     name="description"
                     value={formData.description}
@@ -140,14 +225,15 @@ const ReqListEdit = () => {
                     value={formData.type}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="Select Type"
                     sx={{ backgroundColor: "#FFFFFF" }}
                   >
-                    {["Type 1", "Type 2", "Type 3"].map((type) => (
-                      <MenuItem key={type} value={type}>
-                        {type}
-                      </MenuItem>
-                    ))}
+                    {["Feature Request", "Bug Report", "Dashboard Request", "Connection Request"].map(
+                      (type) => (
+                        <MenuItem key={type} value={type}>
+                          {type}
+                        </MenuItem>
+                      )
+                    )}
                   </TextField>
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -159,10 +245,9 @@ const ReqListEdit = () => {
                     value={formData.method}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="Select Method"
                     sx={{ backgroundColor: "#FFFFFF" }}
                   >
-                    {["Email", "Phone", "Online Meeting"].map((method) => (
+                    {["Email", "Phone", "In-Person"].map((method) => (
                       <MenuItem key={method} value={method}>
                         {method}
                       </MenuItem>
@@ -180,24 +265,32 @@ const ReqListEdit = () => {
                     value={formData.status}
                     onChange={handleChange}
                     variant="outlined"
-                    placeholder="Select"
                     sx={{ backgroundColor: "#FFFFFF" }}
                   >
-                    {["Not Started", "In Progress", "Completed"].map(
-                      (status) => (
-                        <MenuItem key={status} value={status}>
-                          {status}
-                        </MenuItem>
-                      )
-                    )}
+                    {["Not Started", "In Progress", "Completed"].map((status) => (
+                      <MenuItem key={status} value={status}>
+                        {status}
+                      </MenuItem>
+                    ))}
                   </TextField>
                 </Grid>
 
-                {/* File Upload */}
-                <Grid item xs={12} md={6}>
+                {/* File Upload and Download */}
+                <Grid item xs={12}>
                   <Typography variant="body1" gutterBottom>
-                    Small File Attachment
+                    Attachment
                   </Typography>
+                  {formData.existingAttachment && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleDownload}
+                      startIcon={<AiOutlineDownload />}
+                      sx={{ textTransform: "none", mr: 2 }}
+                    >
+                      Download Attachment
+                    </Button>
+                  )}
                   <label htmlFor="file-upload">
                     <Button
                       variant="contained"
@@ -206,7 +299,7 @@ const ReqListEdit = () => {
                       startIcon={<AiOutlineDownload />}
                       sx={{ textTransform: "none" }}
                     >
-                      Download
+                      Upload New Attachment
                     </Button>
                   </label>
                   <input
