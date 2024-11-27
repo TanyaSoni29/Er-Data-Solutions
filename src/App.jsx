@@ -11,7 +11,8 @@ import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Request from './pages/Request';
 import ReqListEdit from './components/Request/ReqListEdit';
-import Historylist from './components/Request/Historylist'
+import Historylist from './components/Request/Historylist';
+import Historylistedit from './components/Request/Historylistedit';
 import ForgotPassword from './components/Authentication/ForgetPassword';
 import Dashboard1 from './pages/Dashboard1';
 import Dashboard2 from './pages/Dashboard2';
@@ -131,6 +132,15 @@ const App = () => {
 					element={
 						<ProtectedRoute
 							element={<Historylist />}
+							allowedRoles={['2']} // Both roles 1 and 2 can access
+						/>
+					}
+				/>
+				<Route
+					path='/historylistedit'
+					element={
+						<ProtectedRoute
+							element={<Historylistedit />}
 							allowedRoles={['2']} // Both roles 1 and 2 can access
 						/>
 					}

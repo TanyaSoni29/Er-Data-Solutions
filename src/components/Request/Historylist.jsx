@@ -25,7 +25,7 @@ const HistoryList = () => {
 
   // Handle edit
   const handleEdit = (id) => {
-    navigate(`/reqeditlist/${id}`);
+    navigate(`/historylistedit?id=${id}`);
   };
 
   // Handle delete
