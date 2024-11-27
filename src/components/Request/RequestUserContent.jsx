@@ -16,7 +16,7 @@ const RequestUserContent = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
-	const requestPerPage = 10;
+	const requestPerPage = 5; // Adjusted pagination to show 5 requests per page
 
 	useEffect(() => {
 		dispatch(refreshRequest());
@@ -98,13 +98,26 @@ const RequestUserContent = () => {
 				<table className="w-full border-collapse">
 					<thead>
 						<tr className="text-left text-gray-600 uppercase text-xs md:text-sm">
-							{['Sr. No', 'Date', 'Requestor Name', 'Method', 'Description', 'Status', 'Action'].map((header, index) => (
+							{[
+								{ label: 'Sr. No', key: null },
+								{ label: 'Date', key: 'requestDate' },
+								{ label: 'Requestor Name', key: 'requestorName' },
+								{ label: 'Method', key: 'communicationMethod' },
+								{ label: 'Description', key: 'description' },
+								{ label: 'Status', key: 'priority' },
+								{ label: 'Action', key: null },
+							].map(({ label, key }, index) => (
 								<th
 									key={index}
-									className="py-3 px-2 md:px-4 cursor-pointer"
-									onClick={() => handleSort(header.replace(' ', '').toLowerCase())}
+									className={`py-3 px-2 md:px-4 ${
+										key ? 'cursor-pointer' : ''
+									}`}
+									onClick={() => key && handleSort(key)}
 								>
-									{header} {sortConfig.key === header.replace(' ', '').toLowerCase() && (sortConfig.direction === 'asc' ? '🔼' : '🔽')}
+									{label}{' '}
+									{key && sortConfig.key === key && (
+										<span>{sortConfig.direction === 'asc' ? '🔼' : '🔽'}</span>
+									)}
 								</th>
 							))}
 						</tr>
@@ -169,7 +182,8 @@ const RequestUserContent = () => {
 				<div className="flex flex-wrap justify-between items-center p-4 text-gray-600 text-sm">
 					<span>
 						Showing {indexOfFirstRequest + 1} to{' '}
-						{Math.min(indexOfLastRequest, sortedRequests.length)} of {sortedRequests.length}
+						{Math.min(indexOfLastRequest, sortedRequests.length)} of{' '}
+						{sortedRequests.length}
 					</span>
 					<div className="flex space-x-2">
 						{Array.from({ length: totalPages }, (_, index) => (
