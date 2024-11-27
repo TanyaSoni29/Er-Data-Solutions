@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { logout } from '../../service/operations/authApi';
+import ProfileImg from '../../assets/ProfileImg.png';
 const Header = () => {
 	const location = useLocation();
 	const pathname = location.pathname;
@@ -35,7 +36,8 @@ const Header = () => {
 			</div>
 			<div className='flex justify-end items-center space-x-2'>
 				<img
-					src={user?.image} // Replace with your profile image path
+					// src={user?.image} // Replace with your profile image path
+					src={ProfileImg}
 					alt='Profile'
 					className='w-8 h-8 md:w-10 md:h-10 rounded-full'
 				/>
