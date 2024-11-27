@@ -97,7 +97,7 @@ const Historylistedit = () => {
   const handleDownload = () => {
     if (formData.existingAttachment) {
       const link = document.createElement("a");
-      link.href = `http://localhost:3000/${formData.existingAttachment}`; // Adjust URL if necessary
+      link.href = `http://localhost:3000/api${formData.existingAttachment}`; // Adjust URL if necessary
       link.download = formData.existingAttachment.split("/").pop(); // Extract filename
       link.click();
     }
@@ -297,7 +297,7 @@ const Historylistedit = () => {
                       Download Attachment
                     </Button>
                   )}
-                  <label htmlFor="file-upload">
+                  {/* <label htmlFor="file-upload">
                     <Button
                       variant="contained"
                       component="span"
@@ -307,7 +307,7 @@ const Historylistedit = () => {
                     >
                       Upload New Attachment
                     </Button>
-                  </label>
+                  </label> */}
                   <input
                     type="file"
                     id="file-upload"
