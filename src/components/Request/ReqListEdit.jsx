@@ -227,7 +227,7 @@ const ReqListEdit = () => {
                     variant="outlined"
                     sx={{ backgroundColor: "#FFFFFF" }}
                   >
-                    {["Feature Request", "Bug Report", "Dashboard Request", "Connection Request"].map(
+                    {["Feature Request","User Feedback", "Bug Report", "Dashboard Request", "Connection Request"].map(
                       (type) => (
                         <MenuItem key={type} value={type}>
                           {type}
@@ -247,7 +247,7 @@ const ReqListEdit = () => {
                     variant="outlined"
                     sx={{ backgroundColor: "#FFFFFF" }}
                   >
-                    {["Email", "Phone", "In-Person"].map((method) => (
+                    {["Email", "Phone", "InPerson"].map((method) => (
                       <MenuItem key={method} value={method}>
                         {method}
                       </MenuItem>

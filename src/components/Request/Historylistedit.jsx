@@ -232,6 +232,7 @@ const Historylistedit = () => {
                     {[
                       "Feature Request",
                       "Bug Report",
+                      "User Feedback",
                       "Dashboard Request",
                       "Connection Request",
                     ].map((type) => (
@@ -252,7 +253,7 @@ const Historylistedit = () => {
                     variant="outlined"
                     sx={{ backgroundColor: "#FFFFFF" }}
                   >
-                    {["Email", "Phone", "In-Person"].map((method) => (
+                    {["Email", "Phone", "InPerson"].map((method) => (
                       <MenuItem key={method} value={method}>
                         {method}
                       </MenuItem>

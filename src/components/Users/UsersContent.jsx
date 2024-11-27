@@ -101,7 +101,7 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 									{user?.email ? user?.email : '-'}
 								</td>
 								<td className='py-3 px-2 md:px-4'>
-									{user?.mobile ? user?.mobile : '-'}
+									{user?.mobileNo ? user?.mobileNo : '-'}
 								</td>
 								<td className='py-3 px-2 md:px-4'>
 									<div className='flex space-x-2'>

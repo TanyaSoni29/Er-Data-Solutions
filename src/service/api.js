@@ -18,9 +18,11 @@ export const requestEndpoints = {
 };
 
 export const usersEndpoints = {
-	GET_ALL_USER: `${BASE_URL}/users`,
-	GET_USER_BY_ID: (id) => `${BASE_URL}/users/${id}`,
-	UPDATE_USER: (id) => `${BASE_URL}/users/${id}`,
-	DELETE_USER: (id) => `${BASE_URL}/users/${id}`,
-	RESET_PASSWORD: `${BASE_URL}/users/resetPassword`,
+	GET_ALL_USERS: `${BASE_URL}/users`, // Fetch all users
+	GET_USER_BY_ID: (id) => `${BASE_URL}/users/${id}`, // Fetch user by ID
+	UPDATE_USER: (id) => `${BASE_URL}/users/${id}`, // Update user by ID
+	DELETE_USER: (id) => `${BASE_URL}/users/${id}`, // Delete user by ID
+	CREATE_USER: `${BASE_URL}/users`, // Create a new user
+	RESET_PASSWORD: `${BASE_URL}/users/resetPassword`, // Reset password
 };
+
