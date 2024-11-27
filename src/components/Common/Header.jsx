@@ -19,6 +19,10 @@ const Header = () => {
 		'/users': 'Users',
 		'/users/addUser': 'Users',
 		'/requestsList': 'Requests',
+		'/reqeditlist': 'Edit Requests',
+		'/historylist': 'History Request List',
+		'/historylistedit': 'Edit Request',
+
 	};
 	const heading = headingMap[pathname] || 'Page Not Found';
 	const { user } = useSelector((state) => state.auth);
