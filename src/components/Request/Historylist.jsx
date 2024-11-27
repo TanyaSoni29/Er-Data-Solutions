@@ -1,5 +1,5 @@
 /** @format */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaRegCircle } from "react-icons/fa";
@@ -17,6 +17,11 @@ const HistoryList = () => {
   // Fetching data from Redux
   const { userRequests, loading } = useSelector((state) => state.request);
   const { token } = useSelector((state) => state.auth);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortConfig, setSortConfig] = useState({ key: "", direction: "asc" });
+  const requestsPerPage = 5;
 
   // Fetch user-specific requests on mount
   useEffect(() => {
@@ -36,6 +41,43 @@ const HistoryList = () => {
         dispatch(removeRequest(id)); // Update Redux after deletion
       }
     }
+  };
+
+  // Search logic
+  const filteredRequests = userRequests.filter((request) =>
+    [request.description, request.priority, request.completionStatus]
+      .map((field) => field?.toLowerCase() || "")
+      .some((field) => field.includes(searchQuery.toLowerCase()))
+  );
+
+  // Sorting logic
+  const sortedRequests = [...filteredRequests].sort((a, b) => {
+    if (!sortConfig.key) return 0;
+
+    const fieldA = a[sortConfig.key] || "";
+    const fieldB = b[sortConfig.key] || "";
+
+    if (sortConfig.direction === "asc") {
+      return fieldA > fieldB ? 1 : -1;
+    }
+    return fieldA < fieldB ? 1 : -1;
+  });
+
+  const totalPages = Math.ceil(sortedRequests.length / requestsPerPage);
+  const indexOfLastRequest = currentPage * requestsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+  const currentRequests = sortedRequests.slice(
+    indexOfFirstRequest,
+    indexOfLastRequest
+  );
+
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleSort = (key) => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+    }));
   };
 
   return (
@@ -64,6 +106,17 @@ const HistoryList = () => {
             </span>
           </div>
 
+          {/* Search Bar */}
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search by Description, Priority, or Status"
+              className="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
           {/* Table */}
           <div className="bg-white rounded-lg shadow overflow-x-auto">
             {loading ? (
@@ -74,21 +127,34 @@ const HistoryList = () => {
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="text-left text-gray-600 uppercase text-xs md:text-sm border-b">
-                    <th className="py-3 px-4">Sr. No</th>
-                    <th className="py-3 px-4">Date</th>
-                    <th className="py-3 px-4">Priority</th>
-                    <th className="py-3 px-4">Description</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4">Action</th>
+                    {[
+                      { label: "Sr. No", key: null },
+                      { label: "Date", key: "requestDate" },
+                      { label: "Priority", key: "priority" },
+                      { label: "Description", key: "description" },
+                      { label: "Status", key: "completionStatus" },
+                      { label: "Action", key: null },
+                    ].map(({ label, key }, index) => (
+                      <th
+                        key={index}
+                        className={`py-3 px-4 ${key ? "cursor-pointer" : ""}`}
+                        onClick={() => key && handleSort(key)}
+                      >
+                        {label}{" "}
+                        {key &&
+                          sortConfig.key === key &&
+                          (sortConfig.direction === "asc" ? "🔼" : "🔽")}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {userRequests.map((request, index) => (
+                  {currentRequests.map((request, index) => (
                     <tr
                       key={request.id}
                       className="border-b hover:bg-gray-50 text-sm"
                     >
-                      <td className="py-3 px-4">{index + 1}</td>
+                      <td className="py-3 px-4">{indexOfFirstRequest + index + 1}</td>
                       <td className="py-3 px-4">
                         {new Date(request.requestDate).toLocaleDateString()}
                       </td>
@@ -140,6 +206,30 @@ const HistoryList = () => {
                 </tbody>
               </table>
             )}
+          </div>
+
+          {/* Pagination */}
+          <div className="flex flex-wrap justify-between items-center p-4 text-gray-600 text-sm">
+            <span>
+              Showing {indexOfFirstRequest + 1} to{" "}
+              {Math.min(indexOfLastRequest, sortedRequests.length)} of{" "}
+              {sortedRequests.length} entries
+            </span>
+            <div className="flex space-x-2">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index + 1}
+                  className={`px-3 py-1 ${
+                    currentPage === index + 1
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 hover:bg-gray-300"
+                  } rounded`}
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
