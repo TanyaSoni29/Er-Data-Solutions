@@ -10,10 +10,11 @@ export const endpoints = {
 };
 
 export const requestEndpoints = {
-	GET_ALL_REQUEST: `${BASE_URL}/requests`,
-	GET_REQUEST_BY_ID: (id) => `${BASE_URL}/requests/${id}`,
-	UPDATE_REQUEST: (id) => `${BASE_URL}/requests/${id}`,
-	DELETE_REQUEST: (id) => `${BASE_URL}/requests/${id}`,
+	GET_ALL_REQUEST: `${BASE_URL}/requests`, // Get all requests (admin/debugging)
+	GET_REQUESTS_BY_USER: (userId) => `${BASE_URL}/requests/user/${userId}`, // Get requests by userId
+	GET_REQUEST_BY_ID: (id) => `${BASE_URL}/requests/${id}`, // Get request by ID
+	UPDATE_REQUEST: (id) => `${BASE_URL}/requests/${id}`, // Update request by ID
+	DELETE_REQUEST: (id) => `${BASE_URL}/requests/${id}`, // Delete request by ID
 };
 
 export const usersEndpoints = {
