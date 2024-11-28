@@ -51,13 +51,12 @@ const Sidebar = () => {
             >
                 {/* Logo Section */}
                 <div className='mb-8 flex justify-start items-center'>
-                    <img
-                        src={LogoImg} // Replace with your logo path
-                        alt='ER Data Solutions'
-                        className='w-10 h-10'
-                    />
-                    <span className='font-bold w-20 ml-2'>ER Data Solution</span>
-                </div>
+					<img
+						src={LogoImg} // Replace with your logo path
+						alt='ER Data Solutions'
+					/>
+					<span className='font-bold w-20'>ER Data Solution</span>
+				</div>
 
                 <nav>
                     <ul className='space-y-1'>
