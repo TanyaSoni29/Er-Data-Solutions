@@ -87,6 +87,10 @@ const ProfilesContent = () => {
 	};
 
 	useEffect(() => {
+		dispatch(refreshUser());
+	}, [dispatch]);
+
+	useEffect(() => {
 		// Set the default profile image from API if available
 		if (user?.image) {
 			setProfileImage(user.image);
