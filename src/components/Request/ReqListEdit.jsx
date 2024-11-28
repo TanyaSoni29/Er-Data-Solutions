@@ -93,13 +93,19 @@ const ReqListEdit = () => {
 
   // Handle file download
   const handleDownload = () => {
-    if (formData.existingAttachment) {
-      const link = document.createElement("a");
-      link.href = `http://localhost:3000/api${formData.existingAttachment}`; // Adjust URL if necessary
-      link.download = formData.existingAttachment.split("/").pop(); // Extract filename
-      link.click();
-    }
-  };
+		if (formData.existingAttachment) {
+			const link = document.createElement('a');
+			link.href = `http://localhost:3000/api${formData.existingAttachment}`; // Adjust URL if necessary
+			link.setAttribute(
+				'download',
+				formData.existingAttachment.split('/').pop()
+			); // Extract filename
+			link.setAttribute('target', '_blank'); // Open in a new tab if the file type is viewable (like images, PDFs)
+			document.body.appendChild(link); // Append link to body
+			link.click(); // Trigger download
+			document.body.removeChild(link); // Remove link after download
+		}
+	};
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -276,45 +282,52 @@ const ReqListEdit = () => {
                 </Grid>
 
                 {/* File Upload and Download */}
-                <Grid item xs={12}>
-                  <Typography variant="body1" gutterBottom>
-                    Attachment
-                  </Typography>
-                  {formData.existingAttachment && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleDownload}
-                      startIcon={<AiOutlineDownload />}
-                      sx={{ textTransform: "none", mr: 2 }}
-                    >
-                      Download Attachment
-                    </Button>
-                  )}
-                  {/* <label htmlFor="file-upload">
-                    <Button
-                      variant="contained"
-                      component="span"
-                      color="primary"
-                      startIcon={<AiOutlineDownload />}
-                      sx={{ textTransform: "none" }}
-                    >
-                      Upload New Attachment
-                    </Button>
-                  </label> */}
-                  <input
-                    type="file"
-                    id="file-upload"
-                    name="attachment"
-                    onChange={handleFileUpload}
-                    style={{ display: "none" }}
-                  />
-                  {formData.attachment && (
-                    <Typography variant="body2" mt={1}>
-                      Uploaded: {formData.attachment.name}
-                    </Typography>
-                  )}
-                </Grid>
+								<Grid
+									item
+									xs={12}
+								>
+									<Typography
+										variant='body1'
+										gutterBottom
+									>
+										Attachment
+									</Typography>
+									{formData.existingAttachment ? (
+										<Box
+											display='flex'
+											alignItems='center'
+										>
+											<Typography
+												variant='body2'
+												sx={{ mr: 2 }}
+											>
+												{`Attached File: ${formData.existingAttachment
+													.split('/')
+													.pop()}`}
+											</Typography>
+											<Button
+												variant='contained'
+												color='primary'
+												onClick={handleDownload}
+												startIcon={<AiOutlineDownload />}
+												sx={{
+													'textTransform': 'none',
+													'bgcolor': '#00449B',
+													'&:hover': { bgcolor: '#003876' },
+												}}
+											>
+												Download
+											</Button>
+										</Box>
+									) : (
+										<Typography
+											variant='body2'
+											color='textSecondary'
+										>
+											No attachment available
+										</Typography>
+									)}
+								</Grid>
 
                 {/* Submit Button */}
                 <Grid item xs={12} display="flex" justifyContent="flex-end">
