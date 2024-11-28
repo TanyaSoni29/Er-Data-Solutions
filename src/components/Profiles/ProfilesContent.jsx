@@ -8,10 +8,11 @@ import { refreshUser } from '../../slices/userSlice';
 import toast from 'react-hot-toast';
 
 const ProfilesContent = () => {
-	const { user, token } = useSelector((state) => state.auth);
+	const { user: loginUser, token } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
-
-	console.log(user);
+	console.log(loginUser);
+	const { users } = useSelector((state) => state.user);
+	const user = users.find((u) => u.id === loginUser.id);
 
 	const [profileImage, setProfileImage] = useState(user?.image || null); // State for managing profile image
 
@@ -30,6 +31,10 @@ const ProfilesContent = () => {
 		reset: resetPasswordForm,
 	} = useForm();
 
+	useEffect(() => {
+		dispatch(refreshUser());
+	}, [dispatch]);
+
 	// Handle Profile Update Submit
 	const onSubmitProfile = async (data) => {
 		const newData = new FormData();
@@ -43,8 +48,9 @@ const ProfilesContent = () => {
 		console.log(newData);
 		try {
 			const response = await updateUser(token, user?.id, newData);
-			console.log(response);
-			dispatch(refreshUser());
+			if (response.message === 'User updated successfully') {
+				dispatch(refreshUser());
+			}
 		} catch (error) {
 			console.log('Profile Updated Error:', error);
 		}
@@ -85,10 +91,6 @@ const ProfilesContent = () => {
 			reader.readAsDataURL(file);
 		}
 	};
-
-	useEffect(() => {
-		dispatch(refreshUser());
-	}, [dispatch]);
 
 	useEffect(() => {
 		// Set the default profile image from API if available
