@@ -91,20 +91,40 @@ const Historylistedit = () => {
 	};
 
 	// Handle file download
-	const handleDownload = () => {
-		if (formData.existingAttachment) {
+	// Handle file download
+const handleDownload = async () => {
+	if (formData.existingAttachment) {
+		try {
+			// Full URL to the attachment
+			const fileUrl = `http://localhost:3000/api${formData.existingAttachment}`; // Adjust the base URL if needed
+
+			// Fetch the file blob from the server
+			const response = await fetch(fileUrl, {
+				headers: {
+					Authorization: `Bearer ${token}`, // Pass token if authorization is required
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error('Failed to download file');
+			}
+
+			// Create a blob from the response
+			const blob = await response.blob();
+
+			// Create a download link and trigger the download
 			const link = document.createElement('a');
-			link.href = `http://localhost:3000/api${formData.existingAttachment}`; // Adjust URL if necessary
-			link.setAttribute(
-				'download',
-				formData.existingAttachment.split('/').pop()
-			); // Extract filename
-			link.setAttribute('target', '_blank'); // Open in a new tab if the file type is viewable (like images, PDFs)
-			document.body.appendChild(link); // Append link to body
-			link.click(); // Trigger download
-			document.body.removeChild(link); // Remove link after download
+			link.href = window.URL.createObjectURL(blob);
+			link.download = formData.existingAttachment.split('/').pop(); // Use the file name from the URL
+			document.body.appendChild(link); // Append link to the DOM
+			link.click(); // Trigger the download
+			document.body.removeChild(link); // Remove link from the DOM
+		} catch (error) {
+			console.error('Error downloading file:', error);
 		}
-	};
+	}
+};
+
 
 	// Handle form submission
 	const handleSubmit = async (e) => {
