@@ -16,6 +16,7 @@ import Historylistedit from './components/Request/Historylistedit';
 import ForgotPassword from './components/Authentication/ForgetPassword';
 import Dashboard1 from './pages/Dashboard1';
 import Dashboard2 from './pages/Dashboard2';
+import Dashboard3 from './pages/Dashboard3';
 import Profiles from './pages/Profiles';
 import RequestUser from './pages/RequestUser';
 import AddUserSecond from './pages/AddUserSecond';
@@ -72,6 +73,15 @@ const App = () => {
 					element={
 						<ProtectedRoute
 							element={<Dashboard2 />}
+							allowedRoles={['2']} // Only role 2 can access
+						/>
+					}
+				/>
+				<Route
+					path='/dashboard-3'
+					element={
+						<ProtectedRoute
+							element={<Dashboard3 />}
 							allowedRoles={['2']} // Only role 2 can access
 						/>
 					}
