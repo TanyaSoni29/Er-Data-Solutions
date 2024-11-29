@@ -92,42 +92,40 @@ const Historylistedit = () => {
 
 	// Handle file download
 	// Handle file download
-const handleDownload = async () => {
-	if (formData.existingAttachment) {
-		try {
+	const handleDownload = async () => {
+		if (formData.existingAttachment) {
+			try {
+				const baseUrl = import.meta.env.VITE_BASE_URL; // Access VITE_BASE_URL
 
-			const baseUrl = import.meta.env.VITE_BASE_URL; // Access VITE_BASE_URL
-			
-			// Full URL to the attachment
-			const fileUrl = `${baseUrl}${formData.existingAttachment}`; // Adjust the base URL if needed
+				// Full URL to the attachment
+				const fileUrl = `${baseUrl}${formData.existingAttachment}`; // Adjust the base URL if needed
 
-			// Fetch the file blob from the server
-			const response = await fetch(fileUrl, {
-				headers: {
-					Authorization: `Bearer ${token}`, // Pass token if authorization is required
-				},
-			});
+				// Fetch the file blob from the server
+				const response = await fetch(fileUrl, {
+					headers: {
+						Authorization: `Bearer ${token}`, // Pass token if authorization is required
+					},
+				});
 
-			if (!response.ok) {
-				throw new Error('Failed to download file');
+				if (!response.ok) {
+					throw new Error('Failed to download file');
+				}
+
+				// Create a blob from the response
+				const blob = await response.blob();
+
+				// Create a download link and trigger the download
+				const link = document.createElement('a');
+				link.href = window.URL.createObjectURL(blob);
+				link.download = formData.existingAttachment.split('/').pop(); // Use the file name from the URL
+				document.body.appendChild(link); // Append link to the DOM
+				link.click(); // Trigger the download
+				document.body.removeChild(link); // Remove link from the DOM
+			} catch (error) {
+				console.error('Error downloading file:', error);
 			}
-
-			// Create a blob from the response
-			const blob = await response.blob();
-
-			// Create a download link and trigger the download
-			const link = document.createElement('a');
-			link.href = window.URL.createObjectURL(blob);
-			link.download = formData.existingAttachment.split('/').pop(); // Use the file name from the URL
-			document.body.appendChild(link); // Append link to the DOM
-			link.click(); // Trigger the download
-			document.body.removeChild(link); // Remove link from the DOM
-		} catch (error) {
-			console.error('Error downloading file:', error);
 		}
-	}
-};
-
+	};
 
 	// Handle form submission
 	const handleSubmit = async (e) => {
