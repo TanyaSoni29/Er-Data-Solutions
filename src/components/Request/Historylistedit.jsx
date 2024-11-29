@@ -95,8 +95,11 @@ const Historylistedit = () => {
 const handleDownload = async () => {
 	if (formData.existingAttachment) {
 		try {
+
+			const baseUrl = import.meta.env.VITE_BASE_URL; // Access VITE_BASE_URL
+			
 			// Full URL to the attachment
-			const fileUrl = `http://localhost:3000/api${formData.existingAttachment}`; // Adjust the base URL if needed
+			const fileUrl = `${baseUrl}${formData.existingAttachment}`; // Adjust the base URL if needed
 
 			// Fetch the file blob from the server
 			const response = await fetch(fileUrl, {
