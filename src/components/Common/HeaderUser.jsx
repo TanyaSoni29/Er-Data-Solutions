@@ -22,6 +22,7 @@ const HeaderUser = () => {
 		'/dashboard-1': 'Dashboard-2',
 		'/requests': 'Requests',
 		'/profiles': 'User Profile',
+		'/model': "Modal",
 	};
 
 	// Get the heading based on pathname, or a default if not found

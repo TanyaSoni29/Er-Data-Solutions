@@ -18,6 +18,7 @@ import Dashboard1 from './pages/Dashboard1';
 import Dashboard2 from './pages/Dashboard2';
 import Dashboard3 from './pages/Dashboard3';
 import Profiles from './pages/Profiles';
+import ModelFile from './pages/model.jsx';
 import RequestUser from './pages/RequestUser';
 import AddUserSecond from './pages/AddUserSecond';
 
@@ -120,11 +121,20 @@ const App = () => {
 					}
 				/>
 				<Route
+					path='/model'
+					element={
+						<ProtectedRoute
+							element={<ModelFile />}
+							allowedRoles={['1', '2']} // Both roles 1 and 2 can access
+						/>
+					}
+				/>
+				<Route
 					path='/requests'
 					element={
 						<ProtectedRoute
 							element={<Request />}
-							allowedRoles={['1', '2']} // Both roles 1 and 2 can access
+							allowedRoles={['1']} // Both roles 1 and 2 can access
 						/>
 					}
 				/>

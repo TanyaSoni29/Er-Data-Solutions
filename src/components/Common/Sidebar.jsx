@@ -3,6 +3,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LogoImg from '../../assets/LogoImg.png';
 import { AiOutlineAppstore } from 'react-icons/ai';
+import { FaModx } from "react-icons/fa6";
 import { PiUsersThree } from 'react-icons/pi';
 import { RxBox } from 'react-icons/rx';
 import { IoMdLogOut } from 'react-icons/io';
@@ -146,6 +147,23 @@ const Sidebar = () => {
                                 >
                                     <AiOutlineAppstore fontSize={22} />
                                     <span>Profiles</span>
+                                </Link>
+                            </li>
+                        )}
+
+                         {/* Admin Model */}
+                         {user?.role === '1' && (
+                            <li>
+                                <Link
+                                    to='/model'
+                                    className={`flex items-center space-x-2 p-3 rounded ${
+                                        isActive('/profiles')
+                                            ? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
+                                            : 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
+                                    }`}
+                                >
+                                    <FaModx fontSize={22} />
+                                    <span>Modal</span>
                                 </Link>
                             </li>
                         )}
