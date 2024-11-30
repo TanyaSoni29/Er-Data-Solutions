@@ -20,8 +20,8 @@ const HeaderUser = () => {
 	const headingMap = {
 		'/dashboard-role2': 'Dashboard-1',
 		'/dashboard-1': 'Dashboard-2',
-		'/requests': 'Request',
-		'/profiles': 'Profile',
+		'/requests': 'Requests',
+		'/profiles': 'User Profile',
 	};
 
 	// Get the heading based on pathname, or a default if not found

@@ -78,7 +78,6 @@ const EditUserSecondContent = ({
 								<div className='flex w-full items-center space-x-4'>
 									<div className='bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center'>
 										Dashboard 1
-										<span className='ml-2 w-2 h-2 rounded-full bg-green-500'></span>
 									</div>
 									<input
 										type='text'

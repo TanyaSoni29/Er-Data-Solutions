@@ -37,24 +37,25 @@ const ProfilesContent = () => {
 
 	// Handle Profile Update Submit
 	const onSubmitProfile = async (data) => {
-		const newData = new FormData();
-		if (profileImage && profileImage !== user?.image) {
-			// If the image is changed, add it to the form data
-			newData.append('image', profileImage);
-		}
-		newData.append('contactPerson', data.contactPerson);
-		newData.append('email', data.email);
-		newData.append('mobileNo', data.mobileNo);
-		console.log(newData);
-		try {
-			const response = await updateUser(token, user?.id, newData);
-			if (response.message === 'User updated successfully') {
-				dispatch(refreshUser());
-			}
-		} catch (error) {
-			console.log('Profile Updated Error:', error);
-		}
-	};
+    const newData = new FormData();
+    if (fileData) {
+      newData.append("image", fileData); // Append the compressed image file
+    }
+    newData.append("contactPerson", data.contactPerson);
+    newData.append("email", data.email);
+    newData.append("mobileNo", data.mobileNo);
+
+    try {
+      const response = await updateUser(token, user?.id, newData);
+      if (response.message === "User updated successfully") {
+        dispatch(refreshUser());
+        toast.success("Profile updated successfully");
+      }
+    } catch (error) {
+      toast.error("Error updating profile");
+      console.log("Profile Update Error:", error);
+    }
+  };
 
 	// Handle Password Change Submit
 	const onSubmitPassword = async (data) => {
@@ -82,15 +83,24 @@ const ProfilesContent = () => {
 
 	// Handle Image Upload
 	const handleImageUpload = (event) => {
-		const file = event.target.files[0];
-		if (file) {
-			const reader = new FileReader();
-			reader.onload = () => {
-				setProfileImage(reader.result); // Update state with the uploaded image
-			};
-			reader.readAsDataURL(file);
-		}
-	};
+    const file = event.target.files[0]; // Get the uploaded file
+    if (file) {
+      // Compress the image using Compressor.js
+      new Compressor(file, {
+        quality: 0.6, // Adjust quality (0.6 = 60% quality)
+        maxWidth: 800, // Limit width
+        maxHeight: 800, // Limit height
+        success(result) {
+          setProfileImage(URL.createObjectURL(result)); // Preview the compressed image
+          setFileData(result); // Store the compressed file
+        },
+        error(err) {
+          console.error("Image compression error", err);
+        },
+      });
+    }
+  };
+
 
 	useEffect(() => {
 		// Set the default profile image from API if available
