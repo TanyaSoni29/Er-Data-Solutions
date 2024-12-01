@@ -1,12 +1,35 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+/** @format */
+
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getFormById } from "../../service/operations/formApi";
 
 const Dashboard1Content = () => {
-  const { user } = useSelector((state) => state.auth);
-  const [isModalOpen, setIsModalOpen] = useState(true); // Open modal by default
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth); // Get user from Redux
+  const [formData, setFormData] = useState(null); // State for form data
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [isModalOpen, setIsModalOpen] = useState(true); // Modal open state
+  const BASE_URL = import.meta.env.VITE_BASE_URL; // Backend base URL
 
-  // Log the user data to ensure the link is coming from Redux
-  console.log('User data from Redux:', user);
+  // Fetch the form data when the component mounts
+  useEffect(() => {
+    const fetchFormData = async () => {
+      try {
+        const token = user?.token; // Use token from Redux if available
+        const formId = "4"; // Replace with the specific form ID
+        const response = await getFormById(token, formId); // Fetch form by ID
+        console.log("Fetched Form Data:", response); // Debug
+        setFormData(response); // Save the fetched data
+      } catch (error) {
+        console.error("Error fetching form data:", error);
+      } finally {
+        setIsLoading(false); // Set loading to false after API call
+      }
+    };
+
+    fetchFormData();
+  }, [user]);
 
   // Handle modal close
   const closeModal = () => {
@@ -15,15 +38,26 @@ const Dashboard1Content = () => {
 
   // Handle visit URL
   const visitUrl = () => {
-    if (user?.dashboardUrl1) {
-      window.open(user.dashboardUrl1, '_blank');
+    if (formData?.link) {
+      window.open(formData.link, "_blank");
+    } else {
+      console.error("No link available in form data.");
     }
   };
+
+  // Show loader while waiting for API response
+  if (isLoading) {
+    return (
+      <div className="p-6 bg-[#F8F9FD] min-h-screen flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 bg-[#F8F9FD] min-h-screen">
       {/* Modal */}
-      {isModalOpen && (
+      {isModalOpen && formData && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-[80%] md:w-[60%] relative">
             {/* Close Button */}
@@ -36,26 +70,40 @@ const Dashboard1Content = () => {
 
             {/* Modal Content */}
             <div className="text-center">
+              {/* Debugging: Log Full Image URL */}
+              <p className="text-sm text-gray-500">
+                Debug Full Image URL: {`${BASE_URL}${formData.imagePath}`}
+              </p>
+
               {/* Image */}
-              <img
-                src="your-image-url-here" // Replace with actual image URL or local image path
-                alt="Modal Image"
-                className="w-full h-64 object-cover rounded-lg mb-4"
-              />
+              {formData.imagePath ? (
+                <img
+                  src={`${BASE_URL}${
+                    formData.imagePath
+                  }?timestamp=${new Date().getTime()}`} // Cache-busting query parameter
+                  alt="Modal Image"
+                  className="w-full h-64 object-cover rounded-lg mb-4"
+                />
+              ) : (
+                <p className="text-gray-500">No image available</p>
+              )}
 
               {/* Description */}
               <p className="text-gray-800 text-lg mb-6">
-                This is the description of the dashboard. You can customize
-                this text based on your needs.
+                {formData.description || "No description available"}
               </p>
 
               {/* Visit URL Button */}
-              <button
-                onClick={visitUrl}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none"
-              >
-                Visit URL
-              </button>
+              {formData.link ? (
+                <button
+                  onClick={visitUrl}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none"
+                >
+                  Visit URL
+                </button>
+              ) : (
+                <p className="text-gray-500">No link available</p>
+              )}
             </div>
           </div>
         </div>
@@ -69,8 +117,8 @@ const Dashboard1Content = () => {
           width="100%"
           height="640px"
           style={{
-            border: 'none',
-            borderRadius: '8px',
+            border: "none",
+            borderRadius: "8px",
           }}
         ></iframe>
       ) : (

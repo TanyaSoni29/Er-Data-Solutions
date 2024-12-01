@@ -26,3 +26,11 @@ export const usersEndpoints = {
 	RESET_PASSWORD: `${BASE_URL}/users/resetPassword`, // Reset password
 };
 
+export const formEndpoints = {
+	GET_ALL_FORMS: `${BASE_URL}/forms`, // Fetch all forms
+	GET_FORM_BY_ID: (id) => `${BASE_URL}/forms/${id}`, // Get form by ID
+	CREATE_FORM: `${BASE_URL}/forms`, // Create a new form
+	UPDATE_FORM: (id) => `${BASE_URL}/forms/${id}`, // Update form by ID
+	DELETE_FORM: (id) => `${BASE_URL}/forms/${id}`, // Delete form by ID
+  };
+
