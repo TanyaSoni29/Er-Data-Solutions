@@ -225,7 +225,7 @@ const RequestForm = () => {
 					</div>
 
 					{/* Completion Status */}
-					{/* <div>
+					<div>
 						<label className='block text-gray-600 mb-2'>
 							Completion Status
 						</label>
@@ -251,7 +251,7 @@ const RequestForm = () => {
 								{errors.completionStatus.message}
 							</p>
 						)}
-					</div> */}
+					</div>
 
 					{/* File Attachment */}
 					<div>
