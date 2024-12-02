@@ -85,7 +85,7 @@ const ModelFile = () => {
         <div className="grid grid-cols-1 gap-10">
           {/* Form Section */}
           <div>
-            <h2 className="text-xl font-semibold text-blue-600 mb-4">Model Form</h2>
+            <h2 className="text-xl font-semibold text-blue-600 mb-4">Modal Form</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
               {/* Image Upload */}
               <div className="mb-4 flex items-center">

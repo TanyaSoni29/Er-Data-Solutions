@@ -20,6 +20,7 @@ const HeaderUser = () => {
 	const headingMap = {
 		'/dashboard-role2': 'Dashboard-1',
 		'/dashboard-1': 'Dashboard-2',
+        '/dashboard-3': 'Dashboard-3',
 		'/requests': 'Requests',
 		'/profiles': 'User Profile',
 		'/model': "Modal",
