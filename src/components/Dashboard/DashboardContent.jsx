@@ -207,7 +207,7 @@ const DashboardContent = () => {
       </Grid>
 
       {/* Table Section */}
-      <TableContainer component={Paper} sx={{ mt: 4 }}>
+      {/* <TableContainer component={Paper} sx={{ mt: 4 }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -250,7 +250,7 @@ const DashboardContent = () => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
     </Box>
   );
 };

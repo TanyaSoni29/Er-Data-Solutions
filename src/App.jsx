@@ -134,7 +134,7 @@ const App = () => {
 					element={
 						<ProtectedRoute
 							element={<Request />}
-							allowedRoles={['1']} // Both roles 1 and 2 can access
+							allowedRoles={['2']} // Both roles 1 and 2 can access
 						/>
 					}
 				/>
