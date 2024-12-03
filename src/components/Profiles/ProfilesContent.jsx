@@ -71,8 +71,16 @@ const ProfilesContent = () => {
 				maxWidth: 800, // Restrict maximum width
 				maxHeight: 800, // Restrict maximum height
 				success(result) {
-					setProfileImage(URL.createObjectURL(result)); // Preview the compressed image
-					setFileData(result); // Store compressed file
+					// Set the image preview and store compressed file
+					setProfileImage(URL.createObjectURL(result)); // Show preview of compressed image
+					setFileData(result); // Store the compressed file for upload
+	
+					// Log the file data to the console
+					console.log("Uploaded Image:", result);
+					console.log("Compressed Image Size:", result.size / 1024, "KB"); // Log the file size in KB
+	
+					// You can also log the object URL to make sure it's created properly
+					console.log("Object URL for Preview:", URL.createObjectURL(result));
 				},
 				error(err) {
 					console.error('Image compression error:', err);
@@ -81,6 +89,7 @@ const ProfilesContent = () => {
 			});
 		}
 	};
+	
 
 	const onSubmitProfile = async (data) => {
 		if (!fileData) {
