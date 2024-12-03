@@ -63,57 +63,66 @@ const ProfilesContent = () => {
 	};
 
 	const handleImageUpload = (event) => {
-		const file = event.target.files[0];
-		if (file) {
-			// Compress the image
-			new Compressor(file, {
-				quality: 0.6, // Reduce image quality
-				maxWidth: 800, // Restrict maximum width
-				maxHeight: 800, // Restrict maximum height
-				success(result) {
-					// Set the image preview and store compressed file
-					setProfileImage(URL.createObjectURL(result)); // Show preview of compressed image
-					setFileData(result); // Store the compressed file for upload
-	
-					// Log the file data to the console
-					console.log("Uploaded Image:", result);
-					console.log("Compressed Image Size:", result.size / 1024, "KB"); // Log the file size in KB
-	
-					// You can also log the object URL to make sure it's created properly
-					console.log("Object URL for Preview:", URL.createObjectURL(result));
-				},
-				error(err) {
-					console.error('Image compression error:', err);
-					toast.error('Image compression failed. Please try again.');
-				},
-			});
-		}
-	};
-	
-
-	const onSubmitProfile = async (data) => {
-		if (!fileData) {
-			toast.error('Please upload an image.');
-			return;
-		}
-
-		const formData = new FormData();
-		formData.append('image', fileData); // Add compressed image
-		formData.append('contactPerson', data.contactPerson); // Add name
-		formData.append('email', data.email); // Add email
-		formData.append('mobileNo', data.mobileNo); // Add mobile number
-
-		try {
-			const response = await updateUser(token, user?.id, formData);
-			if (response.message === 'User updated successfully') {
-				dispatch(refreshUser());
-				toast.success('Profile updated successfully!');
-			}
-		} catch (error) {
-			console.error('Profile Update Error:', error);
-			toast.error('Failed to update profile. Please try again.');
-		}
-	};
+    const file = event.target.files[0];
+    if (file) {
+      // Store the original file for form submission
+      setOriginalFile(file); // Store the original file
+      
+      // Compress the image for preview
+      new Compressor(file, {
+        quality: 0.6, // Reduce image quality
+        maxWidth: 800, // Restrict maximum width
+        maxHeight: 800, // Restrict maximum height
+        success(result) {
+          // Set the image preview and store compressed file
+          setProfileImage(URL.createObjectURL(result)); // Show preview of compressed image
+          setFileData(result); // Store the compressed file for upload
+  
+          // Log the file data to the console
+          console.log("Uploaded Image:", result);
+          console.log("Compressed Image Size:", result.size / 1024, "KB"); // Log the file size in KB
+  
+          // Log the object URL to make sure it's created properly
+          console.log("Object URL for Preview:", URL.createObjectURL(result));
+        },
+        error(err) {
+          console.error('Image compression error:', err);
+          toast.error('Image compression failed. Please try again.');
+        },
+      });
+    }
+  };
+  
+  // Define a state to store the original file (with extension)
+  const [originalFile, setOriginalFile] = useState(null);
+  
+  // On form submission, use the original file (not the compressed one) for upload
+  const onSubmitProfile = async (data) => {
+    if (!fileData) {
+      toast.error('Please upload an image.');
+      return;
+    }
+  
+    const formData = new FormData();
+    
+    // Use the original file for the form submission to preserve the extension
+    formData.append('image', originalFile); // Append the original file
+    formData.append('contactPerson', data.contactPerson); // Add contact person
+    formData.append('email', data.email); // Add email
+    formData.append('mobileNo', data.mobileNo); // Add mobile number
+  
+    try {
+      const response = await updateUser(token, user?.id, formData);
+      if (response.message === 'User updated successfully') {
+        dispatch(refreshUser());
+        toast.success('Profile updated successfully!');
+      }
+    } catch (error) {
+      console.error('Profile Update Error:', error);
+      toast.error('Failed to update profile. Please try again.');
+    }
+  };
+  
 
 	useEffect(() => {
 		// Set the default profile image from API if available
