@@ -12,12 +12,14 @@ const {
   RESET_PASSWORD,
 } = usersEndpoints;
 
-// Create a new user
+// Create a new user (with file upload support)
 export const createUser = async (token, data) => {
   try {
+    // Check if 'data' is FormData (file upload case)
+    const isFormData = data instanceof FormData;
     const response = await apiConnector('POST', GET_ALL_USERS, data, {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
     });
 
     console.log('Create New User API Response:', response.data);
@@ -68,12 +70,14 @@ export const getUserById = async (token, userId) => {
   }
 };
 
-// Update user
+// Update user (with file upload support)
 export const updateUser = async (token, userId, data) => {
   try {
+    // Check if 'data' is FormData (file upload case)
+    const isFormData = data instanceof FormData;
     const response = await apiConnector('PUT', UPDATE_USER(userId), data, {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
     });
 
     console.log('Update User API Response:', response.data);

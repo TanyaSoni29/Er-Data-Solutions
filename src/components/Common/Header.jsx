@@ -23,8 +23,12 @@ const Header = () => {
 		'/reqeditlist': 'Edit Requests',
 		'/historylist': 'History Request List',
 		'/historylistedit': 'Edit Request',
-
 	};
+
+	// const profileImage = user?.image
+	// 	? `${import.meta.env.VITE_BASE_URL}${user.image}` // Prepend base URL to the relative path
+	// 	: ProfileImg;
+
 	const heading = headingMap[pathname] || 'Page Not Found';
 	const { user } = useSelector((state) => state.auth);
 
