@@ -29,7 +29,7 @@ const HeaderUser = () => {
 
 	// Construct absolute profile image URL
 	const profileImage = user?.image
-		? `${import.meta.env.VITE_BASE_URL}${user.image}` // Prepend base URL to the relative path
+		? `${import.meta.env.VITE_BASE_URL}/${user.image}` // Prepend base URL to the relative path
 		: JohnImg; // Use fallback image if no image is available
 
 		console.log('Profile Image Path:', profileImage);

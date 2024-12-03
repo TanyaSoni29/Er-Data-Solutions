@@ -21,64 +21,59 @@ const AddUserSecondStep = ({ addUserDate1 }) => {
   } = useForm();
 
   // Handle Logo Upload
-  // Validate file extension before appending
-const handleLogoUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const validExtensions = ['.png', '.jpg', '.jpeg'];
-    const fileExtension = file.name.split('.').pop().toLowerCase();
+  const handleLogoUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const validExtensions = ['.png', '.jpg', '.jpeg'];
+      const fileExtension = file.name.split('.').pop().toLowerCase();
 
-    if (!validExtensions.includes(`.${fileExtension}`)) {
-      toast.error('Invalid file type. Only .png, .jpg, and .jpeg files are allowed.');
-      return;
+      if (!validExtensions.includes(`.${fileExtension}`)) {
+        toast.error('Invalid file type. Only .png, .jpg, and .jpeg files are allowed.');
+        return;
+      }
+
+      setLogo(file);  // Save file to state
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        setLogoPreview(reader.result); // Set the logo preview
+      };
+      reader.readAsDataURL(file); // Preview the file
     }
-
-    setLogo(file);  // Save file to state
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setLogoPreview(reader.result); // Set the logo preview
-    };
-    reader.readAsDataURL(file); // Preview the file
-  }
-};
-
+  };
 
   // Handle form submission
-const onSubmit = async (data) => {
-  try {
-    const formData = new FormData();
+  const onSubmit = async (data) => {
+    try {
+      const formData = new FormData();
   
-    // Append the logo file to FormData (it automatically includes its extension)
-    if (logo) {
-      formData.append('logo', logo); // Append the logo file with its original extension
-    } else {
-      console.log("Logo is missing");
-    }
-  
-    // Append other form data (dashboard URLs and other fields)
-    const combineData = { ...addUserDate1, ...data };
-    for (const key in combineData) {
-      if (combineData[key]) {
-        formData.append(key, combineData[key]);
+      // Append the logo file to FormData if it's available
+      if (logo) {
+        formData.append('logo', logo); // Append the logo file with its original extension
       }
+  
+      // Append other form data (dashboard URLs and other fields)
+      const combineData = { ...addUserDate1, ...data };
+      for (const key in combineData) {
+        if (combineData[key]) {
+          formData.append(key, combineData[key]);
+        }
+      }
+  
+      // Debug the formData before sending (optional)
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+  
+      // Send data to backend using the createUser API
+      const response = await createUser(token, formData);
+      console.log(response);
+      dispatch(refreshUser());
+      navigate('/users');
+    } catch (error) {
+      console.log(error);
     }
-  
-    // Debug the formData before sending (optional)
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
-  
-    // Send data to backend using the createUser API
-    const response = await createUser(token, formData);
-    console.log(response);
-    dispatch(refreshUser());
-    navigate('/users');
-  } catch (error) {
-    console.log(error);
-  }
-};
-  
+  };
 
   return (
     <div className="p-4 md:p-6 min-h-screen">
