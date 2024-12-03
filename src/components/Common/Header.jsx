@@ -2,7 +2,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { CgBox } from 'react-icons/cg';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { logout } from '../../service/operations/authApi';
 import ProfileImg from '../../assets/ProfileImg.png'; // Default fallback image
 
@@ -26,10 +26,19 @@ const Header = () => {
   const heading = headingMap[pathname] || 'Page Not Found';
   const { user } = useSelector((state) => state.auth);
 
-  // Dynamically construct the profile image URL or use the fallback image
-  const profileImage = user?.image
-    ? `${import.meta.env.VITE_BASE_URL}/${user.image}` // Dynamically set the user's image
-    : ProfileImg; // Fallback to default image if the user doesn't have an image
+  // State for dynamically changing profile image
+  const [profileImage, setProfileImage] = useState(ProfileImg); // Fallback to default initially
+
+  useEffect(() => {
+    // Set the profile image URL dynamically when the user data is available
+    if (user?.image) {
+      const imageUrl = `${import.meta.env.VITE_BASE_URL}/${user.image}`;
+      setProfileImage(imageUrl); // Set the dynamically constructed image URL
+      console.log("Profile Image URL:", imageUrl); // Log for debugging
+    } else {
+      setProfileImage(ProfileImg); // Use fallback if no image
+    }
+  }, [user]); // Only rerun this effect when the user data changes
 
   return (
     <div className="w-full flex flex-wrap justify-between items-center bg-white drop-shadow-lg py-6 px-6 md:px-10">
