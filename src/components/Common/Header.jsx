@@ -23,8 +23,12 @@ const Header = () => {
 		'/reqeditlist': 'Edit Requests',
 		'/historylist': 'History Request List',
 		'/historylistedit': 'Edit Request',
-
 	};
+
+	const profileImage = user?.image
+		? `${import.meta.env.VITE_BASE_URL}${user.image}` // Prepend base URL to the relative path
+		: ProfileImg;
+
 	const heading = headingMap[pathname] || 'Page Not Found';
 	const { user } = useSelector((state) => state.auth);
 
@@ -37,7 +41,7 @@ const Header = () => {
 			<div className='flex justify-end items-center space-x-2'>
 				<img
 					// src={user?.image} // Replace with your profile image path
-					src={ProfileImg}
+					src={profileImage}
 					alt='Profile'
 					className='w-8 h-8 md:w-10 md:h-10 rounded-full'
 				/>
