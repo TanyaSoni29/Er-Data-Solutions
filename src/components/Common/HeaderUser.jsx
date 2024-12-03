@@ -1,14 +1,11 @@
-/** @format */
-
-// import JohnImg from '../../assets/JohnImg.png';
 import { IoIosArrowDown } from 'react-icons/io';
-// import { FaBell } from 'react-icons/fa';
 import TopHeaderImg from '../../assets/TopHeaderImg.png';
+import JohnImg from '../../assets/JohnImg.png'; // Default fallback image
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { logout } from '../../service/operations/authApi';
-import JohnImg from '../../assets/JohnImg.png';
+
 const HeaderUser = () => {
 	const location = useLocation();
 	const pathname = location.pathname;
@@ -17,55 +14,58 @@ const HeaderUser = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	// Map for dynamic heading titles based on routes
 	const headingMap = {
 		'/dashboard-role2': 'Dashboard-1',
 		'/dashboard-1': 'Dashboard-2',
-        '/dashboard-3': 'Dashboard-3',
+		'/dashboard-3': 'Dashboard-3',
 		'/requests': 'Requests',
 		'/profiles': 'User Profile',
-		'/model': "Modal",
+		'/model': 'Modal',
 	};
 
-	// Get the heading based on pathname, or a default if not found
+	// Get the heading based on pathname
 	const heading = headingMap[pathname] || 'Page Not Found';
 
+	// Construct absolute profile image URL
+	const profileImage = user?.image
+		? `${import.meta.env.VITE_BASE_URL}${user.image}` // Prepend base URL to the relative path
+		: JohnImg; // Use fallback image if no image is available
+
+		console.log('Profile Image Path:', profileImage);
+
+
 	const handleLogout = () => {
-		dispatch(logout(navigate));
-		// Redirect to login after logout
+		dispatch(logout(navigate)); // Perform logout and navigate to login page
 	};
 
-	// Toggle dropdown visibility
 	const toggleDropdown = () => {
-		setDropdownVisible((prev) => !prev);
+		setDropdownVisible((prev) => !prev); // Toggle dropdown visibility
 	};
 
 	return (
 		<div className='w-full flex flex-wrap justify-between items-center bg-[#F8F9FD] drop-shadow-lg py-6 px-6 md:px-10'>
 			<div className='flex justify-start items-center gap-2'>
-				<img src={TopHeaderImg} />
+				<img src={TopHeaderImg} alt='Header' />
 				<h1 className='text-xl font-semibold'>{heading}</h1>
 			</div>
 
-			<div className='flex justify-end items-center space-x-2'>
-				{/* <FaBell
-					fontSize={18}
-					color='#000000'
-				/> */}
+			<div className='flex justify-end items-center space-x-2 relative'>
 				<img
-					// src={user?.image} // Replace with your profile image path
-					src={JohnImg}
+					src={profileImage} // Dynamically render profile image
 					alt='Profile'
-					className='w-8 h-8 md:w-10 md:h-10 rounded-full'
+					className='w-8 h-8 md:w-10 md:h-10 rounded-full object-cover'
 				/>
 				<span className='text-sm md:text-base font-medium text-gray-600'>
-					Hi, {user?.contactPerson}
+					Hi, {user?.contactPerson || 'User'}
 				</span>
 				<IoIosArrowDown
 					fontSize={18}
 					color='#0071D3'
 					onClick={toggleDropdown}
-					className={`${dropdownVisible ? '' : '-rotate-90'} cursor-pointer`}
+					className={`cursor-pointer ${dropdownVisible ? '' : '-rotate-90'}`}
 				/>
+
 				{/* Dropdown Menu */}
 				{dropdownVisible && (
 					<div className='absolute right-0 top-14 bg-white border border-gray-300 rounded-lg shadow-lg w-36 z-10'>
