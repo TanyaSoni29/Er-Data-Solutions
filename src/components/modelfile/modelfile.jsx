@@ -23,61 +23,64 @@ const ModelFile = () => {
   } = useForm();
 
   // Handle Image Upload
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // Compress the image
-      new Compressor(file, {
-        quality: 0.6, // Reduce image quality to 60%
-        maxWidth: 800, // Restrict maximum width
-        maxHeight: 800, // Restrict maximum height
-        success(result) {
-          setProfileImage(URL.createObjectURL(result)); // Preview the compressed image
-          setFileData(result); // Store compressed file
-        },
-        error(err) {
-          console.error("Image compression error:", err);
-          toast.error("Image compression failed. Please try again.");
-        },
-      });
+const handleImageUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    // Compress the image
+    new Compressor(file, {
+      quality: 0.6, // Reduce image quality to 60%
+      maxWidth: 800, // Restrict maximum width
+      maxHeight: 800, // Restrict maximum height
+      success(result) {
+        // Preview the compressed image
+        setProfileImage(URL.createObjectURL(result)); 
+        // Store compressed file for preview but keep the original file for upload
+        setFileData(file);  // Store the original file (with the extension)
+      },
+      error(err) {
+        console.error("Image compression error:", err);
+        toast.error("Image compression failed. Please try again.");
+      },
+    });
+  }
+};
+
+// Handle Form Submission
+const onSubmit = async (data) => {
+  if (!fileData) {
+    toast.error("Please upload an image.");
+    return;
+  }
+
+  const formData = new FormData();
+  // Append the original file (with its extension)
+  formData.append("image", fileData); // Use the original file, not the compressed result
+  formData.append("description", data.description);
+  formData.append("link", data.link);
+
+  try {
+    dispatch(setLoading(true)); // Set loading state to true
+
+    // Call the API
+    const response = await createForm(token, formData);
+
+    if (response) {
+      dispatch(addForm(response)); // Add new form to Redux state
+      toast.success("Form submitted successfully!");
+
+      // Reset the form after successful submission
+      reset();
+      setFileData(null);
+      setProfileImage(null);
     }
-  };
+  } catch (error) {
+    console.error("Form submission error:", error);
+    toast.error("Error submitting form. Please try again.");
+  } finally {
+    dispatch(setLoading(false)); // Set loading state to false
+  }
+};
 
-  // Handle Form Submission
-  const onSubmit = async (data) => {
-    // Ensure form data includes image, description, and link
-    if (!fileData) {
-      toast.error("Please upload an image.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("image", fileData); // Add compressed image
-    formData.append("description", data.description); // Add description
-    formData.append("link", data.link); // Add link
-
-    try {
-      dispatch(setLoading(true)); // Set loading state to true
-
-      // Call the API
-      const response = await createForm(token, formData);
-
-      if (response) {
-        dispatch(addForm(response)); // Add new form to Redux state
-        toast.success("Form submitted successfully!");
-
-        // Reset the form after successful submission
-        reset();
-        setFileData(null);
-        setProfileImage(null);
-      }
-    } catch (error) {
-      console.error("Form submission error:", error);
-      toast.error("Error submitting form. Please try again.");
-    } finally {
-      dispatch(setLoading(false)); // Set loading state to false
-    }
-  };
 
   return (
     <div className="p-8 bg-[#F8F9FD] min-h-screen">
