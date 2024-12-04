@@ -146,7 +146,7 @@ const Sidebar = () => {
                                     }`}
                                 >
                                     <AiOutlineAppstore fontSize={22} />
-                                    <span>Profiles</span>
+                                    <span>Profile</span>
                                 </Link>
                             </li>
                         )}
@@ -163,7 +163,7 @@ const Sidebar = () => {
                                     }`}
                                 >
                                     <FaModx fontSize={22} />
-                                    <span>Modal</span>
+                                    <span>Popup </span>
                                 </Link>
                             </li>
                         )}
