@@ -11,7 +11,8 @@ import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import Request from './pages/Request';
 import ReqListEdit from './components/Request/ReqListEdit';
-import Historylist from './components/Request/Historylist';
+// import Historylist from './components/Request/Historylist';
+import RequestForm  from './components/Request/RequestContent';
 import Historylistedit from './components/Request/Historylistedit';
 import ForgotPassword from './components/Authentication/ForgetPassword';
 import Dashboard1 from './pages/Dashboard1';
@@ -147,11 +148,20 @@ const App = () => {
 						/>
 					}
 				/>
-				<Route
+				{/* <Route
 					path='/historylist'
 					element={
 						<ProtectedRoute
 							element={<Historylist />}
+							allowedRoles={['2']} // Both roles 1 and 2 can access
+						/>
+					}
+				/> */}
+				<Route
+					path='/requestform'
+					element={
+						<ProtectedRoute
+							element={<RequestForm />}
 							allowedRoles={['2']} // Both roles 1 and 2 can access
 						/>
 					}

@@ -5,8 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaRegCircle } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FiEdit } from "react-icons/fi";
-import HeaderUser from "../Common/HeaderUser";
-import Sidebar from "../Common/Sidebar";
 import { refreshUserRequests, removeRequest } from "../../slices/requestSlice";
 import { deleteRequestById } from "../../service/operations/requestApi";
 
@@ -81,11 +79,7 @@ const HistoryList = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <HeaderUser />
-
+  
         <div className="p-6 bg-white min-h-screen">
           {/* Header */}
           <div className="text-xl md:text-2xl font-semibold text-gray-700 flex justify-start items-center space-x-2 mb-6">
@@ -95,15 +89,17 @@ const HistoryList = () => {
 
           {/* Navigation Buttons */}
           <div className="flex space-x-4 items-center mb-6 px-4">
-            <button
-              className="text-black font-semibold text-lg"
-              onClick={() => navigate("/requests")}
-            >
-              Add New Request
-            </button>
+
             <span className="bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white px-6 py-2 rounded-lg shadow-lg hover:from-[#003876] hover:to-[#005fa1]">
               History Request List
             </span>
+
+            <button
+              className="text-black text-lg"
+              onClick={() => navigate("/requestform")}
+            >
+              Add New Request
+            </button>
           </div>
 
           {/* Search Bar */}
@@ -232,8 +228,7 @@ const HistoryList = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+    
   );
 };
 

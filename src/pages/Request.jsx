@@ -1,8 +1,9 @@
 /** @format */
 
-import RequestContent from '../components/Request/RequestContent';
+// import RequestContent from '../components/Request/RequestContent';
 import Sidebar from '../components/Common/Sidebar';
 import HeaderUser from '../components/Common/HeaderUser';
+import HistoryList from '../components/Request/Historylist';
 
 function Request() {
 	return (
@@ -11,7 +12,8 @@ function Request() {
 			<div className='flex-1 flex flex-col overflow-hidden'>
 				<HeaderUser />
 				<div className='flex-1 overflow-y-auto p-4'>
-					<RequestContent />
+					{/* <RequestContent /> */}
+					<HistoryList />
 				</div>
 			</div>
 		</div>

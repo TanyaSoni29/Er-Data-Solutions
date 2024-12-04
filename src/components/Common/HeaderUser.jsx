@@ -18,10 +18,10 @@ const HeaderUser = () => {
     '/dashboard-role2': 'Dashboard-1',
     '/dashboard-1': 'Dashboard-2',
     '/dashboard-3': 'Dashboard-3',
-    '/requests': 'Requests',
+    '/requests': 'History List',
     '/profiles': 'User Profile',
     '/model': 'Modal',
-    '/historylist': 'History List',
+    '/requestform': 'Requests',
   };
 
   const heading = headingMap[pathname] || 'Page Not Found';
