@@ -129,7 +129,7 @@ const HistoryList = () => {
                       { label: "Priority", key: "priority" },
                       { label: "Description", key: "description" },
                       { label: "Status", key: "completionStatus" },
-                      { label: "Action", key: null },
+                      { label: "Action View", key: null },
                     ].map(({ label, key }, index) => (
                       <th
                         key={index}
@@ -183,12 +183,12 @@ const HistoryList = () => {
                       </td>
                       <td className="py-3 px-7">
                         <div className="flex space-x-2">
-                          {/* <button
+                          <button
                             className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-700"
                             onClick={() => handleEdit(request.id)}
                           >
                             <FiEdit />
-                          </button> */}
+                          </button>
                           <button
                             className="bg-red-500 text-white p-2 rounded-full hover:bg-red-700"
                             onClick={() => handleDelete(request.id)}

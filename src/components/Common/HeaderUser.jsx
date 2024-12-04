@@ -18,7 +18,7 @@ const HeaderUser = () => {
     '/dashboard-role2': 'Dashboard-1',
     '/dashboard-1': 'Dashboard-2',
     '/dashboard-3': 'Dashboard-3',
-    '/requests': 'History List',
+    '/requests': 'Requests',
     '/profiles': 'User Profile',
     '/model': 'Modal',
     '/requestform': 'Requests',
