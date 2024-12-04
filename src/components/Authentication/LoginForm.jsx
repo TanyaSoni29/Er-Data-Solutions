@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import WorkerImg from '../../assets/Logintime.png';
+import Logintime from '../../assets/logintime.png';
 import LogoImg from '../../assets/LogoImg.png';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useDispatch } from 'react-redux';
@@ -261,7 +261,7 @@ const LoginForm = () => {
 			{/* Right Section */}
 			<div className='hidden md:block w-full md:h-[100%] md:w-[60%]'>
 				<img
-					src={WorkerImg}
+					src={Logintime}
 					alt='Worker Image'
 					className='w-full h-full object-cover'
 				/>
