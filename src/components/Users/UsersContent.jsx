@@ -1,5 +1,6 @@
 import { FiEdit } from 'react-icons/fi';
 import { RiDeleteBinLine } from 'react-icons/ri';
+import { GrHide } from "react-icons/gr";
 import { FaRegCircle } from 'react-icons/fa';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
@@ -154,13 +155,13 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 											className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'
 											onClick={() => handleEditButton(user)}
 										>
-											<FiEdit />
+											<FiEdit fontSize={15} />
 										</button>
 										<button
 											className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'
 											onClick={() => handleDelete(user?.id)}
 										>
-											<RiDeleteBinLine />
+											<GrHide fontSize={17} />
 										</button>
 									</div>
 								</td>

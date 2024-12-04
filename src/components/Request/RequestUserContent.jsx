@@ -208,7 +208,7 @@ const RequestUserContent = () => {
 											<FiEdit />
 										</button>
 										<button
-											className='bg-yellow-500 text-white p-2 rounded-full hover:bg-yellow-700'
+											className='bg-blue-500 text-white p-2 rounded-full hover:bg-yellow-700'
 											onClick={() => handleHide(request?.id)}
 										>
 											<HideSourceIcon fontSize='small' />
