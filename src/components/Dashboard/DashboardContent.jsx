@@ -1,6 +1,6 @@
 /** @format */
 
-import { FaUsers, FaChartBar, FaRegChartBar } from "react-icons/fa"; // Updated Icons
+import { FaUsers, FaChartBar, FaRegChartBar } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { refreshUser } from "../../slices/userSlice";
@@ -9,13 +9,6 @@ import {
   Typography,
   Grid,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Button,
 } from "@mui/material";
 import { Bar, Line } from "react-chartjs-2";
 import "chart.js/auto";
@@ -29,107 +22,96 @@ const DashboardContent = () => {
     dispatch(refreshUser());
   }, [dispatch]);
 
-  // Dummy data for charts
+  // Get current date and month dynamically
+  const currentDate = new Date();
+  const currentMonth = currentDate.toLocaleString('default', { month: 'short' }); // Gets current short month name (e.g., 'Oct')
+  const currentDay = currentDate.getDate(); // Gets current day (e.g., 4)
+
+  // Function to handle dynamic date calculation for labels
+  const getPreviousDays = (currentDay) => {
+    const labels = [];
+    for (let i = 6; i >= 0; i--) {
+      let day = currentDay - i;
+      let date = new Date(currentDate);
+      date.setDate(day);
+
+      // Check if the calculated day is in the previous month
+      const prevMonth = date.getMonth() !== currentDate.getMonth();
+      const formattedMonth = prevMonth
+        ? date.toLocaleString("default", { month: "short" })
+        : currentMonth;
+      const formattedDate = `${formattedMonth} ${date.getDate()}`;
+      
+      labels.push(formattedDate);
+    }
+    return labels;
+  };
+
+  // Get the dynamic labels for the last 7 days (including previous month if necessary)
+  const dynamicLabels = getPreviousDays(currentDay);
+
+  // Dynamically generate chart data
   const lineChartData = {
-    labels: [
-      "Sept 2",
-      "Sept 7",
-      "Sept 12",
-      "Sept 17",
-      "Sept 22",
-      "Sept 27",
-      "Oct 2",
-    ],
+    labels: dynamicLabels, // Dynamic date labels
     datasets: [
       {
         label: "Total Clients",
-        data: [30, 40, 35, 45, 30, 25, 40],
+        data: stats?.clients ? [stats.clients] : [30, 40, 35, 45, 30, 25, 10], // Dynamic data
         borderColor: "#3B82F6",
         backgroundColor: "rgba(59, 130, 246, 0.2)",
         tension: 0.4,
       },
       {
         label: "New Clients",
-        data: [20, 30, 25, 35, 20, 15, 30],
+        data: stats?.newClients || [20, 30, 25, 35, 20, 15, 10], // This should be an array fetched from the backend
         borderColor: "#10B981",
         backgroundColor: "rgba(16, 185, 129, 0.2)",
         tension: 0.4,
-      },
+      }
+      
     ],
   };
 
   const barChartData = {
-    labels: ["Q1", "Q2", "Q3", "Q4"],
+    // Dynamically generate labels based on the number of dashboards
+    labels: Array.from({ length: stats?.dashboardsCount || 9 }, (_, i) => `D ${i + 1}`),
+  
     datasets: [
       {
         label: "Dashboard 1",
-        data: [50, 60, 70, 80],
+        data: stats?.dashboardsCount ? Array(stats.dashboardsCount).fill(stats.dashboardsCount) : [50, 60, 70, 80, 90, 100, 110, 120, 130], // Dynamic data
         backgroundColor: "#3B82F6",
       },
       {
         label: "Dashboard 2",
-        data: [40, 50, 60, 70],
+        data: stats?.clients ? Array(stats.clients).fill(stats.clients) : [40, 50, 60, 70, 80, 90, 100, 110, 120], // Dynamic data
         backgroundColor: "#10B981",
       },
     ],
   };
-
-  // Dummy data for table
-  const dummyTableData = stats?.companies || [
-    {
-      id: 1,
-      name: "Tam's Stationers",
-      contactPerson: "Corina McCoy",
-      email: "lorri73@gmail.com",
-    },
-    {
-      id: 2,
-      name: "Pacific Stereo",
-      contactPerson: "Judith Rodriguez",
-      email: "k_pacheco@gmail.com",
-    },
-    {
-      id: 3,
-      name: "Britches of Georgetown",
-      contactPerson: "Patricia Sanders",
-      email: "k.p.allen@aol.com",
-    },
-    {
-      id: 4,
-      name: "Giant",
-      contactPerson: "Frances Swann",
-      email: "rodger913@aol.com",
-    },
-    {
-      id: 5,
-      name: "Auto Works",
-      contactPerson: "Iva Ryan",
-      email: "dennis416@gmail.com",
-    },
-  ];
+  
 
   return (
     <Box p={4} bgcolor="#F3F4F6" minHeight="100vh">
       {/* Header Metrics Section */}
       <Grid container spacing={4}>
-        {/* Metric Cards */}
-        {[
+        {[ 
           {
             title: "Total Users",
             value: stats?.totalUsers || 0,
-            color: "#3B82F6", // Blue
+            color: "#3B82F6", 
             icon: <FaUsers size={24} color="white" />,
           },
           {
             title: "Clients",
             value: stats?.clients || 0,
-            color: "#10B981", // Green
+            color: "#10B981", 
             icon: <FaRegChartBar size={24} color="white" />,
           },
           {
             title: "Dashboards",
             value: stats?.dashboardsCount || 0,
-            color: "#F59E0B", // Yellow
+            color: "#F59E0B", 
             icon: <FaChartBar size={24} color="white" />,
           },
         ].map((metric, index) => (
@@ -145,7 +127,6 @@ const DashboardContent = () => {
                 boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
               }}
             >
-              {/* Icon Section */}
               <Box
                 sx={{
                   width: 50,
@@ -159,8 +140,6 @@ const DashboardContent = () => {
               >
                 {metric.icon}
               </Box>
-
-              {/* Text Section */}
               <Box textAlign="right">
                 <Typography
                   variant="subtitle1"
@@ -205,52 +184,6 @@ const DashboardContent = () => {
           </Paper>
         </Grid>
       </Grid>
-
-      {/* Table Section */}
-      {/* <TableContainer component={Paper} sx={{ mt: 4 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Sr. No</TableCell>
-              <TableCell>Company Name</TableCell>
-              <TableCell>Contact Person</TableCell>
-              <TableCell>Email ID</TableCell>
-              <TableCell align="center">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {dummyTableData.map((company, index) => (
-              <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{company.name}</TableCell>
-                <TableCell>{company.contactPerson}</TableCell>
-                <TableCell>{company.email}</TableCell>
-                <TableCell align="center">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    sx={{ mr: 1 }}
-                  >
-                    View
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="warning"
-                    size="small"
-                    sx={{ mr: 1 }}
-                  >
-                    Edit
-                  </Button>
-                  <Button variant="outlined" color="error" size="small">
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer> */}
     </Box>
   );
 };
