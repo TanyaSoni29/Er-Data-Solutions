@@ -138,7 +138,7 @@ const RequestUserContent = () => {
 							{[
 								{ label: 'Sr. No', key: null },
 								{ label: 'Date', key: 'requestDate' },
-								{ label: 'Requestor Name', key: 'requestorName' },
+								{ label: 'Requestor', key: 'requestorName' },
 								{ label: 'priority', key: 'priority' },
 								{ label: 'Description', key: 'description' },
 								{ label: 'Status', key: 'completionStatus' },

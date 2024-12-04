@@ -181,14 +181,14 @@ const HistoryList = () => {
                           {request.completionStatus}
                         </span>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-7">
                         <div className="flex space-x-2">
-                          <button
+                          {/* <button
                             className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-700"
                             onClick={() => handleEdit(request.id)}
                           >
                             <FiEdit />
-                          </button>
+                          </button> */}
                           <button
                             className="bg-red-500 text-white p-2 rounded-full hover:bg-red-700"
                             onClick={() => handleDelete(request.id)}
