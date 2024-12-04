@@ -81,9 +81,9 @@ const Dashboard1Content = () => {
             {/* Modal Content */}
             <div className="text-center">
               {/* Debugging: Log Full Image URL */}
-              <p className="text-sm text-gray-500">
+              {/* <p className="text-sm text-gray-500">
                 Debug Full Image URL: {`${BASE_URL}${formData?.imagePath}`}
-              </p>
+              </p> */}
 
               {/* Image */}
               {formData?.imagePath ? (
