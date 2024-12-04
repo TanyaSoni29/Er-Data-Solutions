@@ -138,6 +138,7 @@ const RequestUserContent = () => {
 							{[
 								{ label: 'Sr. No', key: null },
 								{ label: 'Date', key: 'requestDate' },
+								{ label: 'Company', key: 'companyName' },
 								{ label: 'Requestor', key: 'requestorName' },
 								{ label: 'priority', key: 'priority' },
 								{ label: 'Description', key: 'description' },
@@ -170,6 +171,9 @@ const RequestUserContent = () => {
 									{request?.requestDate
 										? request?.requestDate.split('T')[0]
 										: '-'}
+								</td>
+								<td className='py-3 px-2 md:px-4'>
+									{request?.companyName ? request?.companyName : '-'}
 								</td>
 								<td className='py-3 px-2 md:px-4'>
 									{request?.requestorName ? request?.requestorName : '-'}

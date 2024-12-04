@@ -24,11 +24,12 @@ const RequestForm = () => {
       // Prepare form data for API submission
       const formData = new FormData();
       formData.append('userId', user.id); // Add userId from logged-in user
-
+      formData.append('companyName', user.companyName); // Add companyName from logged-in user
+  
       // Set default values for requestDate and completionStatus
       const defaultRequestDate = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
       const defaultCompletionStatus = 'Not Started';
-
+  
       // Append all form data fields
       for (let key in data) {
         if (key === 'attachment' && data.attachment && data.attachment.length > 0) {
@@ -39,11 +40,11 @@ const RequestForm = () => {
           formData.append(key, data[key]);
         }
       }
-
+  
       // Append default values for `requestDate` and `completionStatus`
       formData.append('requestDate', defaultRequestDate); // Default request date (current date)
       formData.append('completionStatus', defaultCompletionStatus); // Default completion status
-
+  
       // API call to create a request
       const response = await createRequest(token, formData);
       if (response) {
@@ -54,6 +55,7 @@ const RequestForm = () => {
       console.error('Error submitting request form:', error);
     }
   };
+  
 
   return (
     <div className='flex flex-col md:flex-row h-screen'>
