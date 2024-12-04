@@ -1,18 +1,18 @@
-/** @format */
-
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import Compressor from "compressorjs"; // Ensure this library is installed
-import { createForm } from "../../service/operations/formApi"; // API call for form creation
-import { addForm, setLoading } from "../../slices/formSlice"; // Redux actions
+import Compressor from "compressorjs"; // Image compression library
+import { setForm, updateForm, setLoading } from "../../slices/formSlice"; // Redux actions
+import { getFormById } from "../../service/operations/formApi"; // API call for fetching the form by ID
+import { apiConnector } from "../../service/apiConnector"; // Assuming this is your API connector
 
 const ModelFile = () => {
   const dispatch = useDispatch();
   const [profileImage, setProfileImage] = useState(null); // State for managing image preview
   const [fileData, setFileData] = useState(null); // Compressed image file
   const loading = useSelector((state) => state.forms.loading); // Loading state from Redux
+  const formData = useSelector((state) => state.forms.form); // Form data from Redux
   const token = useSelector((state) => state.auth.token); // Auth token from Redux
 
   const {
@@ -22,65 +22,92 @@ const ModelFile = () => {
     formState: { errors },
   } = useForm();
 
+  // Fetch form data by ID
+  useEffect(() => {
+    const fetchFormData = async () => {
+      try {
+        const formId = 20; // Example: Replace with dynamic logic to get the form ID
+        const response = await getFormById(token, formId);
+        if (response) {
+          dispatch(setForm(response)); // Dispatch to Redux store
+          reset(response); // Set form data into react-hook-form
+
+          // Check if there's an image URL from the backend and set the preview
+          if (response.imagePath) {
+            // setProfileImage({import.meta.env.VITE_BASE_URL}/${response.imageUrl}); 
+            setProfileImage(`${import.meta.env.VITE_BASE_URL}${response.imagePath}`); // Set the image URL for preview
+            console.log("hiiiiiiii" + `${import.meta.env.VITE_BASE_URL}${response.imagePath}`);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching form data:", error);
+      }
+    };
+
+    fetchFormData();
+  }, [dispatch, token, reset]);
+
   // Handle Image Upload
-const handleImageUpload = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    // Compress the image
-    new Compressor(file, {
-      quality: 0.6, // Reduce image quality to 60%
-      maxWidth: 800, // Restrict maximum width
-      maxHeight: 800, // Restrict maximum height
-      success(result) {
-        // Preview the compressed image
-        setProfileImage(URL.createObjectURL(result)); 
-        // Store compressed file for preview but keep the original file for upload
-        setFileData(file);  // Store the original file (with the extension)
-      },
-      error(err) {
-        console.error("Image compression error:", err);
-        toast.error("Image compression failed. Please try again.");
-      },
-    });
-  }
-};
-
-// Handle Form Submission
-const onSubmit = async (data) => {
-  if (!fileData) {
-    toast.error("Please upload an image.");
-    return;
-  }
-
-  const formData = new FormData();
-  // Append the original file (with its extension)
-  formData.append("image", fileData); // Use the original file, not the compressed result
-  formData.append("description", data.description);
-  formData.append("link", data.link);
-
-  try {
-    dispatch(setLoading(true)); // Set loading state to true
-
-    // Call the API
-    const response = await createForm(token, formData);
-
-    if (response) {
-      dispatch(addForm(response)); // Add new form to Redux state
-      toast.success("Form submitted successfully!");
-
-      // Reset the form after successful submission
-      reset();
-      setFileData(null);
-      setProfileImage(null);
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Compress the image
+      new Compressor(file, {
+        quality: 0.6, // Reduce image quality to 60%
+        maxWidth: 800, // Restrict maximum width
+        maxHeight: 800, // Restrict maximum height
+        success(result) {
+          // Preview the compressed image
+          setProfileImage(URL.createObjectURL(result)); 
+          // Store compressed file for preview but keep the original file for upload
+          setFileData(file);  // Store the original file (with the extension)
+        },
+        error(err) {
+          console.error("Image compression error:", err);
+          toast.error("Image compression failed. Please try again.");
+        },
+      });
     }
-  } catch (error) {
-    console.error("Form submission error:", error);
-    toast.error("Error submitting form. Please try again.");
-  } finally {
-    dispatch(setLoading(false)); // Set loading state to false
-  }
-};
+  };
 
+  // Handle Form Submission (Update form data)
+  const onSubmit = async (data) => {
+    if (!fileData) {
+      toast.error("Please upload an image.");
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    // Append the original file (with its extension)
+    formDataToSend.append("image", fileData); // Use the original file, not the compressed result
+    formDataToSend.append("description", data.description);
+    formDataToSend.append("link", data.link);
+
+    try {
+      dispatch(setLoading(true)); // Set loading state to true
+
+      // Call the API to update the form (PUT request)
+      const response = await apiConnector("PUT", `${import.meta.env.VITE_BASE_URL}/forms/${formData.id}`, formDataToSend, {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data", // For file upload
+      });
+
+      if (response) {
+        dispatch(updateForm(response)); // Dispatch the updated form data to Redux
+        toast.success("Form updated successfully!");
+
+        // Reset the form after successful submission
+        reset();
+        setFileData(null);
+        setProfileImage(null);
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error("Error submitting form. Please try again.");
+    } finally {
+      dispatch(setLoading(false)); // Set loading state to false
+    }
+  };
 
   return (
     <div className="p-8 bg-[#F8F9FD] min-h-screen">
