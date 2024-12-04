@@ -1,15 +1,12 @@
-/** @format */
-
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getAllForms, getFormById } from "../../service/operations/formApi";
 
 const Dashboard1Content = () => {
-  // const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth); // Get user from Redux
   const [formData, setFormData] = useState(null); // State for form data
   const [isLoading, setIsLoading] = useState(true); // Loading state
-  const [isModalOpen, setIsModalOpen] = useState(true); // Modal open state
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal open state
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Backend base URL
 
   // Fetch the form data when the component mounts
@@ -23,7 +20,6 @@ const Dashboard1Content = () => {
         }, formsData[0]);
         const formId = formDataId?.id; // Replace with the specific form ID
         const response = await getFormById(token, formId); // Fetch form by ID
-        console.log("Fetched Form Data:", response); // Debug
         setFormData(response); // Save the fetched data
       } catch (error) {
         console.error("Error fetching form data:", error);
@@ -34,6 +30,14 @@ const Dashboard1Content = () => {
 
     fetchFormData();
   }, [user]);
+
+  useEffect(() => {
+    // Check if the modal has already been shown in this session
+    if (!localStorage.getItem("hasModalShown")) {
+      setIsModalOpen(true); // Open the modal if it's not shown already
+      localStorage.setItem("hasModalShown", "true"); // Set the flag to prevent modal from showing again
+    }
+  }, []);
 
   // Handle modal close
   const closeModal = () => {
@@ -58,9 +62,7 @@ const Dashboard1Content = () => {
     );
   }
 
-  const image = `${BASE_URL}${
-    formData?.imagePath
-  }?timestamp=${new Date().getTime()}`;
+  const image = `${BASE_URL}${formData?.imagePath}?timestamp=${new Date().getTime()}`;
 
   return (
     <div className="p-6 bg-[#F8F9FD] min-h-screen">
@@ -71,7 +73,7 @@ const Dashboard1Content = () => {
             {/* Close Button */}
             <button
               onClick={closeModal}
-              className="absolute top-2 right-2 text-gray-600 text-xl"
+              className="absolute top-2 right-2 text-gray-600 text-2xl"
             >
               &times;
             </button>
@@ -88,7 +90,7 @@ const Dashboard1Content = () => {
                 <img
                   src={image} // Cache-busting query parameter
                   alt="Modal Image"
-                  className="w-full h-full object-cover rounded-lg mb-4"
+                  className="w-[300px] h-[300px] object-cover rounded-lg mb-4 mx-auto"
                 />
               ) : (
                 <p className="text-gray-500">No image available</p>

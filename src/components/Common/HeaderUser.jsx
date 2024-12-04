@@ -21,6 +21,7 @@ const HeaderUser = () => {
     '/requests': 'Requests',
     '/profiles': 'User Profile',
     '/model': 'Modal',
+    '/historylist': 'History List',
   };
 
   const heading = headingMap[pathname] || 'Page Not Found';

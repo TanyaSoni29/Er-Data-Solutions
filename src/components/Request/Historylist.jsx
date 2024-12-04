@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaRegCircle } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FiEdit } from "react-icons/fi";
-import Header from "../Common/Header";
+import HeaderUser from "../Common/HeaderUser";
 import Sidebar from "../Common/Sidebar";
 import { refreshUserRequests, removeRequest } from "../../slices/requestSlice";
 import { deleteRequestById } from "../../service/operations/requestApi";
@@ -84,7 +84,7 @@ const HistoryList = () => {
     <div className="flex flex-col md:flex-row h-screen">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
+        <HeaderUser />
 
         <div className="p-6 bg-white min-h-screen">
           {/* Header */}
