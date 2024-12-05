@@ -12,7 +12,7 @@ const RequestUserContent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize navigation
   const { requests } = useSelector((state) => state.request);
-  const { token } = useSelector((state) => state.auth);
+  // const { token } = useSelector((state) => state.auth);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");

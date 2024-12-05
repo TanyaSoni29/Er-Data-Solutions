@@ -7,13 +7,15 @@ import { FaRegCircle } from 'react-icons/fa';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { refreshUser, removeUser } from '../../slices/userSlice';
-import { deleteUserById } from '../../service/operations/usersApi';
+import { refreshUser } from '../../slices/userSlice';
+// import { deleteUserById } from '../../service/operations/usersApi';
 
 const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 	const dispatch = useDispatch();
 	const { users } = useSelector((state) => state.user);
-	const { token } = useSelector((state) => state.auth);
+	// const { token } = useSelector((state) => state.auth);
+	const [hiddenUsers, setHiddenUsers] = useState([]);
+	const [showHidden, setShowHidden] = useState(false); // New state to toggle hidden requests
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchQuery, setSearchQuery] = useState('');
@@ -22,7 +24,20 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 
 	useEffect(() => {
 		dispatch(refreshUser());
+		const savedHiddenUsers =
+			JSON.parse(localStorage.getItem('hiddenUsers')) || [];
+		const savedShowHidden =
+			JSON.parse(localStorage.getItem('showHidden')) || false;
+
+		setHiddenUsers(savedHiddenUsers);
+		setShowHidden(savedShowHidden);
 	}, [dispatch]);
+
+	useEffect(() => {
+		// Save the hidden state to localStorage whenever it changes
+		localStorage.setItem('hiddenUsers', JSON.stringify(hiddenUsers));
+		localStorage.setItem('showHidden', JSON.stringify(showHidden));
+	}, [hiddenUsers, showHidden]);
 
 	const handleAddNewClick = () => {
 		setAddUserButton(true);
@@ -34,23 +49,36 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 		setEditUserButton(true);
 	};
 
-	const handleDelete = async (id) => {
-		try {
-			const response = await deleteUserById(token, id);
-			if (response) {
-				dispatch(removeUser(id));
-				dispatch(refreshUser());
+	const handleHide = (id) => {
+		// Toggle the hidden state for the request
+		setHiddenUsers((prevHiddenUsers) => {
+			if (prevHiddenUsers.includes(id)) {
+				return prevHiddenUsers.filter((userId) => userId !== id); // Remove from hidden
+			} else {
+				return [...prevHiddenUsers, id]; // Add to hidden
 			}
-		} catch (error) {
-			console.error('Error deleting user:', error);
-		}
+		});
 	};
 
+	// const handleDelete = async (id) => {
+	// 	try {
+	// 		const response = await deleteUserById(token, id);
+	// 		if (response) {
+	// 			dispatch(removeUser(id));
+	// 			dispatch(refreshUser());
+	// 		}
+	// 	} catch (error) {
+	// 		console.error('Error deleting user:', error);
+	// 	}
+	// };
+
 	// Search logic
-	const filteredUsers = users.filter((user) =>
-		[user.companyName, user.contactPerson, user.email, user.mobileNo]
-			.map((field) => field?.toLowerCase() || '')
-			.some((field) => field.includes(searchQuery.toLowerCase()))
+	const filteredUsers = users.filter(
+		(user) =>
+			[user.companyName, user.contactPerson, user.email, user.mobileNo]
+				.map((field) => field?.toLowerCase() || '')
+				.some((field) => field.includes(searchQuery.toLowerCase())) &&
+			(!hiddenUsers.includes(user?.id) || showHidden)
 	);
 
 	// Sorting logic
@@ -79,6 +107,9 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 			direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
 		}));
 	};
+	const toggleShowHidden = () => {
+		setShowHidden((prev) => !prev); // Toggle visibility of hidden requests
+	};
 
 	return (
 		<div className='p-4 md:p-6 bg-white min-h-screen'>
@@ -102,6 +133,12 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 					>
 						<span>Add User</span>
 						<AiOutlineUserAdd />
+					</button>
+					<button
+						onClick={toggleShowHidden}
+						className='bg-blue-500 text-white px-4 py-2 rounded-md'
+					>
+						{showHidden ? 'Hide Hidden' : 'Show Hidden'}
 					</button>
 				</div>
 			</div>
@@ -154,12 +191,14 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 										<button
 											className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'
 											onClick={() => handleEditButton(user)}
+											title='show file'
 										>
 											<FiEdit fontSize={15} />
 										</button>
 										<button
 											className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'
-											onClick={() => handleDelete(user?.id)}
+											onClick={() => handleHide(user?.id)}
+											title='Hide Row'
 										>
 											<GrHide fontSize={17} />
 										</button>
