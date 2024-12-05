@@ -61,7 +61,7 @@ const RequestForm = () => {
 	};
 
 	return (
-		<div className='flex flex-col md:flex-row h-screen'>
+		<div className='flex flex-col md:flex-row min-h-screen'>
 			<Sidebar />
 			<div className='flex-1 flex flex-col overflow-hidden'>
 				<HeaderUser />
