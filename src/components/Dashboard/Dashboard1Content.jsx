@@ -10,11 +10,6 @@ const Dashboard1Content = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal open state
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Backend base URL
 
-  // Clear local storage on page refresh
-  useEffect(() => {
-    localStorage.removeItem("hasModalShown"); // Clear specific key
-  }, []);
-
   // Fetch the form data when the component mounts
   useEffect(() => {
     const fetchFormData = async () => {
@@ -38,10 +33,11 @@ const Dashboard1Content = () => {
   }, [user]);
 
   useEffect(() => {
-    // Check if the modal has already been shown in this session
-    if (!localStorage.getItem("hasModalShown")) {
-      setIsModalOpen(true); // Open the modal if it's not shown already
-      localStorage.setItem("hasModalShown", "true"); // Set the flag to prevent modal from showing again
+    // Check if the modal has already been shown during this session
+    const hasModalShown = sessionStorage.getItem("hasModalShown");
+    if (!hasModalShown) {
+      setIsModalOpen(true); // Open the modal for the first time
+      sessionStorage.setItem("hasModalShown", "true"); // Set the flag in session storage
     }
   }, []);
 
@@ -91,15 +87,13 @@ const Dashboard1Content = () => {
               onClick={closeModal}
               className="absolute top-4 right-4 text-gray-600"
               style={{
-                fontSize: "24px", // Larger close icon
+                fontSize: "30px", // Larger close icon
                 width: "40px",
                 height: "40px",
-                backgroundColor: "white",
                 borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
                 cursor: "pointer",
               }}
             >
