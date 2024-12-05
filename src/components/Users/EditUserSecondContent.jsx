@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { updateUser } from '../../service/operations/usersApi';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
+import { useEffect } from 'react';
 
 const EditUserSecondContent = ({
 	editUserDate1,
@@ -55,7 +56,7 @@ const EditUserSecondContent = ({
 
 			// Append the logo file if available
 			if (logo) {
-				formData.append('logo', logo); // Include the new logo file
+				formData.append('logoUrl', logo); // Include the new logo file
 			}
 
 			// Merge the provided data with existing user data
@@ -80,6 +81,16 @@ const EditUserSecondContent = ({
 			console.log(error);
 		}
 	};
+
+	useEffect(() => {
+		if (user?.logoUrl) {
+			console.log(
+				'Logo Url',
+				`${import.meta.env.VITE_BASE_URL}/${user?.logoUrl}`
+			);
+		}
+		setLogoPreview(`${import.meta.env.VITE_BASE_URL}/${user?.logoUrl}`);
+	}, [user]);
 
 	return (
 		<div className='p-4 md:p-6 min-h-screen'>
