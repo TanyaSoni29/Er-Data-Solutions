@@ -86,10 +86,10 @@ const EditUserSecondContent = ({
 		if (user?.logoUrl) {
 			console.log(
 				'Logo Url',
-				`${import.meta.env.VITE_BASE_URL}/${user?.logoUrl}`
+				`${import.meta.env.VITE_BASE_URL}${user?.logoUrl}`
 			);
 		}
-		setLogoPreview(`${import.meta.env.VITE_BASE_URL}/${user?.logoUrl}`);
+		setLogoPreview(`${import.meta.env.VITE_BASE_URL}${user?.logoUrl}`);
 	}, [user]);
 
 	return (
