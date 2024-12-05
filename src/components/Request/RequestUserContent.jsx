@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { refreshRequest } from '../../slices/requestSlice';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // For navigation to edit page
+import { Switch } from '@mui/material';
+import { BiHide, BiShow } from 'react-icons/bi';
 
 const RequestUserContent = () => {
 	const dispatch = useDispatch();
@@ -121,12 +123,12 @@ const RequestUserContent = () => {
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 					/>
-					<button
-						onClick={toggleShowHidden}
-						className='bg-blue-500 text-white px-4 py-2 rounded-md'
-					>
-						{showHidden ? 'Hide Hidden' : 'Show Hidden'}
-					</button>
+					<span>Show Hidden</span>
+					<Switch
+						checked={showHidden}
+						onChange={toggleShowHidden}
+						className=' text-white rounded-md'
+					></Switch>
 				</div>
 			</div>
 
@@ -209,9 +211,17 @@ const RequestUserContent = () => {
 										<button
 											className='bg-blue-500 text-white p-2 rounded-full hover:bg-blue-700'
 											onClick={() => handleHide(request?.id)}
-											title='Hide Row' // Tooltip text on hover
+											title={
+												hiddenRequests.includes(request?.id)
+													? 'Unhidden Request'
+													: 'Hide Request'
+											} // Tooltip text on hover
 										>
-											<HideSourceIcon fontSize='small' />
+											{hiddenRequests.includes(request?.id) ? (
+												<BiHide fontSize={17} />
+											) : (
+												<BiShow fontSize={17} />
+											)}
 										</button>
 									</div>
 								</td>

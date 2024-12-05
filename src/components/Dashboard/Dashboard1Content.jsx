@@ -95,6 +95,7 @@ const Dashboard1Content = () => {
 								width: '40px',
 								height: '40px',
 								borderRadius: '50%',
+								backgroundColor: '#fff',
 								display: 'flex',
 								alignItems: 'center',
 								justifyContent: 'center',
