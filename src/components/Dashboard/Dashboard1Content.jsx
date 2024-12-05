@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getAllForms, getFormById } from "../../service/operations/formApi";
+import Logintime from "../../assets/LoginImg.png";
 
 const Dashboard1Content = () => {
   const { user } = useSelector((state) => state.auth); // Get user from Redux
@@ -8,6 +9,11 @@ const Dashboard1Content = () => {
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal open state
   const BASE_URL = import.meta.env.VITE_BASE_URL; // Backend base URL
+
+  // Clear local storage on page refresh
+  useEffect(() => {
+    localStorage.removeItem("hasModalShown"); // Clear specific key
+  }, []);
 
   // Fetch the form data when the component mounts
   useEffect(() => {
@@ -67,51 +73,92 @@ const Dashboard1Content = () => {
   return (
     <div className="p-6 bg-[#F8F9FD] min-h-screen">
       {/* Modal */}
-      {isModalOpen && formData && (
+      {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-[80%] md:w-[60%] relative">
+          <div
+            className="bg-white rounded-lg relative shadow-lg"
+            style={{
+              width: "600px", // Fixed modal width
+              height: "500px", // Fixed modal height
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             {/* Close Button */}
             <button
               onClick={closeModal}
-              className="absolute top-2 right-2 text-gray-600 text-2xl"
+              className="absolute top-4 right-4 text-gray-600"
+              style={{
+                fontSize: "24px", // Larger close icon
+                width: "40px",
+                height: "40px",
+                backgroundColor: "white",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+                cursor: "pointer",
+              }}
             >
               &times;
             </button>
 
             {/* Modal Content */}
-            <div className="text-center">
-              {/* Debugging: Log Full Image URL */}
-              {/* <p className="text-sm text-gray-500">
-                Debug Full Image URL: {`${BASE_URL}${formData?.imagePath}`}
-              </p> */}
-
+            <div
+              className="w-full h-full"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "16px",
+              }}
+            >
               {/* Image */}
-              {formData?.imagePath ? (
+              <div
+                style={{
+                  width: "100%",
+                  height: "60%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  overflow: "hidden",
+                  borderRadius: "8px",
+                  marginBottom: "16px",
+                }}
+              >
                 <img
-                  src={image} // Cache-busting query parameter
+                  src={Logintime}
                   alt="Modal Image"
-                  className="w-[300px] h-[300px] object-cover rounded-lg mb-4 mx-auto"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover", // Ensure image fills the container proportionally
+                  }}
                 />
-              ) : (
-                <p className="text-gray-500">No image available</p>
-              )}
+              </div>
 
               {/* Description */}
-              <p className="text-gray-800 text-lg mb-6">
-                {formData.description || "No description available"}
+              <p className="text-gray-800 text-lg mb-6 text-center">
+                {formData?.description || "Sample description for the form"}
               </p>
 
               {/* Visit URL Button */}
-              {formData.link ? (
-                <button
-                  onClick={visitUrl}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none"
-                >
-                  Visit URL
-                </button>
-              ) : (
-                <p className="text-gray-500">No link available</p>
-              )}
+              <div className="text-center">
+                {formData?.link ? (
+                  <button
+                    onClick={visitUrl}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none text-lg font-medium"
+                  >
+                    Visit URL
+                  </button>
+                ) : (
+                  <p className="text-gray-500">No link available</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
