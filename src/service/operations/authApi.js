@@ -155,6 +155,7 @@ export function getMe(navigate) {
 			dispatch(setToken(null));
 			dispatch(setIsAuth(false));
 			localStorage.removeItem('token');
+			localStorage.removeItem('hasModalShown');
 			// Redirect to login page
 			navigate('/');
 		} finally {

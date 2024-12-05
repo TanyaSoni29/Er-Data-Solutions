@@ -220,7 +220,7 @@ const Sidebar = () => {
 						)}
 
 						{/* Logout Button */}
-						<li>
+						<li onClick={() => dispatch(logout(navigate))}>
 							<Link
 								to='/'
 								className={`flex items-center space-x-2 p-3 rounded ${
@@ -234,7 +234,7 @@ const Sidebar = () => {
 									className=' -rotate-90'
 								/>
 
-								<span onClick={() => dispatch(logout(navigate))}>Logout</span>
+								<span>Logout</span>
 							</Link>
 						</li>
 					</ul>
