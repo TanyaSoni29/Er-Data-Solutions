@@ -68,8 +68,6 @@ const DashboardContent = () => {
 		],
 	};
 
-	console.log(stats);
-
 	const barChartData = {
 		// Dynamically generate labels based on the number of dashboards
 		labels: stats?.usersWithDashboards?.map((user, i) => `User ${i + 1}`),
@@ -117,6 +115,10 @@ const DashboardContent = () => {
 		},
 	};
 
+	const totalNoDashboard = stats?.usersWithDashboards.reduce((total, user) => {
+		return total + (user.d1 ? 1 : 0) + (user.d2 ? 1 : 0) + (user.d3 ? 1 : 0);
+	}, 0);
+
 	return (
 		<Box
 			p={4}
@@ -153,7 +155,7 @@ const DashboardContent = () => {
 					},
 					{
 						title: 'Dashboards',
-						value: stats?.dashboardsCount || 0,
+						value: totalNoDashboard || 0,
 						color: '#F59E0B',
 						icon: (
 							<FaChartBar
