@@ -1,6 +1,8 @@
+/** @format */
+
 import { FiEdit } from 'react-icons/fi';
-import { RiDeleteBinLine } from 'react-icons/ri';
-import { GrHide } from "react-icons/gr";
+// import { RiDeleteBinLine } from 'react-icons/ri';
+import { GrHide } from 'react-icons/gr';
 import { FaRegCircle } from 'react-icons/fa';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
@@ -119,9 +121,7 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 							].map(({ label, key }, index) => (
 								<th
 									key={index}
-									className={`py-3 px-2 md:px-4 ${
-										key ? 'cursor-pointer' : ''
-									}`}
+									className={`py-3 px-2 md:px-4 ${key ? 'cursor-pointer' : ''}`}
 									onClick={() => key && handleSort(key)}
 								>
 									{label}{' '}
@@ -173,7 +173,8 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 				<div className='flex flex-wrap justify-between items-center p-4 text-gray-600 text-sm'>
 					<span>
 						Showing {indexOfFirstUser + 1} to{' '}
-						{Math.min(indexOfLastUser, sortedUsers.length)} of {sortedUsers.length} entries
+						{Math.min(indexOfLastUser, sortedUsers.length)} of{' '}
+						{sortedUsers.length} entries
 					</span>
 					<div className='flex space-x-2'>
 						{Array.from({ length: totalPages }, (_, index) => (
