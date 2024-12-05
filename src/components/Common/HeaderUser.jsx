@@ -20,7 +20,7 @@ const HeaderUser = () => {
     '/dashboard-3': 'Dashboard-3',
     '/requests': 'Requests',
     '/profiles': 'User Profile',
-    '/model': 'Modal',
+    '/modal': 'Modal',
     '/requestform': 'Requests',
   };
 

@@ -12,7 +12,7 @@ import Users from './pages/Users';
 import Request from './pages/Request';
 import ReqListEdit from './components/Request/ReqListEdit';
 // import Historylist from './components/Request/Historylist';
-import RequestForm  from './components/Request/RequestContent';
+import RequestForm from './components/Request/RequestContent';
 import Historylistedit from './components/Request/Historylistedit';
 import ForgotPassword from './components/Authentication/ForgetPassword';
 import Dashboard1 from './pages/Dashboard1';
@@ -122,7 +122,7 @@ const App = () => {
 					}
 				/>
 				<Route
-					path='/model'
+					path='/modal'
 					element={
 						<ProtectedRoute
 							element={<ModelFile />}

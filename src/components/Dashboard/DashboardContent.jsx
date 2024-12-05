@@ -115,7 +115,7 @@ const DashboardContent = () => {
 		},
 	};
 
-	const totalNoDashboard = stats?.usersWithDashboards.reduce((total, user) => {
+	const totalNoDashboard = stats?.usersWithDashboards?.reduce((total, user) => {
 		return total + (user.d1 ? 1 : 0) + (user.d2 ? 1 : 0) + (user.d3 ? 1 : 0);
 	}, 0);
 
