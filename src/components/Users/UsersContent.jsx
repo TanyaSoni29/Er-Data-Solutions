@@ -2,12 +2,13 @@
 
 import { FiEdit } from 'react-icons/fi';
 // import { RiDeleteBinLine } from 'react-icons/ri';
-import { GrHide } from 'react-icons/gr';
 import { FaRegCircle } from 'react-icons/fa';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { refreshUser } from '../../slices/userSlice';
+import { BiHide, BiShow } from 'react-icons/bi';
+import { Switch } from '@mui/material';
 // import { deleteUserById } from '../../service/operations/usersApi';
 
 const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
@@ -134,12 +135,12 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 						<span>Add User</span>
 						<AiOutlineUserAdd />
 					</button>
-					<button
-						onClick={toggleShowHidden}
-						className='bg-blue-500 text-white px-4 py-2 rounded-md'
-					>
-						{showHidden ? 'Hide Hidden' : 'Show Hidden'}
-					</button>
+					<span>Show Hidden</span>
+					<Switch
+						checked={showHidden}
+						onChange={toggleShowHidden}
+						className=' text-white rounded-md'
+					></Switch>
 				</div>
 			</div>
 
@@ -198,9 +199,17 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 										<button
 											className='bg-[#00449B] text-white p-2 rounded-full hover:bg-blue-700'
 											onClick={() => handleHide(user?.id)}
-											title='Hide Row'
+											title={
+												hiddenUsers.includes(user?.id)
+													? 'Unhidden User'
+													: 'Hide User'
+											}
 										>
-											<GrHide fontSize={17} />
+											{hiddenUsers.includes(user?.id) ? (
+												<BiHide fontSize={17} />
+											) : (
+												<BiShow fontSize={17} />
+											)}
 										</button>
 									</div>
 								</td>

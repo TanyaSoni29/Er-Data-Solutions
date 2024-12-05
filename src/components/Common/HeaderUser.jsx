@@ -2,7 +2,7 @@
 
 import { IoIosArrowDown } from 'react-icons/io';
 import TopHeaderImg from '../../assets/TopHeaderImg.png';
-import JohnImg from '../../assets/JohnImg.png'; // Default fallback image
+import JohnImg from '../../assets/user.webp'; // Default fallback image
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
