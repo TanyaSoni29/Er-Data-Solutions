@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createUser } from '../../service/operations/usersApi';
 import { refreshUser } from '../../slices/userSlice';
+import toast from 'react-hot-toast';
 
 const AddUserSecondStep = ({ addUserDate1 }) => {
   const navigate = useNavigate();
