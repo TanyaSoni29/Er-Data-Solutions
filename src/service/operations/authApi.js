@@ -170,6 +170,7 @@ export function logout(navigate) {
 		dispatch(setUser(null));
 		dispatch(setIsAuth(false));
 		localStorage.removeItem('token');
+		localStorage.removeItem('hasModalShown');
 		toast.success('Logged Out');
 		navigate('/');
 	};
