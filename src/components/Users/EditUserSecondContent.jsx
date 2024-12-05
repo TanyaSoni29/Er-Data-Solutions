@@ -56,7 +56,7 @@ const EditUserSecondContent = ({
 
 			// Append the logo file if available
 			if (logo) {
-				formData.append('logoUrl', logo); // Include the new logo file
+				formData.append('logo', logo); // Include the new logo file
 			}
 
 			// Merge the provided data with existing user data
@@ -82,14 +82,22 @@ const EditUserSecondContent = ({
 		}
 	};
 
+	// useEffect(() => {
+	// 	if (user?.logoUrl) {
+	// 		console.log(
+	// 			'Logo Url',
+	// 			`${import.meta.env.VITE_BASE_URL}${user?.logoUrl}`
+	// 		);
+	// 	}
+	// 	setLogoPreview(`${import.meta.env.VITE_BASE_URL}${user?.logoUrl}`);
+	// }, [user]);
+
 	useEffect(() => {
 		if (user?.logoUrl) {
-			console.log(
-				'Logo Url',
-				`${import.meta.env.VITE_BASE_URL}${user?.logoUrl}`
-			);
+			const fullLogoUrl = `${import.meta.env.VITE_BASE_URL}/${user?.logoUrl}`;
+			console.log("Logo Url:", fullLogoUrl);
+			setLogoPreview(fullLogoUrl);
 		}
-		setLogoPreview(`${import.meta.env.VITE_BASE_URL}${user?.logoUrl}`);
 	}, [user]);
 
 	return (
