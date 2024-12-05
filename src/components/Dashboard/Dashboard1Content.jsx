@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getAllForms, getFormById } from '../../service/operations/formApi';
-import Logintime from '../../assets/LoginImg.png';
+// import Logintime from '../../assets/LoginImg.png';
 
 const Dashboard1Content = () => {
 	const { user } = useSelector((state) => state.auth); // Get user from Redux
@@ -130,7 +130,7 @@ const Dashboard1Content = () => {
 								}}
 							>
 								<img
-									src={Logintime}
+									src={image}
 									alt='Modal Image'
 									style={{
 										width: '100%',
