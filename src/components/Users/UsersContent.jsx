@@ -135,12 +135,12 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
 						<span>Add User</span>
 						<AiOutlineUserAdd />
 					</button>
-					<span>Show Hidden</span>
 					<Switch
 						checked={showHidden}
 						onChange={toggleShowHidden}
 						className=' text-white rounded-md'
 					></Switch>
+					<span>Show Hidden</span>
 				</div>
 			</div>
 

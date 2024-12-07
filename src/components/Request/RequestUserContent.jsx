@@ -123,12 +123,13 @@ const RequestUserContent = () => {
 						value={searchQuery}
 						onChange={(e) => setSearchQuery(e.target.value)}
 					/>
-					<span>Show Hidden</span>
+					
 					<Switch
 						checked={showHidden}
 						onChange={toggleShowHidden}
 						className=' text-white rounded-md'
 					></Switch>
+					<span>Show Hidden</span>
 				</div>
 			</div>
 
