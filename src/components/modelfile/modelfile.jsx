@@ -296,7 +296,7 @@ const ModelFile = () => {
                 }}
               >
                 <img
-                  src={updatedData?.imagePath || profileImage}
+                  src={profileImage}
                   alt='Modal Image'
                   style={{
                     width: '100%',
