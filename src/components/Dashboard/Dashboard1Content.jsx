@@ -104,6 +104,10 @@ const Dashboard1Content = () => {
 						>
 							&times;
 						</button>
+						{/* Modal Title */}
+						<h2 className='text-xl font-semibold text-blue-600 mt-4'>
+							Client Notification
+						</h2>
 
 						{/* Modal Content */}
 						<div
