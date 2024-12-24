@@ -24,8 +24,6 @@ const ForgotPassword = () => {
 		} catch (error) {
 			console.log(error);
 		}
-
-		// Redirect to login page
 	};
 
 	return (
@@ -42,11 +40,12 @@ const ForgotPassword = () => {
 							/>
 							<span className='font-bold w-16'>ER Data Solutions</span>
 						</div>
+						{/* Back Button */}
 						<button
-							onClick={() => navigate('/signup')}
-							className='text-blue-600 font-medium border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white'
+							onClick={() => navigate(-1)}
+							className='text-gray-600 font-medium border border-gray-600 px-4 py-2 rounded-lg hover:bg-gray-600 hover:text-white'
 						>
-							Sign Up
+							Back
 						</button>
 					</div>
 					<div className='w-[75%] mx-auto'>
