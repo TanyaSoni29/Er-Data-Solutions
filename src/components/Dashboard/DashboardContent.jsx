@@ -102,38 +102,38 @@ const DashboardContent = () => {
 		],
 	};
 
-	const barChartData = {
-		labels: stats?.usersWithDashboards?.map((user, i) => `User ${i + 1}`),
-		datasets: [{
-			label: "Dashboard 1",
-			data: stats?.usersWithDashboards?.map((user) => (user.d1 ? 1 : 0)),
-			backgroundColor: "#3B82F6",
-		},
-		{
-			label: "Dashboard 2",
-			data: stats?.usersWithDashboards?.map((user) => (user.d2 ? 1 : 0)),
-			backgroundColor: "#10B981",
-		},
-		{
-			label: "Dashboard 3",
-			data: stats?.usersWithDashboards?.map((user) => (user.d3 ? 1 : 0)),
-			backgroundColor: "#F59E0B",
-		},
-		],
-	};
+	// const barChartData = {
+	// 	labels: stats?.usersWithDashboards?.map((user, i) => `User ${i + 1}`),
+	// 	datasets: [{
+	// 		label: "Dashboard 1",
+	// 		data: stats?.usersWithDashboards?.map((user) => (user.d1 ? 1 : 0)),
+	// 		backgroundColor: "#3B82F6",
+	// 	},
+	// 	{
+	// 		label: "Dashboard 2",
+	// 		data: stats?.usersWithDashboards?.map((user) => (user.d2 ? 1 : 0)),
+	// 		backgroundColor: "#10B981",
+	// 	},
+	// 	{
+	// 		label: "Dashboard 3",
+	// 		data: stats?.usersWithDashboards?.map((user) => (user.d3 ? 1 : 0)),
+	// 		backgroundColor: "#F59E0B",
+	// 	},
+	// 	],
+	// };
 
-	const barChartOptions = {
-		plugins: {
-			tooltip: {
-				callbacks: {
-					label: function (tooltipItem) {
-						const dashboardLabel = tooltipItem.dataset.label;
-						return `${dashboardLabel}: ${tooltipItem.raw}`;
-					},
-				},
-			},
-		},
-	};
+	// const barChartOptions = {
+	// 	plugins: {
+	// 		tooltip: {
+	// 			callbacks: {
+	// 				label: function (tooltipItem) {
+	// 					const dashboardLabel = tooltipItem.dataset.label;
+	// 					return `${dashboardLabel}: ${tooltipItem.raw}`;
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// };
 
 	const totalNoDashboard = stats?.usersWithDashboards?.reduce((total, user) => {
 		return total + (user.d1 ? 1 : 0) + (user.d2 ? 1 : 0) + (user.d3 ? 1 : 0);
