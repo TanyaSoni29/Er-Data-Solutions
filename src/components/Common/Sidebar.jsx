@@ -56,7 +56,7 @@ const Sidebar = () => {
 						src={LogoImg} // Replace with your logo path
 						alt='ER Data Solutions'
 					/>
-					<span className='font-bold w-20'>ER Data Solution</span>
+					<span className='font-bold w-20'>ER Data Solutions </span>
 				</div>
 
 				<nav>
