@@ -49,7 +49,7 @@ const DashboardContent = () => {
 
 	// Pagination State
 	const [currentPage, setCurrentPage] = useState(1);
-	const rowsPerPage = 5;
+	const rowsPerPage = 3;
 
 	useEffect(() => {
 		dispatch(refreshUser());
@@ -240,7 +240,7 @@ const DashboardContent = () => {
 			{/* Charts Section */}
 			<Grid container spacing={4} mt={4}>
 				<Grid item xs={12} lg={6}>
-					<Paper elevation={3} sx={{ p: 3 }}>
+					<Paper elevation={3} sx={{ p: 6 }}>
 						<Typography variant="h6" color="textSecondary" mb={2}>
 							Number of New Clients per Month
 						</Typography>
@@ -249,16 +249,79 @@ const DashboardContent = () => {
 				</Grid>
 				<Grid item xs={12} lg={6}>
 					<Paper elevation={3} sx={{ p: 3 }}>
-						<Typography variant="h6" color="textSecondary" mb={2}>
-							Top Dashboard Accessed
+						<Typography variant="h6" color="textSecondary" mb={1}>
+							 Dashboard Accessed
 						</Typography>
-						<Bar data={barChartData} options={barChartOptions} />
+						<TableContainer component={Paper} sx={{ mt: 1 }}>
+							<Table>
+								<TableHead>
+									<TableRow>
+										<TableCell>Sr. No</TableCell>
+										<TableCell>Company Name</TableCell>
+										<TableCell>Contact Person</TableCell>
+										{/* <TableCell>Email ID</TableCell>
+							<TableCell>Phone Number</TableCell> */}
+										<TableCell align="center">Actions</TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{paginatedUsers?.map((user, index) => (
+										<TableRow key={user?.id || index}>
+											<TableCell>{index + 1}</TableCell>
+											<TableCell>{user?.companyName || "N/A"}</TableCell>
+											<TableCell>{user?.contactPerson || "N/A"}</TableCell>
+											{/* <TableCell>
+									{user?.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)
+										? user.email
+										: "Invalid Email"}
+								</TableCell>
+								<TableCell>
+									{user?.mobileNo && /^\d{10,15}$/.test(user.mobileNo)
+										? user.mobileNo
+										: "NA"}
+								</TableCell> */}
+											<TableCell align="center">
+												<Button
+													variant="contained"
+													color="primary"
+													size="small"
+													onClick={() => {
+														const dashboardUrls = [
+															user?.dashboardUrl1 || null,
+															user?.dashboardUrl2 || null,
+															user?.dashboardUrl3 || null,
+														];
+														if (dashboardUrls.every((url) => !url)) {
+															console.error("No valid dashboard URLs provided.");
+															alert("This user has no dashboard URLs to view.");
+														} else {
+															handleOpenModal(dashboardUrls);
+														}
+													}}
+													disabled={!user || !user.dashboardUrl1 && !user.dashboardUrl2 && !user.dashboardUrl3}
+												>
+													View
+												</Button>
+											</TableCell>
+										</TableRow>
+
+									))}
+								</TableBody>
+							</Table>
+							<Box display="flex" justifyContent="center" mt={2}>
+								<Pagination
+									count={Math.ceil(users?.length / rowsPerPage)}
+									page={currentPage}
+									onChange={handleChangePage}
+								/>
+							</Box>
+						</TableContainer>
 					</Paper>
 				</Grid>
 			</Grid>
 
 			{/* User Table Section */}
-			<TableContainer component={Paper} sx={{ mt: 4 }}>
+			{/* <TableContainer component={Paper} sx={{ mt: 4 }}>
 				<Table>
 					<TableHead>
 						<TableRow>
@@ -321,7 +384,7 @@ const DashboardContent = () => {
 						onChange={handleChangePage}
 					/>
 				</Box>
-			</TableContainer>
+			</TableContainer> */}
 
 			{/* Modal for Dashboards */}
 			<Modal

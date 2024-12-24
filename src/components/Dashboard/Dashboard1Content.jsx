@@ -66,9 +66,8 @@ const Dashboard1Content = () => {
 		);
 	}
 
-	const image = `${BASE_URL}${
-		formData?.imagePath
-	}?timestamp=${new Date().getTime()}`;
+	const image = `${BASE_URL}${formData?.imagePath
+		}?timestamp=${new Date().getTime()}`;
 
 	return (
 		<div className='p-6 bg-[#F8F9FD] min-h-screen'>
@@ -180,7 +179,12 @@ const Dashboard1Content = () => {
 					}}
 				></iframe>
 			) : (
-				<p>No dashboard URL found</p>
+				<p>
+					No dashboard URLs found. Please contact the administration at{" "}
+					<a href="mailto:info@ERData-Solutions.com" style={{ color: "#007BFF", textDecoration: "underline" }}>
+						info@ERData-Solutions.com
+					</a>
+				</p>
 			)}
 		</div>
 	);
