@@ -30,7 +30,6 @@ import {
 	Pagination
 } from "@mui/material";
 import {
-	Bar,
 	Line
 } from "react-chartjs-2";
 import "chart.js/auto";
@@ -83,24 +82,39 @@ const DashboardContent = () => {
 
 	const dynamicLabels = getPreviousDays(currentDay);
 
+	const adjustDataLength = (data, labels) => {
+		const safeData = Array.isArray(data) ? data : []; // Ensure data is always an array
+		if (safeData.length === labels.length) {
+			return safeData; // No adjustment needed
+		} else if (safeData.length > labels.length) {
+			return safeData.slice(0, labels.length); // Trim if too long
+		} else {
+			return [...safeData, ...Array(labels.length - safeData.length).fill(0)]; // Pad with zeros if too short
+		}
+	};
+	
+	
 	const lineChartData = {
 		labels: dynamicLabels,
-		datasets: [{
-			label: "Total Clients",
-			data: stats?.clients || [30, 40, 35, 45, 30, 25, 10],
-			borderColor: "#3B82F6",
-			backgroundColor: "rgba(59, 130, 246, 0.2)",
-			tension: 0.4,
-		},
-		{
-			label: "New Clients",
-			data: stats?.newClients || [20, 30, 25, 35, 20, 15, 10],
-			borderColor: "#10B981",
-			backgroundColor: "rgba(16, 185, 129, 0.2)",
-			tension: 0.4,
-		},
+		datasets: [
+			{
+				label: "Total Clients",
+				data: adjustDataLength(stats?.clients || [30, 40, 35, 45, 30, 25, 10], dynamicLabels),
+				borderColor: "#3B82F6",
+				backgroundColor: "rgba(59, 130, 246, 0.2)",
+				tension: 0.4,
+			},
+			{
+				label: "New Clients",
+				data: adjustDataLength(stats?.newClients || [20, 30, 25, 35, 20, 15, 10], dynamicLabels),
+				borderColor: "#10B981",
+				backgroundColor: "rgba(16, 185, 129, 0.2)",
+				tension: 0.4,
+			},
 		],
 	};
+	
+	
 
 	// const barChartData = {
 	// 	labels: stats?.usersWithDashboards?.map((user, i) => `User ${i + 1}`),
