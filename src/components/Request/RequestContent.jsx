@@ -74,15 +74,15 @@ const RequestForm = () => {
 					</div> */}
 
 					{/* Buttons */}
-					<div className='fixed top-[100px] flex space-x-4 items-center mb-6 px-4'>
+					<div className='flex flex-col md:flex-row justify-start items-center space-y-4 md:space-y-0 md:space-x-4 mb-6'>
 						<span
-							className='text-black text-lg cursor-pointer'
+							className='text-black text-md md:text-lg hover:underline'
 							onClick={() => navigate('/requests')}
 						>
 							History Request List
 						</span>
 
-						<button className='bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white px-6 py-2 rounded-lg shadow-lg hover:from-[#003876] hover:to-[#005fa1]'>
+						<button className='bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white px-4 py-1 rounded-lg shadow-lg hover:from-[#003876] hover:to-[#005fa1] text-md md:text-lg'>
 							Add New Request
 						</button>
 					</div>
