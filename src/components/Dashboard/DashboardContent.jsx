@@ -1,530 +1,486 @@
-import { FaUsers, FaChartBar, FaRegChartBar } from 'react-icons/fa';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { refreshUser } from '../../slices/userSlice';
+/** @format */
+
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { FaUsers, FaChartBar, FaRegChartBar } from "react-icons/fa";
+import { Line } from "react-chartjs-2";
+import "chart.js/auto";
 import {
-	Box,
-	Typography,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Button,
-	Grid,
-	Paper,
-	Modal,
-	Pagination,
-} from '@mui/material';
-import { Line } from 'react-chartjs-2';
-import 'chart.js/auto';
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+  Grid,
+  Paper,
+  Modal,
+  Pagination,
+} from "@mui/material";
+import { refreshUser } from "../../slices/userSlice"; // Ensure this is imported
 
 const DashboardContent = () => {
-	const dispatch = useDispatch();
-	const { stats, users, loading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { stats, users, loading } = useSelector((state) => state.user);
 
-	// Modal State
-	const [openModal, setOpenModal] = useState(false);
-	const [selectedDashboards, setSelectedDashboards] = useState([]);
+  // Modal State
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedDashboards, setSelectedDashboards] = useState([]);
 
-	// Pagination State
-	const [currentPage, setCurrentPage] = useState(1);
-	const rowsPerPage = 3;
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 3;
 
-	useEffect(() => {
-		dispatch(refreshUser());
-	}, [dispatch]);
+  useEffect(() => {
+    dispatch(refreshUser()).catch((error) =>
+      console.error("Failed to refresh user data:", error)
+    );
+  }, [dispatch]);
 
-	const currentDate = new Date();
-	const currentMonth = currentDate.toLocaleString('default', {
-		month: 'short',
-	});
-	const currentDay = currentDate.getDate();
+  const currentDate = new Date();
+  const currentMonth = currentDate.toLocaleString("default", { month: "short" });
+  const currentDay = currentDate.getDate();
 
-	const getPreviousDays = (currentDay) => {
-		const labels = [];
-		for (let i = 6; i >= 0; i--) {
-			let day = currentDay - i;
-			let date = new Date(currentDate);
-			date.setDate(day);
+  const getPreviousDays = (currentDay) => {
+    const labels = [];
+    for (let i = 6; i >= 0; i--) {
+      let day = currentDay - i;
+      let date = new Date(currentDate);
+      date.setDate(day);
+      const prevMonth = date.getMonth() !== currentDate.getMonth();
+      const formattedMonth = prevMonth
+        ? date.toLocaleString("default", { month: "short" })
+        : currentMonth;
+      const formattedDate = `${formattedMonth} ${date.getDate()}`;
+      labels.push(formattedDate);
+    }
+    return labels;
+  };
 
-			const prevMonth = date.getMonth() !== currentDate.getMonth();
-			const formattedMonth = prevMonth
-				? date.toLocaleString('default', {
-						month: 'short',
-				  })
-				: currentMonth;
-			const formattedDate = `${formattedMonth} ${date.getDate()}`;
+  const dynamicLabels = getPreviousDays(currentDay);
 
-			labels.push(formattedDate);
-		}
-		return labels;
-	};
+  const adjustDataLength = (data, labels) => {
+    const safeData = Array.isArray(data) ? data : [];
+    return Array(labels.length)
+      .fill(0)
+      .map((_, i) => (i < safeData.length ? safeData[i] : 0));
+  };
 
-	const dynamicLabels = getPreviousDays(currentDay);
+  // Ensure stats.clients and stats.newClients are arrays or use fallback data
+  const clientsData = stats?.clients
+    ? adjustDataLength(stats.clients, dynamicLabels)
+    : [30, 40, 35, 45, 30, 25, 10]; // Fallback if stats.clients is not an array
+  const newClientsData = stats?.newClients
+    ? adjustDataLength(stats.newClients, dynamicLabels)
+    : [20, 30, 25, 35, 20, 15, 10]; // Fallback if stats.newClients is not an array
 
-	const adjustDataLength = (data, labels) => {
-		const safeData = Array.isArray(data) ? data : []; // Ensure data is always an array
-		if (safeData.length === labels.length) {
-			return safeData; // No adjustment needed
-		} else if (safeData.length > labels.length) {
-			return safeData.slice(0, labels.length); // Trim if too long
-		} else {
-			return [...safeData, ...Array(labels.length - safeData.length).fill(0)]; // Pad with zeros if too short
-		}
-	};
+  const lineChartData = {
+    labels: dynamicLabels,
+    datasets: [
+      {
+        label: "Total Clients",
+        data: clientsData,
+        borderColor: "#3B82F6",
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        tension: 0.4, // Smooth curves for up-down movement
+        fill: true, // Area under the line for better visualization
+        borderWidth: 2,
+        pointRadius: 5, // Larger points for visibility
+        pointBackgroundColor: "#3B82F6",
+        pointBorderColor: "#fff",
+        pointHoverRadius: 7,
+      },
+      {
+        label: "New Clients",
+        data: newClientsData,
+        borderColor: "#10B981",
+        backgroundColor: "rgba(16, 185, 129, 0.2)",
+        tension: 0.4,
+        fill: true,
+        borderWidth: 2,
+        pointRadius: 5,
+        pointBackgroundColor: "#10B981",
+        pointBorderColor: "#fff",
+        pointHoverRadius: 7,
+      },
+    ],
+  };
 
-	const lineChartData = {
-		labels: dynamicLabels,
-		datasets: [
-			{
-				label: 'Total Clients',
-				data: adjustDataLength(
-					stats?.clients || [30, 40, 35, 45, 30, 25, 10],
-					dynamicLabels
-				),
-				borderColor: '#3B82F6',
-				backgroundColor: 'rgba(59, 130, 246, 0.2)',
-				tension: 0.4,
-			},
-			{
-				label: 'New Clients',
-				data: adjustDataLength(
-					stats?.newClients || [20, 30, 25, 35, 20, 15, 10],
-					dynamicLabels
-				),
-				borderColor: '#10B981',
-				backgroundColor: 'rgba(16, 185, 129, 0.2)',
-				tension: 0.4,
-			},
-		],
-	};
+  const lineChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+        labels: {
+          font: { size: 14, family: "Arial, sans-serif" },
+          color: "#1f2937",
+          boxWidth: 20,
+        },
+      },
+      tooltip: {
+        mode: "index",
+        intersect: false,
+        backgroundColor: "#fff",
+        titleColor: "#1f2937",
+        bodyColor: "#4b5563",
+        borderColor: "#e5e7eb",
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      x: {
+        title: { display: true, text: "Date", color: "#6b7280", font: { size: 12 } },
+        ticks: { color: "#6b7280", font: { size: 10 } },
+        grid: { color: "#e5e7eb", borderDash: [5, 5] },
+      },
+      y: {
+        title: { display: true, text: "Number of Clients", color: "#6b7280", font: { size: 12 } },
+        ticks: { color: "#6b7280", font: { size: 10 }, beginAtZero: true },
+        grid: { color: "#e5e7eb", borderDash: [5, 5] },
+      },
+    },
+    hover: {
+      mode: "nearest",
+      intersect: true,
+    },
+  };
 
-	// const barChartData = {
-	// 	labels: stats?.usersWithDashboards?.map((user, i) => `User ${i + 1}`),
-	// 	datasets: [{
-	// 		label: "Dashboard 1",
-	// 		data: stats?.usersWithDashboards?.map((user) => (user.d1 ? 1 : 0)),
-	// 		backgroundColor: "#3B82F6",
-	// 	},
-	// 	{
-	// 		label: "Dashboard 2",
-	// 		data: stats?.usersWithDashboards?.map((user) => (user.d2 ? 1 : 0)),
-	// 		backgroundColor: "#10B981",
-	// 	},
-	// 	{
-	// 		label: "Dashboard 3",
-	// 		data: stats?.usersWithDashboards?.map((user) => (user.d3 ? 1 : 0)),
-	// 		backgroundColor: "#F59E0B",
-	// 	},
-	// 	],
-	// };
+  const totalNoDashboard = stats?.usersWithDashboards?.reduce((total, user) => {
+    return total + (user.d1 ? 1 : 0) + (user.d2 ? 1 : 0) + (user.d3 ? 1 : 0);
+  }, 0);
 
-	// const barChartOptions = {
-	// 	plugins: {
-	// 		tooltip: {
-	// 			callbacks: {
-	// 				label: function (tooltipItem) {
-	// 					const dashboardLabel = tooltipItem.dataset.label;
-	// 					return `${dashboardLabel}: ${tooltipItem.raw}`;
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// };
+  const handleOpenModal = (dashboards) => {
+    setSelectedDashboards(dashboards);
+    setOpenModal(true);
+  };
 
-	const totalNoDashboard = stats?.usersWithDashboards?.reduce((total, user) => {
-		return total + (user.d1 ? 1 : 0) + (user.d2 ? 1 : 0) + (user.d3 ? 1 : 0);
-	}, 0);
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedDashboards([]);
+  };
 
-	const handleOpenModal = (dashboards) => {
-		setSelectedDashboards(dashboards);
-		setOpenModal(true);
-	};
+  const handleChangePage = (event, value) => {
+    setCurrentPage(value);
+  };
 
-	const handleCloseModal = () => {
-		setOpenModal(false);
-		setSelectedDashboards([]);
-	};
+  // Paginated Users
+  const paginatedUsers = users?.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
-	const handleChangePage = (event, value) => {
-		setCurrentPage(value);
-	};
+  return (
+    <Box p={4} bgcolor="#F3F4F6" minHeight="100vh">
+      {/* Header Metrics Section */}
+      <Grid container spacing={4}>
+        {[
+          {
+            title: "Total Users",
+            value: stats?.totalUsers || 0,
+            color: "#3B82F6",
+            icon: <FaUsers size={24} color="white" />,
+          },
+          {
+            title: "Clients",
+            value: stats?.clients || 0,
+            color: "#10B981",
+            icon: <FaRegChartBar size={24} color="white" />,
+          },
+          {
+            title: "Dashboards",
+            value: totalNoDashboard || 0,
+            color: "#F59E0B",
+            icon: <FaChartBar size={24} color="white" />,
+          },
+        ].map((metric, index) => (
+          <Grid item xs={12} md={4} key={index}>
+            <Paper
+              elevation={3}
+              sx={{
+                p: 3,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                borderRadius: "12px",
+                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+                background: `linear-gradient(135deg, ${metric.color}20 0%, #ffffff 100%)`, // Gradient background
+                transition: "transform 0.3s",
+                "&:hover": { transform: "scale(1.02)" },
+              }}
+            >
+              <Box
+                sx={{
+                  width: 50,
+                  height: 50,
+                  bgcolor: metric.color,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: "50%",
+                  transition: "transform 0.3s",
+                  "&:hover": { transform: "scale(1.1)" },
+                }}
+              >
+                {metric.icon}
+              </Box>
+              <Box textAlign="right">
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    color: "#6B7280",
+                    fontWeight: 500,
+                    fontFamily: "Arial, sans-serif",
+                  }}
+                >
+                  {metric.title}
+                </Typography>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    color: "#111827",
+                    fontWeight: 700,
+                    fontFamily: "Arial, sans-serif",
+                  }}
+                >
+                  {loading ? "Loading..." : metric.value}
+                </Typography>
+              </Box>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
 
-	// Paginated Users
-	const paginatedUsers = users?.slice(
-		(currentPage - 1) * rowsPerPage,
-		currentPage * rowsPerPage
-	);
+      {/* Charts Section */}
+      <Grid container spacing={4} mt={4}>
+        <Grid item xs={12} lg={6}>
+          <Paper
+            elevation={3}
+            sx={{ p: 3, height: "400px", position: "relative", background: "#fff" }}
+          >
+            <Typography
+              variant="h6"
+              color="textSecondary"
+              mb={2}
+              sx={{ fontFamily: "Arial, sans-serif", fontWeight: 600 }}
+            >
+              Number of New Clients per Month
+            </Typography>
+            <Box sx={{ height: "100%", width: "100%" }}>
+              <Line data={lineChartData} options={lineChartOptions} />
+            </Box>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <Paper
+            elevation={3}
+            sx={{ p: 3, backgroundColor: "#F9FAFB" }}
+          >
+            <Typography
+              variant="h6"
+              color="textSecondary"
+              mb={2}
+              sx={{ fontFamily: "Arial, sans-serif", fontWeight: 600 }}
+            >
+              Dashboard Accessed
+            </Typography>
+            <TableContainer
+              component={Paper}
+              sx={{ mt: 1, border: "1px solid #E5E7EB", borderRadius: "8px" }}
+            >
+              <Table>
+                <TableHead>
+                  <TableRow
+                    sx={{
+                      backgroundColor: "#3B82F6",
+                      "& th": {
+                        color: "white",
+                        fontWeight: "bold",
+                        fontFamily: "Arial, sans-serif",
+                      },
+                    }}
+                  >
+                    <TableCell>Sr. No</TableCell>
+                    <TableCell>Company Name</TableCell>
+                    <TableCell>Contact Person</TableCell>
+                    <TableCell align="center">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {paginatedUsers?.map((user, index) => (
+                    <TableRow
+                      key={user?.id || index}
+                      sx={{
+                        "&:hover": { backgroundColor: "#F3F4F6" },
+                      }}
+                    >
+                      <TableCell sx={{ fontFamily: "Arial, sans-serif" }}>
+                        {(index + rowsPerPage * (currentPage - 1)) + 1}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontFamily: "Arial, sans-serif",
+                          color: "#1F2937",
+                        }}
+                      >
+                        {user?.companyName || "N/A"}
+                      </TableCell>
+                      <TableCell
+                        sx={{
+                          fontFamily: "Arial, sans-serif",
+                          color: "#1F2937",
+                        }}
+                      >
+                        {user?.contactPerson || "N/A"}
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          sx={{
+                            backgroundColor: "#10B981",
+                            "&:hover": { backgroundColor: "#047857" },
+                            fontFamily: "Arial, sans-serif",
+                          }}
+                          onClick={() => {
+                            const dashboardUrls = [
+                              user?.dashboardUrl1 || null,
+                              user?.dashboardUrl2 || null,
+                              user?.dashboardUrl3 || null,
+                            ];
+                            if (dashboardUrls.every((url) => !url)) {
+                              console.error(
+                                "No valid dashboard URLs provided."
+                              );
+                              alert("This user has no dashboard URLs to view.");
+                            } else {
+                              handleOpenModal(dashboardUrls);
+                            }
+                          }}
+                          disabled={
+                            !user ||
+                            (!user.dashboardUrl1 &&
+                              !user.dashboardUrl2 &&
+                              !user.dashboardUrl3)
+                          }
+                        >
+                          View
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <Box display="flex" justifyContent="center" mt={2}>
+                <Pagination
+                  count={Math.ceil(users?.length / rowsPerPage)}
+                  page={currentPage}
+                  onChange={handleChangePage}
+                  sx={{
+                    "& .MuiPaginationItem-root": {
+                      fontFamily: "Arial, sans-serif",
+                    },
+                  }}
+                />
+              </Box>
+            </TableContainer>
+          </Paper>
+        </Grid>
+      </Grid>
 
-	return (
-		<Box
-			p={4}
-			bgcolor='#F3F4F6'
-			minHeight='100vh'
-		>
-			{/* Header Metrics Section */}
-			<Grid
-				container
-				spacing={4}
-			>
-				{[
-					{
-						title: 'Total Users',
-						value: stats?.totalUsers || 0,
-						color: '#3B82F6',
-						icon: (
-							<FaUsers
-								size={24}
-								color='white'
-							/>
-						),
-					},
-					{
-						title: 'Clients',
-						value: stats?.clients || 0,
-						color: '#10B981',
-						icon: (
-							<FaRegChartBar
-								size={24}
-								color='white'
-							/>
-						),
-					},
-					{
-						title: 'Dashboards',
-						value: totalNoDashboard || 0,
-						color: '#F59E0B',
-						icon: (
-							<FaChartBar
-								size={24}
-								color='white'
-							/>
-						),
-					},
-				].map((metric, index) => (
-					<Grid
-						item
-						xs={12}
-						md={4}
-						key={index}
-					>
-						<Paper
-							elevation={3}
-							sx={{
-								p: 3,
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'space-between',
-								borderRadius: '12px',
-								boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-							}}
-						>
-							<Box
-								sx={{
-									width: 50,
-									height: 50,
-									bgcolor: metric.color,
-									display: 'flex',
-									justifyContent: 'center',
-									alignItems: 'center',
-									borderRadius: '50%',
-								}}
-							>
-								{metric.icon}
-							</Box>
-							<Box textAlign='right'>
-								<Typography
-									variant='subtitle1'
-									sx={{
-										color: '#6B7280',
-										fontWeight: 500,
-									}}
-								>
-									{metric.title}
-								</Typography>
-								<Typography
-									variant='h4'
-									sx={{
-										color: '#111827',
-										fontWeight: 700,
-									}}
-								>
-									{loading ? 'Loading...' : metric.value}
-								</Typography>
-							</Box>
-						</Paper>
-					</Grid>
-				))}
-			</Grid>
-
-			{/* Charts Section */}
-			<Grid
-				container
-				spacing={4}
-				mt={4}
-			>
-				<Grid
-					item
-					xs={12}
-					lg={6}
-				>
-					<Paper
-						elevation={3}
-						sx={{ p: 6 }}
-					>
-						<Typography
-							variant='h6'
-							color='textSecondary'
-							mb={2}
-						>
-							Number of New Clients per Month
-						</Typography>
-						<Line data={lineChartData} />
-					</Paper>
-				</Grid>
-				<Grid
-					item
-					xs={12}
-					lg={6}
-				>
-					<Paper
-						elevation={3}
-						sx={{ p: 3 }}
-					>
-						<Typography
-							variant='h6'
-							color='textSecondary'
-							mb={1}
-						>
-							Dashboard Accessed
-						</Typography>
-						<TableContainer
-							component={Paper}
-							sx={{ mt: 1 }}
-						>
-							<Table>
-								<TableHead>
-									<TableRow>
-										<TableCell>Sr. No</TableCell>
-										<TableCell>Company Name</TableCell>
-										<TableCell>Contact Person</TableCell>
-										{/* <TableCell>Email ID</TableCell>
-							<TableCell>Phone Number</TableCell> */}
-										<TableCell align='center'>Actions</TableCell>
-									</TableRow>
-								</TableHead>
-								<TableBody>
-									{paginatedUsers?.map((user, index) => (
-										<TableRow key={user?.id || index}>
-											<TableCell>{(index + (rowsPerPage * (currentPage -1) )) + 1 }</TableCell>
-											<TableCell>{user?.companyName || 'N/A'}</TableCell>
-											<TableCell>{user?.contactPerson || 'N/A'}</TableCell>
-											{/* <TableCell>
-									{user?.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)
-										? user.email
-										: "Invalid Email"}
-								</TableCell>
-								<TableCell>
-									{user?.mobileNo && /^\d{10,15}$/.test(user.mobileNo)
-										? user.mobileNo
-										: "NA"}
-								</TableCell> */}
-											<TableCell align='center'>
-												<Button
-													variant='contained'
-													color='primary'
-													size='small'
-													onClick={() => {
-														const dashboardUrls = [
-															user?.dashboardUrl1 || null,
-															user?.dashboardUrl2 || null,
-															user?.dashboardUrl3 || null,
-														];
-														if (dashboardUrls.every((url) => !url)) {
-															console.error(
-																'No valid dashboard URLs provided.'
-															);
-															alert('This user has no dashboard URLs to view.');
-														} else {
-															handleOpenModal(dashboardUrls);
-														}
-													}}
-													disabled={
-														!user ||
-														(!user.dashboardUrl1 &&
-															!user.dashboardUrl2 &&
-															!user.dashboardUrl3)
-													}
-												>
-													View
-												</Button>
-											</TableCell>
-										</TableRow>
-									))}
-								</TableBody>
-							</Table>
-							<Box
-								display='flex'
-								justifyContent='center'
-								mt={2}
-							>
-								<Pagination
-									count={Math.ceil(users?.length / rowsPerPage)}
-									page={currentPage}
-									onChange={handleChangePage}
-								/>
-							</Box>
-						</TableContainer>
-					</Paper>
-				</Grid>
-			</Grid>
-
-			{/* User Table Section */}
-			{/* <TableContainer component={Paper} sx={{ mt: 4 }}>
-				<Table>
-					<TableHead>
-						<TableRow>
-							<TableCell>Sr. No</TableCell>
-							<TableCell>Company Name</TableCell>
-							<TableCell>Contact Person</TableCell>
-							<TableCell>Email ID</TableCell>
-							<TableCell>Phone Number</TableCell>
-							<TableCell align="center">Actions</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{paginatedUsers?.map((user, index) => (
-							<TableRow key={user?.id || index}>
-								<TableCell>{index + 1}</TableCell>
-								<TableCell>{user?.companyName || "N/A"}</TableCell>
-								<TableCell>{user?.contactPerson || "N/A"}</TableCell>
-								<TableCell>
-									{user?.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)
-										? user.email
-										: "Invalid Email"}
-								</TableCell>
-								<TableCell>
-									{user?.mobileNo && /^\d{10,15}$/.test(user.mobileNo)
-										? user.mobileNo
-										: "NA"}
-								</TableCell>
-								<TableCell align="center">
-									<Button
-										variant="contained"
-										color="primary"
-										size="small"
-										onClick={() => {
-											const dashboardUrls = [
-												user?.dashboardUrl1 || null,
-												user?.dashboardUrl2 || null,
-												user?.dashboardUrl3 || null,
-											];
-											if (dashboardUrls.every((url) => !url)) {
-												console.error("No valid dashboard URLs provided.");
-												alert("This user has no dashboard URLs to view.");
-											} else {
-												handleOpenModal(dashboardUrls);
-											}
-										}}
-										disabled={!user || !user.dashboardUrl1 && !user.dashboardUrl2 && !user.dashboardUrl3}
-									>
-										View
-									</Button>
-								</TableCell>
-							</TableRow>
-
-						))}
-					</TableBody>
-				</Table>
-				<Box display="flex" justifyContent="center" mt={2}>
-					<Pagination
-						count={Math.ceil(users?.length / rowsPerPage)}
-						page={currentPage}
-						onChange={handleChangePage}
-					/>
-				</Box>
-			</TableContainer> */}
-
-			{/* Modal for Dashboards */}
-			<Modal
-				open={openModal}
-				onClose={handleCloseModal}
-				aria-labelledby='modal-modal-title'
-				aria-describedby='modal-modal-description'
-			>
-				<Box
-					sx={{
-						position: 'absolute',
-						top: '50%',
-						left: '50%',
-						transform: 'translate(-50%, -50%)',
-						width: '100%', // Adjust width for larger URLs
-						maxWidth: '600px',
-						bgcolor: 'background.paper',
-						border: 'none',
-						boxShadow: 24,
-						p: 4,
-						borderRadius: '10px',
-					}}
-				>
-					<Typography
-						id='modal-modal-title'
-						variant='h6'
-						component='h2'
-						mb={3}
-					>
-						Dashboard Links
-					</Typography>
-					<div className='flex flex-col w-full justify-start items-start gap-2 space-y-2'>
-						{selectedDashboards.map((url, index) => (
-							<div
-								className='w-full flex flex-col items-start justify-start gap-4'
-								key={index}
-							>
-								<div className='w-full'>
-									<div className='flex items-center space-x-4'>
-										<div
-											className='bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center'
-											style={{ minWidth: '120px' }}
-										>
-											{`Dashboard ${index + 1}`}
-										</div>
-										{url ? (
-											<a
-												href={url}
-												target='_blank'
-												rel='noopener noreferrer'
-												className='w-full flex-1 px-4 py-2 border border-[#01CAEC] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-												style={{
-													textDecoration: 'none',
-													color: '#007BFF',
-													wordBreak: 'break-word', // Break long URLs
-												}}
-											>
-												{url}
-											</a>
-										) : (
-											<span
-												className='text-gray-500 w-full flex-1 px-4 py-2 border border-[#E5E7EB] rounded-lg'
-												style={{ wordBreak: 'break-word' }}
-											>
-												No URL provided
-											</span>
-										)}
-									</div>
-								</div>
-							</div>
-						))}
-					</div>
-					{selectedDashboards.every((url) => !url) && (
-						<Typography>No dashboards available.</Typography>
-					)}
-				</Box>
-			</Modal>
-		</Box>
-	);
+      {/* Modal for Dashboards */}
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "90%",
+            maxWidth: "600px",
+            bgcolor: "background.paper",
+            border: "1px solid #E5E7EB",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: "12px",
+            maxHeight: "80vh",
+            overflowY: "auto",
+          }}
+        >
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            mb={3}
+            sx={{ fontFamily: "Arial, sans-serif", fontWeight: 600 }}
+          >
+            Dashboard Links
+          </Typography>
+          <div className="flex flex-col gap-4">
+            {selectedDashboards.map((url, index) => (
+              <div
+                className="flex items-center gap-4"
+                key={index}
+              >
+                <div
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center"
+                  style={{ minWidth: "120px" }}
+                >
+                  {`Dashboard ${index + 1}`}
+                </div>
+                {url ? (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 px-4 py-2 border border-[#01CAEC] rounded-lg text-blue-600 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 truncate"
+                    style={{ wordBreak: "break-word" }}
+                  >
+                    {url}
+                  </a>
+                ) : (
+                  <span className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-500 truncate">
+                    No URL provided
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          {selectedDashboards.every((url) => !url) && (
+            <Typography
+              sx={{ mt: 2, color: "#6B7280", fontFamily: "Arial, sans-serif" }}
+            >
+              No dashboards available.
+            </Typography>
+          )}
+          <Box mt={3} display="flex" justifyContent="flex-end">
+            <Button
+              onClick={handleCloseModal}
+              variant="contained"
+              sx={{
+                backgroundColor: "#dc2626",
+                color: "white",
+                "&:hover": { backgroundColor: "#b91c1c" },
+                fontFamily: "Arial, sans-serif",
+              }}
+            >
+              Close
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+    </Box>
+  );
 };
 
 export default DashboardContent;
