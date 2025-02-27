@@ -15,7 +15,7 @@ const Dashboard2Content = () => {
 					src={user.dashboardUrl2} // Power BI or other dashboard link from Redux
 					title="Power BI Dashboard 2"
 					width="100%"
-					height="640px" // Adjust height as necessary
+					height="800px" // Adjust height as necessary
 					style={{
 						border: 'none',
 						borderRadius: '8px', // Optional rounded corners for better visuals

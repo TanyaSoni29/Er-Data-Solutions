@@ -172,7 +172,7 @@ const Dashboard1Content = () => {
 					src={user.dashboardUrl1} // Power BI link from Redux
 					title='Power BI Dashboard'
 					width='100%'
-					height='640px'
+					height='800px'
 					style={{
 						border: 'none',
 						borderRadius: '8px',

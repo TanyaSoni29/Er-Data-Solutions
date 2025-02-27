@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getMe, refreshToken } from "../service/operations/authApi";	
+import {  refreshToken } from "../service/operations/authApi";	
 
 const ProtectedRoute = ({ element, allowedRoles = [] }) => {
   const { isAuth, token, user, loading: authLoading } = useSelector((state) => state.auth);
@@ -16,7 +16,6 @@ const ProtectedRoute = ({ element, allowedRoles = [] }) => {
         // If the user is not authenticated but has a token, refresh or fetch user data
         if (!isAuth && token) {
           await dispatch(refreshToken()); // Refresh the token if needed
-          await dispatch(getMe()); // Fetch user details
         }
       } catch (error) {
         console.error("Authentication failed:", error);
