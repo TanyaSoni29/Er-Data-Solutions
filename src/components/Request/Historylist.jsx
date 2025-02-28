@@ -165,6 +165,7 @@ const HistoryList = () => {
                       >
                         <div className="flex items-center space-x-2">
                           {label}
+                          <span> </span>
                           {key && sortConfig.key === key && (
                             <span className="text-gray-800">
                               {sortConfig.direction === "asc" ? (

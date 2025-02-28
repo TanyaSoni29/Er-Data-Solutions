@@ -6,11 +6,11 @@ import { AiOutlineAppstore } from 'react-icons/ai';
 import { FaModx } from 'react-icons/fa6';
 import { PiUsersThree } from 'react-icons/pi';
 import { RxBox } from 'react-icons/rx';
-import { IoMdLogOut } from 'react-icons/io';
+// import { IoMdLogOut } from 'react-icons/io';
 import { useState } from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../service/operations/authApi';
+// import { logout } from '../../service/operations/authApi';
 
 const Sidebar = () => {
 	const { user } = useSelector((state) => state.auth); // Access user data from Redux
@@ -135,7 +135,7 @@ const Sidebar = () => {
 						)}
 
 						{/* User Profiles */}
-						{user?.role === '2' && (
+						{/* {user?.role === '2' && (
 							<li>
 								<Link
 									to='/profiles'
@@ -149,7 +149,7 @@ const Sidebar = () => {
 									<span>Profile</span>
 								</Link>
 							</li>
-						)}
+						)} */}
 
 						{/* Admin Model */}
 						{user?.role === '1' && (
@@ -220,7 +220,7 @@ const Sidebar = () => {
 						)}
 
 						{/* Logout Button */}
-						<li onClick={() => dispatch(logout(navigate))}>
+						{/* <li onClick={() => dispatch(logout(navigate))}>
 							<Link
 								to='/'
 								className={`flex items-center space-x-2 p-3 rounded ${
@@ -236,7 +236,7 @@ const Sidebar = () => {
 
 								<span>Logout</span>
 							</Link>
-						</li>
+						</li> */}
 					</ul>
 				</nav>
 			</div>
