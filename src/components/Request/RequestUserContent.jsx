@@ -22,10 +22,11 @@ const RequestUserContent = () => {
     key: "",
     direction: "asc",
   }); // Added sortConfig for sorting
-  const [showHidden, setShowHidden] = useState(false); // New state to toggle hidden requests
+  const [showHidden, setShowHidden] = useState(false); // Toggle hidden requests
   const [hiddenRequests, setHiddenRequests] = useState([]);
+  const [requestPerPage, setRequestPerPage] = useState(10); // State for rows per page
 
-  const requestPerPage = 5; // Adjusted pagination to show 5 requests per page
+  const rowsPerPageOptions = [10, 20, 40, 80, 100]; // Options for dropdown
 
   useEffect(() => {
     dispatch(refreshRequest());
@@ -120,6 +121,13 @@ const RequestUserContent = () => {
 
   const toggleShowHidden = () => {
     setShowHidden((prev) => !prev); // Toggle visibility of hidden requests
+  };
+
+  // Handle rows per page change
+  const handleRowsPerPageChange = (e) => {
+    const newRowsPerPage = parseInt(e.target.value, 10);
+    setRequestPerPage(newRowsPerPage); // Update rows per page
+    setCurrentPage(1); // Reset to first page
   };
 
   return (
@@ -258,25 +266,45 @@ const RequestUserContent = () => {
 
         {/* Pagination */}
         <div className="flex flex-col md:flex-row justify-between items-center p-4 text-gray-600 text-sm">
-          <span className="mb-2 md:mb-0">
-            Showing {indexOfFirstRequest + 1} to{" "}
-            {Math.min(indexOfLastRequest, sortedRequests.length)} of{" "}
-            {sortedRequests.length}
-          </span>
-          <div className="flex space-x-2">
-            {Array.from({ length: totalPages }, (_, index) => (
-              <button
-                key={index + 1}
-                className={`px-3 py-1 ${
-                  currentPage === index + 1
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 hover:bg-gray-300"
-                } rounded transition-colors duration-200`}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))}
+          <div className="flex items-center gap-2 mb-2 md:mb-0">
+          {/* <span className="mb-2 md:mb-0">
+              Showing {indexOfFirstRequest + 1} to{" "}
+              {Math.min(indexOfLastRequest, sortedRequests.length)} of{" "}
+              {sortedRequests.length}
+            </span> */}
+            <label htmlFor="rowsPerPage" className="text-sm md:text-base">
+              Rows:
+            </label>
+            <select
+              id="rowsPerPage"
+              value={requestPerPage}
+              onChange={handleRowsPerPageChange}
+              className="px-2 py-1 border border-gray-300 rounded-md focus:outline-none hover:bg-gray-50"
+            >
+              {rowsPerPageOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            
+            <div className="flex space-x-2 mt-2 md:mt-0">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index + 1}
+                  className={`px-3 py-1 ${
+                    currentPage === index + 1
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 hover:bg-gray-300"
+                  } rounded transition-colors duration-200`}
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
