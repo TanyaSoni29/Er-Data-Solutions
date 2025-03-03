@@ -75,13 +75,20 @@ const DashboardContent = () => {
       .map((_, i) => (i < safeData.length ? safeData[i] : 0));
   };
 
-  // Ensure stats.clients and stats.newClients are arrays or use fallback data
+  // Dynamic data based on stats with improved fallback
   const clientsData = stats?.totalUsers
-    ? adjustDataLength(stats.totalUsers, dynamicLabels)
-    : [30, 40, 35, 45, 30, 25, 10];
-  const newClientsData = stats?.newClients
-    ? adjustDataLength(stats.newClients, dynamicLabels)
-    : [20, 30, 25, 35, 20, 15, 10];
+    ? Array.isArray(stats.totalUsers)
+      ? adjustDataLength(stats.totalUsers, dynamicLabels)
+      : Array(dynamicLabels.length).fill(stats.totalUsers || 0) // Distribute total evenly
+    : Array(dynamicLabels.length).fill(0); // Dynamic fallback with zeros
+ 
+console.log(clientsData + "clientsData");
+
+  const newClientsData = stats?.clients
+    ? Array.isArray(stats.clients)
+      ? adjustDataLength(stats.clients, dynamicLabels)
+      : Array(dynamicLabels.length).fill(stats.clients || 0) // Distribute total evenly
+    : Array(dynamicLabels.length).fill(0); // Dynamic fallback with zeros
 
   const lineChartData = {
     labels: dynamicLabels,
