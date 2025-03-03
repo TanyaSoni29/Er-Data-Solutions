@@ -19,8 +19,8 @@ const RequestUserContent = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState({
-    key: "",
-    direction: "asc",
+    key: "requestDate",
+    direction: "desc",
   }); // Added sortConfig for sorting
   const [showHidden, setShowHidden] = useState(false); // Toggle hidden requests
   const [hiddenRequests, setHiddenRequests] = useState([]);
