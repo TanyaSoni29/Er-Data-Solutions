@@ -88,13 +88,13 @@ const RequestForm = () => {
 					</div>
 
 					{/* Form Container */}
-					<div className='bg-white p-4 md:p-6 mt-4 rounded-lg shadow-lg'>
+					<div className='bg-white p-4 md:p-6 mt-4 rounded-lg shadow-lg overflow-y-auto max-h-[calc(100vh-250px)]'>
 						<h2 className='text-xl font-semibold text-gray-700 mb-6'>
 							Request Form
 						</h2>
 						<form
 							onSubmit={handleSubmit(onSubmit)}
-							className='grid grid-cols-1 md:grid-cols-3 gap-6'
+							className='grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6'
 						>
 							{/* Description */}
 							<div>
@@ -268,7 +268,7 @@ const RequestForm = () => {
 							</div>
 
 							{/* Submit Button */}
-							<div className='col-span-3 mt-6 flex justify-end'>
+							<div className='col-span-1 md:col-span-3 mt-6 flex justify-end'>
 								<button
 									type='submit'
 									className='bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white px-6 py-2 rounded-lg shadow-lg hover:from-[#003876] hover:to-[#005fa1]'
