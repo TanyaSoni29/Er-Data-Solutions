@@ -19,7 +19,7 @@ const UsersContent = ({ setAddUserButton, setEditUserButton, setUser }) => {
   const [showHidden, setShowHidden] = useState(false); // New state to toggle hidden requests
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" }); // Added sortConfig for sorting
+  const [sortConfig, setSortConfig] = useState({ key: "companyName", direction: "desc" }); // Updated default sortConfig
   const userPerPage = 10;
 
   useEffect(() => {
