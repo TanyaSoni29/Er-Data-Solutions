@@ -20,16 +20,21 @@ import {
   Paper,
   Modal,
   Pagination,
+  IconButton,
 } from "@mui/material";
+import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { refreshUser } from "../../slices/userSlice"; // Ensure this is imported
 
 const DashboardContent = () => {
   const dispatch = useDispatch();
   const { stats, users, loading } = useSelector((state) => state.user);
 
-  // Modal State
+  // Modal State for dashboards
   const [openModal, setOpenModal] = useState(false);
   const [selectedDashboards, setSelectedDashboards] = useState([]);
+
+  // Modal State for expanded chart
+  const [openChartModal, setOpenChartModal] = useState(false);
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,25 +76,25 @@ const DashboardContent = () => {
   };
 
   // Ensure stats.clients and stats.newClients are arrays or use fallback data
-  const clientsData = stats?.clients
-    ? adjustDataLength(stats.clients, dynamicLabels)
-    : [30, 40, 35, 45, 30, 25, 10]; // Fallback if stats.clients is not an array
+  const clientsData = stats?.totalUsers
+    ? adjustDataLength(stats.totalUsers, dynamicLabels)
+    : [30, 40, 35, 45, 30, 25, 10];
   const newClientsData = stats?.newClients
     ? adjustDataLength(stats.newClients, dynamicLabels)
-    : [20, 30, 25, 35, 20, 15, 10]; // Fallback if stats.newClients is not an array
+    : [20, 30, 25, 35, 20, 15, 10];
 
   const lineChartData = {
     labels: dynamicLabels,
     datasets: [
       {
-        label: "Total Clients",
+        label: "Total Users",
         data: clientsData,
         borderColor: "#3B82F6",
         backgroundColor: "rgba(59, 130, 246, 0.2)",
-        tension: 0.4, // Smooth curves for up-down movement
-        fill: true, // Area under the line for better visualization
+        tension: 0.4,
+        fill: true,
         borderWidth: 2,
-        pointRadius: 5, // Larger points for visibility
+        pointRadius: 5,
         pointBackgroundColor: "#3B82F6",
         pointBorderColor: "#fff",
         pointHoverRadius: 7,
@@ -117,7 +122,7 @@ const DashboardContent = () => {
       legend: {
         position: "top",
         labels: {
-          font: { size: 14, family: "Arial, sans-serif" },
+          font: { size: 12, family: "Arial, sans-serif" },
           color: "#1f2937",
           boxWidth: 20,
         },
@@ -134,7 +139,7 @@ const DashboardContent = () => {
     },
     scales: {
       x: {
-        title: { display: true, text: "Date", color: "#6b7280", font: { size: 12 } },
+        title: { display: true, text: "", color: "#6b7280", font: { size: 25 } },
         ticks: { color: "#6b7280", font: { size: 10 } },
         grid: { color: "#e5e7eb", borderDash: [5, 5] },
       },
@@ -150,6 +155,29 @@ const DashboardContent = () => {
     },
   };
 
+  // Expanded chart options (optional adjustments for the expanded view)
+  const expandedChartOptions = {
+    ...lineChartOptions,
+    plugins: {
+      ...lineChartOptions.plugins,
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: "xy",
+        },
+        pan: {
+          enabled: true,
+          mode: "xy",
+        },
+      },
+    },
+  };
+
   const totalNoDashboard = stats?.usersWithDashboards?.reduce((total, user) => {
     return total + (user.d1 ? 1 : 0) + (user.d2 ? 1 : 0) + (user.d3 ? 1 : 0);
   }, 0);
@@ -162,6 +190,14 @@ const DashboardContent = () => {
   const handleCloseModal = () => {
     setOpenModal(false);
     setSelectedDashboards([]);
+  };
+
+  const handleOpenChartModal = () => {
+    setOpenChartModal(true);
+  };
+
+  const handleCloseChartModal = () => {
+    setOpenChartModal(false);
   };
 
   const handleChangePage = (event, value) => {
@@ -208,7 +244,7 @@ const DashboardContent = () => {
                 justifyContent: "space-between",
                 borderRadius: "12px",
                 boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-                background: `linear-gradient(135deg, ${metric.color}20 0%, #ffffff 100%)`, // Gradient background
+                background: `linear-gradient(135deg, ${metric.color}20 0%, #ffffff 100%)`,
                 transition: "transform 0.3s",
                 "&:hover": { transform: "scale(1.02)" },
               }}
@@ -262,24 +298,25 @@ const DashboardContent = () => {
             elevation={3}
             sx={{ p: 3, height: "400px", position: "relative", background: "#fff" }}
           >
-            <Typography
-              variant="h6"
-              color="textSecondary"
-              mb={2}
-              sx={{ fontFamily: "Arial, sans-serif", fontWeight: 600 }}
-            >
-              Number of New Clients per Month
-            </Typography>
-            <Box sx={{ height: "100%", width: "100%" }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+              <Typography
+                variant="h6"
+                color="textSecondary"
+                sx={{ fontFamily: "Arial, sans-serif", fontWeight: 600 }}
+              >
+                Number of New Clients per Month
+              </Typography>
+              <IconButton onClick={handleOpenChartModal}>
+                <ExpandMore />
+              </IconButton>
+            </Box>
+            <Box sx={{ height: "100%", width: "100%", cursor: "pointer" }} onClick={handleOpenChartModal}>
               <Line data={lineChartData} options={lineChartOptions} />
             </Box>
           </Paper>
         </Grid>
         <Grid item xs={12} lg={6}>
-          <Paper
-            elevation={3}
-            sx={{ p: 3, backgroundColor: "#F9FAFB" }}
-          >
+          <Paper elevation={3} sx={{ p: 3, backgroundColor: "#F9FAFB" }}>
             <Typography
               variant="h6"
               color="textSecondary"
@@ -354,9 +391,7 @@ const DashboardContent = () => {
                               user?.dashboardUrl3 || null,
                             ];
                             if (dashboardUrls.every((url) => !url)) {
-                              console.error(
-                                "No valid dashboard URLs provided."
-                              );
+                              console.error("No valid dashboard URLs provided.");
                               alert("This user has no dashboard URLs to view.");
                             } else {
                               handleOpenModal(dashboardUrls);
@@ -466,6 +501,63 @@ const DashboardContent = () => {
           <Box mt={3} display="flex" justifyContent="flex-end">
             <Button
               onClick={handleCloseModal}
+              variant="contained"
+              sx={{
+                backgroundColor: "#dc2626",
+                color: "white",
+                "&:hover": { backgroundColor: "#b91c1c" },
+                fontFamily: "Arial, sans-serif",
+              }}
+            >
+              Close
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      {/* Modal for Expanded Chart */}
+      <Modal
+        open={openChartModal}
+        onClose={handleCloseChartModal}
+        aria-labelledby="expanded-chart-modal-title"
+        aria-describedby="expanded-chart-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "90%",
+            maxWidth: "1000px",
+            bgcolor: "background.paper",
+            border: "1px solid #E5E7EB",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: "12px",
+            maxHeight: "90vh",
+            overflowY: "auto",
+          }}
+        >
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography
+              id="expanded-chart-modal-title"
+              variant="h6"
+              component="h2"
+              sx={{ fontFamily: "Arial, sans-serif", fontWeight: 600 }}
+            >
+              Detailed Client Analysis
+            </Typography>
+            <IconButton onClick={handleCloseChartModal}>
+              <ExpandLess />
+            </IconButton>
+          </Box>
+          <Box sx={{ height: "600px", width: "100%" }}>
+            <Line data={lineChartData} options={expandedChartOptions} />
+          </Box>
+          <Box mt={3} display="flex" justifyContent="flex-end">
+            <Button
+              onClick={handleCloseChartModal}
               variant="contained"
               sx={{
                 backgroundColor: "#dc2626",
