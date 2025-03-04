@@ -3,12 +3,44 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FaRegCircle, FaArrowUp, FaArrowDown, FaBars } from "react-icons/fa"; // Added FaBars for hamburger menu
+import { FaRegCircle, FaArrowUp, FaArrowDown, FaBars } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FiEdit } from "react-icons/fi";
 import { refreshUserRequests, removeRequest } from "../../slices/requestSlice";
 import { deleteRequestById } from "../../service/operations/requestApi";
-import Sidebar from "../Common/Sidebar"; // Added Sidebar import
+import Sidebar from "../Common/Sidebar";
+
+// Modal Component
+const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, requestId }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-11/12 md:w-1/3">
+        <h2 className="text-lg md:text-xl font-semibold text-gray-800 mb-4">
+          Confirm Deletion
+        </h2>
+        <p className="text-sm md:text-base text-gray-600 mb-6">
+          Are you sure you want to delete this request? This action cannot be undone.
+        </p>
+        <div className="flex justify-end space-x-4">
+          <button
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200 text-sm md:text-base"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 text-sm md:text-base"
+            onClick={() => onConfirm(requestId)}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const HistoryList = () => {
   const navigate = useNavigate();
@@ -16,16 +48,18 @@ const HistoryList = () => {
 
   // Fetching data from Redux
   const { userRequests, loading } = useSelector((state) => state.request);
-  const { token, user } = useSelector((state) => state.auth); // Added user from auth state
+  const { token, user } = useSelector((state) => state.auth);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState({
-    key: "requestDate", // Default sort by requestDate
-    direction: "desc", // Default to descending
-  }); // Added sortConfig for sorting
+    key: "requestDate",
+    direction: "desc",
+  });
   const requestsPerPage = 5;
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar toggle
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
+  const [selectedRequestId, setSelectedRequestId] = useState(null); // State to store the request ID for deletion
 
   // Fetch user-specific requests on mount
   useEffect(() => {
@@ -37,14 +71,25 @@ const HistoryList = () => {
     navigate(`/historylistedit?id=${id}`);
   };
 
-  // Handle delete
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this request?")) {
-      const success = await deleteRequestById(token, id);
-      if (success) {
-        dispatch(removeRequest(id)); // Update Redux after deletion
-      }
+  // Open modal for delete confirmation
+  const openDeleteModal = (id) => {
+    setSelectedRequestId(id);
+    setIsModalOpen(true);
+  };
+
+  // Close modal
+  const closeDeleteModal = () => {
+    setIsModalOpen(false);
+    setSelectedRequestId(null);
+  };
+
+  // Handle delete confirmation
+  const handleDeleteConfirm = async (id) => {
+    const success = await deleteRequestById(token, id);
+    if (success) {
+      dispatch(removeRequest(id)); // Update Redux after deletion
     }
+    closeDeleteModal();
   };
 
   // Search logic
@@ -61,17 +106,15 @@ const HistoryList = () => {
     const fieldA = a[sortConfig.key] || "";
     const fieldB = b[sortConfig.key] || "";
 
-    // Handle date sorting specifically for requestDate
     if (sortConfig.key === "requestDate") {
       const dateA = new Date(fieldA);
       const dateB = new Date(fieldB);
       if (sortConfig.direction === "asc") {
         return dateA - dateB;
       }
-      return dateB - dateA; // Default desc for requestDate
+      return dateB - dateA;
     }
 
-    // Default string sorting for other fields
     if (sortConfig.direction === "asc") {
       return fieldA.localeCompare(fieldB);
     }
@@ -91,8 +134,7 @@ const HistoryList = () => {
   const handleSort = (key) => {
     setSortConfig((prev) => ({
       key,
-      direction:
-        prev.key === key && prev.direction === "desc" ? "asc" : "desc", // Toggle between asc and desc
+      direction: prev.key === key && prev.direction === "desc" ? "asc" : "desc",
     }));
   };
 
@@ -102,12 +144,8 @@ const HistoryList = () => {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
-    
-     
-
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-
         {/* Navigation Buttons */}
         <div className="p-4 md:p-6">
           <div className="flex flex-col md:flex-row justify-start items-center space-y-4 md:space-y-0 md:space-x-4 mb-6">
@@ -232,7 +270,7 @@ const HistoryList = () => {
                           </button>
                           <button
                             className="bg-red-500 text-white p-2 rounded-full hover:bg-red-700 transition-colors duration-200"
-                            onClick={() => handleDelete(request.id)}
+                            onClick={() => openDeleteModal(request.id)}
                             title="Delete Request"
                           >
                             <RiDeleteBinLine />
@@ -271,6 +309,14 @@ const HistoryList = () => {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={isModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={handleDeleteConfirm}
+        requestId={selectedRequestId}
+      />
     </div>
   );
 };
