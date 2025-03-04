@@ -22,7 +22,8 @@ const Sidebar = () => {
 	const location = useLocation();
 
 	// Check if the current path is active
-	const isActive = (path) => location.pathname === path;
+	const isActive = (paths) => paths.includes(location.pathname);
+
 
 	// Toggle the sidebar visibility
 	const toggleSidebar = () => {
@@ -191,7 +192,7 @@ const Sidebar = () => {
 								<Link
 									to='/requests'
 									className={`flex items-center space-x-2 p-3 rounded ${
-										isActive('/requests')
+										isActive(['/requests', '/requestform'])
 											? 'bg-gradient-to-r from-[#00449B] to-[#0071D3] text-white'
 											: 'hover:bg-gradient-to-r hover:from-[#00449B] hover:to-[#0071D3] hover:text-white'
 									}`}
