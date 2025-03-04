@@ -253,6 +253,8 @@ const HistoryList = () => {
                               ? "bg-yellow-500"
                               : request.completionStatus === "In Progress"
                               ? "bg-blue-500"
+                              : request.completionStatus === "Not Started"
+                              ? "bg-red-500"
                               : "bg-green-500"
                           }`}
                         >
