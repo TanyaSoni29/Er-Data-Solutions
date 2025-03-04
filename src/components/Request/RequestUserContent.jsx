@@ -134,7 +134,7 @@ const RequestUserContent = () => {
     <div className="p-4 md:p-6 bg-white min-h-screen">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 px-4 gap-4 md:gap-0">
-        <div className="text-xl md:text-2xl font-semibold text-gray-700 flex justify-start items-center space-x-2">
+        <div className="hidden md:flex text-lg md:text-2xl font-semibold text-gray-700 justify-start items-center space-x-2 w-auto">
           <FaRegCircle fontSize={18} />
           <span>Requests</span>
         </div>
