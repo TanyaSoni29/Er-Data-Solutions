@@ -14,6 +14,8 @@ const Header = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [dropDownVissible, setDropDownVissible] = useState(false);
+	const [notifications, setNotifications] = useState([]); // Store notifications
+	const [showDropdown, setShowDropdown] = useState(false); // Dropdown state
 
 	const headingMap = {
 		'/dashboard-role1': 'Dashboard',
@@ -42,6 +44,20 @@ const Header = () => {
 		}
 	}, [user]); // Only rerun this effect when the user data changes
 
+	// Fetch notifications from API
+	useEffect(() => {
+		const fetchNotifications = async () => {
+			try {
+				const response = await fetch(`${import.meta.env.VITE_BASE_URL}/notifications`);
+				const data = await response.json();
+				setNotifications(data.notifications || []);
+			} catch (error) {
+				console.error('Error fetching notifications:', error);
+			}
+		};
+		fetchNotifications();
+	}, []); // Run only on mount
+
 	return (
 		<div className='w-full flex flex-wrap justify-between items-center bg-white drop-shadow-lg py-6 px-6 md:px-10'>
 			<div className='flex justify-start items-center gap-2'>
@@ -51,12 +67,17 @@ const Header = () => {
 			<div className='flex justify-end items-center space-x-4 relative'>
 				{/* Notification Icon - Visible only for role '1' */}
 				{user?.role === '1' && (
-					<IoIosNotifications
-						fontSize={30}
-						color='#0071D3'
-						className='cursor-pointer'
-					/>
+					<div className='relative cursor-pointer' onClick={() => setShowDropdown(!showDropdown)}>
+						<IoIosNotifications fontSize={30} color='#0071D3' />
+						{/* Notification Count */}
+						{notifications.length > 0 && (
+							<span className='absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-2'>
+								{notifications.length}
+							</span>
+						)}
+					</div>
 				)}
+
 				{/* Dynamically render the profile image */}
 				<img
 					src={profileImage} // Use dynamic profile image or fallback
@@ -90,6 +111,30 @@ const Header = () => {
 								Logout
 							</li>
 						</ul>
+					</div>
+				)}
+
+				{/* Notification Dropdown */}
+				{showDropdown && (
+					<div className='absolute right-52 top-14 bg-white border border-gray-300 rounded-lg shadow-lg w-64 z-10'>
+						<h3 className='text-center font-semibold py-2 border-b'>Notifications</h3>
+						<ul className='max-h-60 overflow-auto'>
+							{notifications.length > 0 ? (
+								notifications.map((notif, index) => (
+									<li key={index} className='px-4 py-2 hover:bg-gray-100 cursor-pointer'>
+										{notif.message}
+									</li>
+								))
+							) : (
+								<li className='px-4 py-2 text-gray-500 text-center'>No notifications</li>
+							)}
+						</ul>
+						<button
+							className='w-full text-center bg-gray-100 hover:bg-gray-200 py-2'
+							onClick={() => setNotifications([])} // Clear notifications
+						>
+							Clear All
+						</button>
 					</div>
 				)}
 			</div>
