@@ -1,12 +1,12 @@
 /** @format */
 
-import { IoIosArrowDown } from 'react-icons/io';
+import { IoIosArrowDown, IoIosNotifications } from 'react-icons/io';
 import { CgBox } from 'react-icons/cg';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { logout } from '../../service/operations/authApi';
-import ProfileImg from '../../assets/user.webp'; // Default fallback image
+import JohnImg from '../../assets/user.webp'; // Default fallback image
 
 const Header = () => {
 	const location = useLocation();
@@ -29,7 +29,7 @@ const Header = () => {
 	const { user } = useSelector((state) => state.auth);
 
 	// State for dynamically changing profile image
-	const [profileImage, setProfileImage] = useState(ProfileImg); // Fallback to default initially
+	const [profileImage, setProfileImage] = useState(JohnImg); // Fallback to default initially
 
 	useEffect(() => {
 		// Set the profile image URL dynamically when the user data is available
@@ -38,7 +38,7 @@ const Header = () => {
 			setProfileImage(imageUrl); // Set the dynamically constructed image URL
 			console.log('Profile Image URL:', imageUrl); // Log for debugging
 		} else {
-			setProfileImage(ProfileImg); // Use fallback if no image
+			setProfileImage(JohnImg); // Use fallback if no image
 		}
 	}, [user]); // Only rerun this effect when the user data changes
 
@@ -48,7 +48,15 @@ const Header = () => {
 				<CgBox className='-rotate-90' />
 				<h1 className='text-xl font-semibold'>{heading}</h1>
 			</div>
-			<div className='flex justify-end items-center space-x-2 relative'>
+			<div className='flex justify-end items-center space-x-4 relative'>
+				{/* Notification Icon - Visible only for role '1' */}
+				{user?.role === '1' && (
+					<IoIosNotifications
+						fontSize={30}
+						color='#0071D3'
+						className='cursor-pointer'
+					/>
+				)}
 				{/* Dynamically render the profile image */}
 				<img
 					src={profileImage} // Use dynamic profile image or fallback
@@ -56,7 +64,7 @@ const Header = () => {
 					className='w-8 h-8 md:w-10 md:h-10 rounded-full object-cover'
 				/>
 				<span className='text-sm md:text-base font-medium text-gray-600'>
-					Hi, {user?.contactPerson || 'User'}
+					Hi, {user?.contactPerson || 'Admin'}
 				</span>
 				<IoIosArrowDown
 					fontSize={18}

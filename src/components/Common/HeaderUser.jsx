@@ -1,6 +1,6 @@
 /** @format */
 
-import { IoIosArrowDown } from 'react-icons/io';
+import { IoIosArrowDown, IoIosNotifications } from 'react-icons/io'; // Added IoIosNotifications
 import TopHeaderImg from '../../assets/TopHeaderImg.png';
 import JohnImg from '../../assets/user.webp'; // Default fallback image
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -60,7 +60,15 @@ const HeaderUser = () => {
 				<h1 className='text-xl font-semibold'>{heading}</h1>
 			</div>
 
-			<div className='flex justify-end items-center space-x-2 relative'>
+			<div className='flex justify-end items-center space-x-4 relative'>
+				{/* Notification Icon - Visible only for role '2' */}
+				{user?.role === '2' && (
+					<IoIosNotifications
+						fontSize={30}
+						color='#0071D3'
+						className='cursor-pointer'
+					/>
+				)}
 				<img
 					src={profileImage} // Dynamically render profile image or fallback
 					alt='Profile'
