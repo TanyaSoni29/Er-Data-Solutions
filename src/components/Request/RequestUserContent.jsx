@@ -227,7 +227,7 @@ const RequestUserContent = () => {
                         ? "bg-yellow-500"
                         : request?.completionStatus === "Completed"
                         ? "bg-green-500"
-                        : "bg-blue-500"
+                        : "bg-red-500"
                     }`}
                   >
                     {request?.completionStatus || "Pending"}
@@ -296,7 +296,7 @@ const RequestUserContent = () => {
                   key={index + 1}
                   className={`px-3 py-1 ${
                     currentPage === index + 1
-                      ? "bg-blue-500 text-white"
+                      ? "bg-blue-500 text-white"     
                       : "bg-gray-200 hover:bg-gray-300"
                   } rounded transition-colors duration-200`}
                   onClick={() => handlePageChange(index + 1)}
