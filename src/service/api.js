@@ -34,3 +34,8 @@ export const formEndpoints = {
 	DELETE_FORM: (id) => `${BASE_URL}/forms/${id}`, // Delete form by ID
   };
 
+  export const usernotificationEndpoints = {
+	GET_ALL_NOTIFICATIONS: (id) => `${BASE_URL}/notifications/${id}`, // Fetch all notifications for user
+	MARK_AS_READ: (id) => `${BASE_URL}/notifications/${id}/read`, // ✅ Corrected path for marking as read
+};
+
